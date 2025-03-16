@@ -78,12 +78,10 @@ export default function Main() {
     const testImage = 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
 
     return (
-        <ScrollView scrollEventThrottle={16}
+        <ScrollView scrollEventThrottle={16} stickyHeaderIndices={[0]}
         onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
+        style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}
         >
-        <SafeAreaView style={styleDashboard.dashboard}>
-            <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'rgba(230, 230, 230, 0.83)' : 'transparent'} style="dark"/>
-
             <View style={styleDashboard.headerDashboard}>
                 <View style={styleDashboard.headerDecorationLeft}>
                 </View>
@@ -101,6 +99,10 @@ export default function Main() {
                     <Image source={{ uri: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'}} style={styleDashboard.profilePicture}/>
                 </View>
             </View>
+
+        <SafeAreaView style={styleDashboard.dashboard}>
+            <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'rgba(230, 230, 230, 0.83)' : 'transparent'} style="dark"/>
+
 
             <View style={styleDashboard.mainContainer}>
                 <View style={styleDashboard.userDashboard}>

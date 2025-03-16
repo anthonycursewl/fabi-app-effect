@@ -34,12 +34,14 @@ export default function Login({ navigation }: INavGlobal) {
         navigation.navigate('Dashboard')
     }
 
+    const LogoApp = require('@/assets/images/app-logo.png') 
+
     return (
         <View style={styleLogin.containerMainLogin}>
             <Image source={{ uri: 'https://www.pngall.com/wp-content/uploads/12/Lines-PNG-HD-Image.png' }} style={styleLogin.decorateHeader}/>
             <View style={{ width: '88%', gap: 12, position: 'relative' }}>
                 <View style={{ marginBottom: 20, alignItems: 'center', position: 'relative' }}>
-                    <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc-lA3eL9lLTxnBpLD80c5DQMkK2aviC2EXQ&s' }} style={styleLogin.loginImg}/>
+                    <Image source={LogoApp} style={styleLogin.loginImg}/>
                 </View>
 
                 <View style={styleLogin.gradientLoginFace}></View>
@@ -136,9 +138,8 @@ const styleLogin = StyleSheet.create({
     loginImg: {
         width: 110,
         height: 110,
-        borderRadius: 60,
         zIndex: 1,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)'
+        filter: 'drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))'
     },
     decorationImg: {
         width: 150,

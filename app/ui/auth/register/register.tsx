@@ -32,12 +32,14 @@ export default function Register({ navigation }: INavGlobal) {
         Alert.alert('Formulario enviado', 'El formulario se ha enviado correctamente')
     }
 
+    const LogoApp = require('@/assets/images/app-logo.png')
+
     return (
         <View style={styleRegister.containerMainLogin}>
             <Image source={{ uri: 'https://www.pngall.com/wp-content/uploads/12/Lines-PNG-HD-Image.png' }} style={styleRegister.decorateHeader}/>
             <View style={{ width: '88%', gap: 12, position: 'relative' }}>
                 <View style={{ marginBottom: 20, alignItems: 'center' }}>
-                    <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc-lA3eL9lLTxnBpLD80c5DQMkK2aviC2EXQ&s' }} style={styleRegister.loginImg}/>
+                    <Image source={LogoApp} style={styleRegister.loginImg}/>
                 </View>
 
                 <View style={styleRegister.gradientLoginFace}></View>
@@ -146,9 +148,8 @@ const styleRegister = StyleSheet.create({
     loginImg: {
         width: 110,
         height: 110,
-        borderRadius: 60,
         zIndex: 1,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)'
+        filter: 'drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))'
     },
     goToRegister: {
         alignItems: 'center',
