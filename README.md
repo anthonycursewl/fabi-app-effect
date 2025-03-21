@@ -1,50 +1,90 @@
-# Welcome to your Expo app 👋
+# Fabi Effect: La App de Citas para Contadores 💖💼
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![Logo de Fabi Effect](./assets/logo.png)  <!-- Reemplaza con la ruta de tu logo -->
 
-## Get started
+**Fabi Effect** es una innovadora aplicación móvil diseñada para conectar a contadores y contadoras que buscan relaciones significativas, tanto profesionales como personales. ¡Deja que la magia de los números te guíe al amor o a una valiosa colaboración!
 
-1. Install dependencies
+## ✨ Características Principales
 
-   ```bash
-   npm install
-   ```
+*   **Perfiles Detallados:** Crea un perfil completo que muestre tu experiencia, habilidades, intereses y, por supuesto, ¡tu personalidad!
+*   **Filtros Avanzados:** Encuentra a tu pareja ideal (o a tu próximo socio/a) basándote en criterios específicos como especialidad contable, años de experiencia, ubicación y más.
+*   **Conexiones Profesionales:** Amplía tu red de contactos con contadores y contadoras de tu área, ¡perfecto para colaboraciones y oportunidades laborales!
+*   **Citas Casuales o Serias:** Define tus intenciones desde el principio. ¿Buscas una relación duradera o una simple reunión para intercambiar ideas?
+*   **Match Personalizado:** Nuestro algoritmo inteligente analiza tus preferencias y te sugiere perfiles compatibles.
+*   **Chat Integrado:** Comunícate de forma segura y privada con tus matches.
+*   **Eventos Exclusivos:** Accede a eventos y webinars diseñados específicamente para la comunidad contable.
+*   **[PRO] Mentorías Personalizadas:** Obtén acceso a mentores experimentados que te guiarán en tu carrera profesional y en el arte de las citas. (Característica Premium)
 
-2. Start the app
+## 🚀 Tecnologías Utilizadas
 
-   ```bash
-    npx expo start
-   ```
+*   **React Native:** Para una experiencia nativa en iOS y Android.
+*   **Node.js/Express.js:** Backend robusto y escalable para la gestión de usuarios y datos.
+*   **MongoDB:** Base de datos NoSQL para almacenar perfiles, matches y conversaciones.
+*   **Firebase Cloud Messaging (FCM):** Notificaciones push para mantenerte al tanto de nuevos matches y mensajes.
+*   **[Opcional] AWS/Azure/Google Cloud:** Para el despliegue y la infraestructura.
 
-In the output, you'll find options to open the app in a
+## ⚙️ Configuración e Instalación
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1.  **Clona el repositorio:**
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    ```bash
+    git clone https://github.com/TuUsuario/fabi-effect.git  # Reemplaza con la URL de tu repositorio
+    cd fabi-effect
+    ```
 
-## Get a fresh project
+2.  **Instala las dependencias:**
 
-When you're ready, run:
+    ```bash
+    npm install  # o yarn install
+    cd ios && pod install && cd .. # Para proyectos iOS
+    ```
 
-```bash
-npm run reset-project
-```
+3.  **Configura las variables de entorno:**
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+    *   Crea un archivo `.env` en la raíz del proyecto.
+    *   Define las variables necesarias para tu backend y frontend (claves de API, URLs de bases de datos, etc.).
+    *   Ejemplo:
 
-## Learn more
+        ```
+        API_URL=http://tu-api.com
+        DATABASE_URL=mongodb://localhost:27017/fabi-effect
+        FIREBASE_API_KEY=AIzaSy...
+        ```
 
-To learn more about developing your project with Expo, look at the following resources:
+4.  **Ejecuta la aplicación:**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+    ```bash
+    npx react-native run-android  # o npx react-native run-ios
+    ```
 
-## Join the community
+    *Asegúrate de tener configurado tu entorno de desarrollo de React Native (Android Studio, Xcode, etc.).*
 
-Join our community of developers creating universal apps.
+## 🖼️ Capturas de Pantalla
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+(Aquí irían imágenes atractivas de la app, mostrando la interfaz y las principales funcionalidades)
+
+*   ![Captura de pantalla 1](./assets/screenshot1.png)  <!-- Reemplaza con la ruta de tu captura -->
+*   ![Captura de pantalla 2](./assets/screenshot2.png)
+*   ![Captura de pantalla 3](./assets/screenshot3.png)
+
+## 🤝 Contribución
+
+¡Nos encantaría que contribuyeras a Fabi Effect! Si tienes ideas, sugerencias o quieres reportar un error, sigue estos pasos:
+
+1.  Crea un fork del repositorio.
+2.  Crea una rama con tu nombre y la característica que estás implementando: `git checkout -b feature/mi-nueva-caracteristica`
+3.  Realiza tus cambios y haz commit con mensajes claros y descriptivos.
+4.  Sube tu rama a tu fork.
+5.  Crea un pull request al repositorio principal.
+
+## 📜 Licencia
+
+Este proyecto está bajo la licencia [MIT License](LICENSE) - consulta el archivo `LICENSE` para más detalles.
+
+## 📧 Contacto
+
+*   Si tienes preguntas o comentarios, no dudes en contactarnos en [tu.email@example.com](mailto:tu.email@example.com).
+
+---
+
+**Fabi Effect - Conectando Contadores, Creando Relaciones 💖💼**
