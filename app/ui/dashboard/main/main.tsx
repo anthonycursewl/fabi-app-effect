@@ -152,7 +152,7 @@ export default function Main({ navigation }: INavGlobal) {
 
                         <View>
                             <TouchableOpacity>
-                                <Image source={require('../../../../assets/images/menu-app.png')} style={{ width: 30, height: 30 }} />
+                                <Image source={require('../../../../assets/images/menu-app.png')} style={{ width: 25, height: 25 }} />
                             </TouchableOpacity>
                         </View>
 
@@ -300,8 +300,8 @@ const styleDashboard = StyleSheet.create({
         width: '85%',
     },
     profilePicture: {
-        width: 45,  
-        height: 45,
+        width: 35,  
+        height: 35,
         borderRadius: 50,
         borderWidth: 1,
         borderColor: 'rgba(156, 74, 255, 0.97)'

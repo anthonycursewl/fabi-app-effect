@@ -1,20 +1,15 @@
 import { View, ScrollView } from "react-native";
 import { ButtonCard } from "./ButtonCard";
 
-export default function AuthenticatedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const ButtonsApp = [
-    { icon: require("@/assets/images/nav/home-icon.png"), name: "Inicio" },
-    { icon: require("@/assets/images/nav/citas-icon.png"), name: "Citas" },
-    {
-      icon: require("@/assets/images/nav/notification-icon.png"),
-      name: "Notis",
-    },
-    { icon: require("@/assets/images/nav/profile-icon.png"), name: "Perfil" },
-  ];
+// Contants
+import { ButtonsApp } from "../constants/ButtonsApp";
+
+// Navigation
+import { useNavigationState } from "@react-navigation/native";
+
+export default function AuthenticatedLayout({children }: { children: React.ReactNode }) {
+
+  const currentPath = useNavigationState((state) => state.routes[state.index].name);
 
   return (
     <>
@@ -50,9 +45,13 @@ export default function AuthenticatedLayout({
               paddingBottom: 8,
             }}
           >
+
+            {/* Iteration in order to create the buttons. Buttons are in the constant ButtonsApp */}
             {ButtonsApp.map((item, index) => (
-              <ButtonCard key={index} icon={item.icon} name={item.name} />
+              <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} />
             ))}
+
+
           </View>
         </ScrollView>
       </View>
