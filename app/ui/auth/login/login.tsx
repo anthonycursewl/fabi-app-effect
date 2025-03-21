@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from "react-native"
+import { StyleSheet, View, TextInput, TouchableOpacity, Image, Alert } from "react-native"
 
 // interfaces
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
@@ -7,6 +7,12 @@ import { AuthContext } from "@/app/shared/context/ContextProvider";
 
 // Components
 import TextWithColor from "@/app/shared/components/TextWithColor";
+import { useFetch } from "@/app/shared/services/useFetch";
+import { API_URl } from "@/app/config/api.breadriuss.config";
+
+// services
+import { handleLogin } from "./services/hadleLogin";
+import { storeData } from "@/app/store/storeData";
 
 interface FormDataLogin {
     email: string;
@@ -21,17 +27,27 @@ export default function Login({ navigation }: INavGlobal) {
     const [loading, setLoading] = useState<boolean>(false)
     const { setUserToken } = useContext(AuthContext)
 
-    const handleSumbit = () => {
+    const handleSumbit = async () => {
         if (!formData.email || !formData.password) {
             Alert.alert('Error | Formulario incompleto', 'Por favor, el correo electrónico y contraseña son requeridos.')
             return
         }
 
-        console.log(formData)
-        Alert.alert('Formulario enviado', 'El formulario se ha enviado correctamente')
-        setFormData({ email: '', password: '' })
-        setUserToken('Este es el token uwu')
-        navigation.navigate('Dashboard')
+        setLoading(true)
+        const { error, data } = await useFetch({ url: `${API_URl}/auth/login`, method: 'POST', body: JSON.stringify(formData) })
+
+        if (error) {
+            setLoading(false)
+            Alert.alert('Error | Error', `${JSON.stringify(error)}`)
+        }
+
+        if (data) {
+            setLoading(false)
+            Alert.alert('BRD | Inicio de sesión', `¡Bienvenido de vuelta!`)
+            setUserToken({ access_token: data.access_token, refresh_token: data.refresh_token })
+            await storeData('AuthToken', data.access_token)
+            navigation.navigate('Dashboard')
+        }
     }
 
     const LogoApp = require('@/assets/images/app-logo.png') 
@@ -69,7 +85,8 @@ export default function Login({ navigation }: INavGlobal) {
                     <TouchableOpacity style={styleLogin.buttonLogin}
                     onPress={handleSumbit}
                     >
-                        <TextWithColor color="white">Iniciar Sesión</TextWithColor>
+                        
+                        <TextWithColor color="white">{loading ? 'Cargando...' : 'Iniciar Sesión'}</TextWithColor>
                     </TouchableOpacity>
 
                    <View style={styleLogin.goToRegister}>
