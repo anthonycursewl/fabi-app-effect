@@ -19,42 +19,26 @@
 
 *   **React Native:** Para una experiencia nativa en iOS y Android.
 *   **Node.js/Express.js:** Backend robusto y escalable para la gestión de usuarios y datos.
-*   **MongoDB:** Base de datos NoSQL para almacenar perfiles, matches y conversaciones.
-*   **Firebase Cloud Messaging (FCM):** Notificaciones push para mantenerte al tanto de nuevos matches y mensajes.
-*   **[Opcional] AWS/Azure/Google Cloud:** Para el despliegue y la infraestructura.
 
 ## ⚙️ Configuración e Instalación
 
 1.  **Clona el repositorio:**
 
     ```bash
-    git clone https://github.com/TuUsuario/fabi-effect.git  # Reemplaza con la URL de tu repositorio
-    cd fabi-effect
+    git clone https://github.com/anthonycursewl/fabi-app-effect.git 
+    cd fabi-app-effect
     ```
 
 2.  **Instala las dependencias:**
 
     ```bash
-    npm install  # o yarn install
-    cd ios && pod install && cd .. # Para proyectos iOS
+    npm install # or npx expo install <nombre-del-paquete> para añadir más dependencias usando Expo.
     ```
 
-3.  **Configura las variables de entorno:**
-
-    *   Crea un archivo `.env` en la raíz del proyecto.
-    *   Define las variables necesarias para tu backend y frontend (claves de API, URLs de bases de datos, etc.).
-    *   Ejemplo:
-
-        ```
-        API_URL=http://tu-api.com
-        DATABASE_URL=mongodb://localhost:27017/fabi-effect
-        FIREBASE_API_KEY=AIzaSy...
-        ```
-
-4.  **Ejecuta la aplicación:**
+3.  **Ejecuta la aplicación:**
 
     ```bash
-    npx react-native run-android  # o npx react-native run-ios
+    npx expo start # npx expo start --clear para iniciar la aplicación limpiando el cache.
     ```
 
     *Asegúrate de tener configurado tu entorno de desarrollo de React Native (Android Studio, Xcode, etc.).*
@@ -63,9 +47,7 @@
 
 (Aquí irían imágenes atractivas de la app, mostrando la interfaz y las principales funcionalidades)
 
-*   ![Captura de pantalla 1](./assets/screenshot1.png)  <!-- Reemplaza con la ruta de tu captura -->
-*   ![Captura de pantalla 2](./assets/screenshot2.png)
-*   ![Captura de pantalla 3](./assets/screenshot3.png)
+* Posteriormente se subirán algunas imagenes de la app en sí.
 
 ## 🤝 Contribución
 
@@ -83,7 +65,7 @@ Este proyecto está bajo la licencia [MIT License](LICENSE) - consulta el archiv
 
 ## 📧 Contacto
 
-*   Si tienes preguntas o comentarios, no dudes en contactarnos en [tu.email@example.com](mailto:tu.email@example.com).
+*   Si tienes preguntas o comentarios, no dudes en contactarnos en [zerpaanthony.wx@breadriuss.com](mailto:zerpaanthony.wx@breadriuss.com).
 
 ---
 
