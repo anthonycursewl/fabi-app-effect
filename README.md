@@ -2,18 +2,14 @@
 
 ![Logo de Fabi Effect](./assets/logo.png)  <!-- Reemplaza con la ruta de tu logo -->
 
-**Fabi Effect** es una innovadora aplicación móvil diseñada para conectar a contadores y contadoras que buscan relaciones significativas, tanto profesionales como personales. ¡Deja que la magia de los números te guíe al amor o a una valiosa colaboración!
+**Fabi Effect** es una innovadora aplicación móvil diseñada para conectar a contadores con sus clientes y ofrecer el tipo de servicio que necesitan.  Con esto, poder llevar su agenda de una manera más clara y precisa, evitando saturar fechas y no dejar clientes con citas inconclusas. 
 
 ## ✨ Características Principales
 
-*   **Perfiles Detallados:** Crea un perfil completo que muestre tu experiencia, habilidades, intereses y, por supuesto, ¡tu personalidad!
-*   **Filtros Avanzados:** Encuentra a tu pareja ideal (o a tu próximo socio/a) basándote en criterios específicos como especialidad contable, años de experiencia, ubicación y más.
 *   **Conexiones Profesionales:** Amplía tu red de contactos con contadores y contadoras de tu área, ¡perfecto para colaboraciones y oportunidades laborales!
-*   **Citas Casuales o Serias:** Define tus intenciones desde el principio. ¿Buscas una relación duradera o una simple reunión para intercambiar ideas?
-*   **Match Personalizado:** Nuestro algoritmo inteligente analiza tus preferencias y te sugiere perfiles compatibles.
-*   **Chat Integrado:** Comunícate de forma segura y privada con tus matches.
-*   **Eventos Exclusivos:** Accede a eventos y webinars diseñados específicamente para la comunidad contable.
-*   **[PRO] Mentorías Personalizadas:** Obtén acceso a mentores experimentados que te guiarán en tu carrera profesional y en el arte de las citas. (Característica Premium)
+*   **Exposición de Perfil:** La exposición de tu perfil como profesional, donde se muestra a los clientes tu especialidad creando así una red de clientes ajustada a tus habilidades!
+*   **Agenda personalizada:** Puedes exponer tu agenda personalizada a los demás clientes para tener la oportunidad de no duplicar citas.
+*   **Reprogramación de citas:** Si en algún momento alguna cita que haya sido programada, requiere de su reprogramación, puedes hacerlo en pocos taps, y notificar al cliente para confirmar la reprogramación!  
 
 ## 🚀 Tecnologías Utilizadas
 
