@@ -1,15 +1,51 @@
-import { View, ScrollView } from "react-native";
-import { ButtonCard } from "./ButtonCard";
+import { View, ScrollView, Alert, BackHandler } from "react-native";
+import ButtonCard from "./ButtonCard";
 
 // Contants
 import { ButtonsApp } from "../constants/ButtonsApp";
 
+// Hooks
+import { useEffect } from "react";
+
 // Navigation
-import { useNavigationState } from "@react-navigation/native";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 
-export default function AuthenticatedLayout({children }: { children: React.ReactNode }) {
+export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
 
+  const navigation = useNavigation();
   const currentPath = useNavigationState((state) => state.routes[state.index].name);
+  const routes = useNavigationState((state) => state.routes);
+  
+  useEffect(() => {
+
+    if (currentPath === 'Dashboard') {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            Alert.alert('BRD | Salir', '¿Desea salir de la app?', [
+                {
+                    text: 'No',
+                    onPress: () => {
+                        return true
+                    },
+                    style: 'cancel'
+                },
+                {
+                text: 'Si',
+                onPress: () => {
+                    BackHandler.exitApp()
+                    return true
+                }
+            }
+            ])
+            return true
+        })
+    }
+  
+    return () => {
+        BackHandler.removeEventListener('hardwareBackPress', () => {
+            return true
+         })
+     }
+  }, [currentPath])
 
   return (
     <>
@@ -48,7 +84,7 @@ export default function AuthenticatedLayout({children }: { children: React.React
 
             {/* Iteration in order to create the buttons. Buttons are in the constant ButtonsApp */}
             {ButtonsApp.map((item, index) => (
-              <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} />
+              <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} navigation={{ navigation: navigation }}/>
             ))}
 
 
