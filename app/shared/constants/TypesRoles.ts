@@ -5,17 +5,8 @@
  * the rest of the app and I can implement a better way later. It's not my main priority right now.
 */
 
-export const TYPES_ROLES = [
-    {
-        name: 'Administrador', 
-        value: 'Admin',
-    },
-    {
-        name: 'Usuario',
-        value: 'Default',
-    },
-    {
-        name: 'Contador',
-        value: 'Contdr',
-    }
-]
+export const TYPES_ROLES = {
+    ADMIN: 'Admin',
+    USER: 'Default',
+    PROFESIONAL: 'Contdr'
+}

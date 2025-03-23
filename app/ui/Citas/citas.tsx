@@ -14,6 +14,7 @@ import { AuthContext } from "@/app/shared/context/ContextProvider"
 
 // Constans
 import { newCitas } from "@/app/shared/constants/mockCitas"
+import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles"
 
 export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -31,30 +32,10 @@ export default function Citas() {
         };
       }, [scrollY]);
 
+    useEffect(() => {
+        console.log(user.role === TYPES_ROLES.USER)
+    }, [])
 
-     let restates = newCitas.length - 5
-    const testImage = 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
-
-
-    const fakeDataToLoad = [
-        { id: 1, title: 'Cita 1', description: 'Descripción de la cita 1', date: '2023-04-05', time: '10:00 AM', status: 'Pendiente', profilePic: testImage },
-        { id: 2, title: 'Cita 2', description: 'Descripción de la cita 2', date: '2023-04-06', time: '11:00 AM', status: 'Pendiente', profilePic: testImage },
-        { id: 3, title: 'Cita 3', description: 'Descripción de la cita 3', date: '2023-04-07', time: '12:00 PM', status: 'Pendiente', profilePic: testImage },
-        { id: 4, title: 'Cita 4', description: 'Descripción de la cita 4', date: '2023-04-08', time: '1:00 PM', status: 'Pendiente', profilePic: testImage },
-        { id: 5, title: 'Cita 5', description: 'Descripción de la cita 5', date: '2023-04-09', time: '2:00 PM', status: 'Pendiente', profilePic: testImage },
-        { id: 6, title: 'Cita 6', description: 'Descripción de la cita 6', date: '2023-04-09', time: '3:00 PM', status: 'Pendiente', profilePic: testImage },
-        { id: 7, title: 'Cita 7', description: 'Descripción de la cita 7', date: '2023-04-09', time: '4:00 PM', status: 'Pendiente', profilePic: testImage },
-    ]
-
-
-    const CitaCard = ({ cita }: { cita: any }) => {
-        return (
-            <View>
-                <TextWithColor style={{ fontSize: 16, fontWeight: 'bold' }} color="rgba(40, 40, 41, 0.83)">{cita.title}</TextWithColor>
-                <TextWithColor color="rgba(25, 25, 26, 0.53)">{cita.description}</TextWithColor>
-            </View>
-        )
-    }
     const stateAim = useAnimatedValue(0)
     const translateLetters = Animated.timing(stateAim,  {
         toValue: 1,
@@ -66,7 +47,7 @@ export default function Citas() {
     return (
         <AuthenticatedLayout>
             <ScrollView scrollEventThrottle={16}
-                onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: true })}
+                onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
                 style={{ flex: 1, width: '100%' }}>
                         
             <SafeAreaView style={stylesCitas.citasMain}>
@@ -136,9 +117,10 @@ const stylesCitas = StyleSheet.create({
     citasMain:{
         width: '100%',
         height: '100%',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center', 
-        marginTop: 40
+        marginTop: 60,
+        marginBottom: 45
     },
     decorationName: {
         position: 'absolute',

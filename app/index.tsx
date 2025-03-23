@@ -7,8 +7,6 @@ import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import Main from './ui/dashboard/main/main';
 import Citas from './ui/Citas/citas';
-import { Easing } from 'react-native';
-import { TransitionSpecs } from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -24,7 +22,7 @@ export default function Index() {
         cardStyle: {
           opacity: current.progress.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, 1], // Desvanecimiento de 0 (transparente) a 1 (opaco)
+            outputRange: [0, 1],
           }),
         },
       };
@@ -43,7 +41,7 @@ export default function Index() {
 
   return (
     <Stack.Navigator
-    screenOptions={{ animation: 'simple_push', animationDuration: 1 }} 
+    screenOptions={{ animation: 'fade', ...MyCustomTransition }} 
     >
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>

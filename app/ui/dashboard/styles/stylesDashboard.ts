@@ -113,7 +113,6 @@ export const styleDashboard = StyleSheet.create({
         padding: 15,
         justifyContent: 'center',
         alignItems: 'flex-start',
-        marginTop: 20,
         borderRadius: 12
     }, 
     buttonVerEspecialistas: {
@@ -124,7 +123,6 @@ export const styleDashboard = StyleSheet.create({
         borderWidth: .5,
         borderRadius: 20,
         alignItems: 'center',
-        marginTop: 10
     },
     header: {
         paddingTop: 25

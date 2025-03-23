@@ -1,4 +1,4 @@
-import { SafeAreaView, View, ScrollView, Image, TouchableOpacity, Animated, Alert, BackHandler } from "react-native";
+import { SafeAreaView, View, ScrollView, Image, Animated, Alert } from "react-native";
 import { useRef, useEffect, useState, useContext } from "react";
 
 // Components
@@ -6,12 +6,12 @@ import { StatusBar } from "expo-status-bar";
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import AuthenticatedLayout from "../../../shared/components/AuthenticatedLayout";
 import StatusBarApp from "../components/StatusBarApp";
+import InfoApproach from "../components/InfoApproach/InfoApproach";
 
 // Services
 import { secureFetch } from "@/app/shared/services/secureFetch";
 import { AuthContext } from "@/app/shared/context/ContextProvider";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
-import { useNavigationState } from "@react-navigation/native";
 
 // Styles
 import { styleDashboard } from "../styles/stylesDashboard";
@@ -60,9 +60,7 @@ export default function Main({ navigation }: INavGlobal) {
         }
     }, [user])
 
-
     let restates = newCitas.length - 5
-    const testImage = 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
 
     return (
         <>
@@ -100,91 +98,18 @@ export default function Main({ navigation }: INavGlobal) {
                             </View>
                         </View>
 
-                        <View style={styleDashboard.dashboardDescription}>
-                            <TextWithColor color="rgba(19, 19, 19, 0.83)" style={{ fontSize: 24 }}>Maneja tu agenda de citas de la <TextWithColor color="rgba(167, 114, 252, 0.83)" style={{ fontWeight: 'bold' }}>Mejor</TextWithColor> manera con CitasApp</TextWithColor>
-
-                            <TouchableOpacity style={styleDashboard.buttonEmpezarCitas} onPress={() => {console.log("wola")}}>
-                                <TextWithColor color="rgb(37, 37, 37)">Empezar</TextWithColor>
-                            </TouchableOpacity>
-                        </View>
+                        
 
 
                         <View style={styleDashboard.citasRecientes}>
-                            <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">Citas Recientes</TextWithColor>
-                            <TextWithColor color="rgba(51, 51, 51, 0.57)">Dale un vistazo a tus citas más recientes.</TextWithColor>
+                            <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">¿Como agendar una cita?</TextWithColor>
+                            <TextWithColor color="rgba(51, 51, 51, 0.57)">Con este pequeño tutorial podrás aprender a como agendar tu cita de manera sencilla y en pocos taps.</TextWithColor>
                         </View>
 
-                        <View style={styleDashboard.infoApproach}>
-                            <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center'}}>
-                                        <Image style={styleDashboard.infoApproachImg} source={{ uri: testImage }}/>
-                                        <View style={{ height: 145,
-                                        width: 1,
-                                        borderRightColor: 'rgba(162, 150, 202, 0.83)',
-                                        borderRightWidth: 1
-                                    }}></View>
-                                    </View>
-
-                                    <View style={styleDashboard.infoAboutCitas}>
-                                        <TextWithColor color="rgba(48, 48, 48, 0.83)">Busca tu especialista</TextWithColor>
-                                        <TextWithColor color="rgba(128, 128, 128, 0.83)" style={{ fontSize: 12, marginTop: 5 }}>Busca el especialista que más se adapte a tus necesidades.</TextWithColor>
-
-                                        <TouchableOpacity style={styleDashboard.buttonVerEspecialistas}>
-                                            <TextWithColor color="rgb(73, 73, 73)">Ver especialistas</TextWithColor>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center'}}>
-                                        <Image style={styleDashboard.infoApproachImg} source={{ uri: testImage }}/>
-                                        <View style={{ height: 145,
-                                        width: 1,
-                                        borderRightColor: 'rgba(162, 150, 202, 0.83)',
-                                        borderRightWidth: 1
-                                        }}></View>
-                                    </View>
-
-                                    <View style={styleDashboard.infoAboutCitas}>
-                                        <TextWithColor color="rgba(48, 48, 48, 0.83)">Revisa su disponibilidad para empezar a Agendar!</TextWithColor>
-                                        <TextWithColor color="rgba(128, 128, 128, 0.83)" style={{ fontSize: 12, marginTop: 5 }}>Una vez tengas el especialista que se adapte a tus necesidades, revisa su disponibilidad para empezar a agendar.</TextWithColor>
-                                    </View>
-                                </View>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center'}}>
-                                        <Image style={styleDashboard.infoApproachImg} source={{ uri: testImage }}/>
-                                        <View style={{ height: 195,
-                                        width: 1,
-                                        borderRightColor: 'rgba(162, 150, 202, 0.83)',
-                                        borderRightWidth: 1
-                                    }}></View>
-                                    </View>
-
-                                    <View style={styleDashboard.infoAboutCitas}>
-                                        <TextWithColor color="rgba(48, 48, 48, 0.83)">Cita agendada y lista para su confirmación!</TextWithColor>
-                                        <TextWithColor color="rgba(128, 128, 128, 0.83)" style={{ fontSize: 12, marginTop: 5 }}>Cuando agendas una cita el especialista debe marcar la confirmación/cancelación de la misma.</TextWithColor>
-                                        <TextWithColor 
-                                        color="rgba(145, 96, 23, 0.83)" 
-                                        style={{ fontSize: 12, backgroundColor: 'rgba(255, 205, 97, 0.85)', paddingHorizontal: 8, paddingVertical: 6, borderRadius: 10, marginTop: 10 }}
-                                        >Nota: la cita puede ser reprogramada por el contador y podrás aceptar o rechazar la programación.</TextWithColor>
-                                    </View>
-                                </View>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                                    <View style={{ alignItems: 'flex-start', justifyContent: 'center', width: '100%', transform: [{ translateX: -7 }] }}>
-                                        <Image style={styleDashboard.infoApproachImg} source={{ uri: testImage }}/>
-                                    </View>
-                                </View>
-
-                            </View>
-                            
-                        </View>
-
+                        <InfoApproach styleDashboard={styleDashboard} />  
                     </View>
                 </SafeAreaView>
+
             </ScrollView>
         </AuthenticatedLayout>
     </>
