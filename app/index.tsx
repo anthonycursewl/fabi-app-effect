@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import Main from './ui/dashboard/main/main';
 import Citas from './ui/Citas/citas';
+import CreateProfileContador from './ui/Profile/profile';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -47,6 +48,7 @@ export default function Index() {
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
       <Stack.Screen name="Dashboard" component={Main} options={{ headerShown: false }}/>
       <Stack.Screen name="Citas" component={Citas} options={{ headerShown: false }}/>
+      <Stack.Screen name="CreateProfileContador" component={CreateProfileContador} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }

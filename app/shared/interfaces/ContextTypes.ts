@@ -4,7 +4,7 @@ export interface ICType {
     userToken: Auth
     setUserToken: (type: Auth) => void
     user: User
-    setUser: (type: User) => void
+    setUser: (type: User) => void,
 }
 
 export interface Auth {

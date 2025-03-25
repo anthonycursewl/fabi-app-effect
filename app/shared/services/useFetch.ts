@@ -9,7 +9,7 @@ export const useFetch = async ({ url, method, body, headers }: IFetchProps) => {
     try {
         const response = await fetch(url, {
             method: method,
-            body: body,
+            body: body ? JSON.stringify(body) : null,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -22,7 +22,7 @@ export const useFetch = async ({ url, method, body, headers }: IFetchProps) => {
 
         const data = await response.json()
         return { data: data }
-    } catch (error) {
-        return { error: error }
+    } catch (error: any) {
+        return { error: error.message }
     }
 }

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from "react-native"
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from "react-native"
 
 // interfaces
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
@@ -7,6 +7,13 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 
 // Styles
 import { styleRegister } from "./styles/stylesRegister";
+import { useFetch } from "@/app/shared/services/useFetch";
+import { API_URl } from "@/app/config/api.breadriuss.config";
+
+// Services 
+import { generatorUID } from "@/app/shared/services/UUIDGenerator";
+import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
+import { ICON_DEFAULT } from "@/app/shared/constants/TypesIconUsers";
 
 interface FormDataLogin {
     email: string;
@@ -24,22 +31,44 @@ export default function Register({ navigation }: INavGlobal) {
     })
     const [loading, setLoading] = useState<boolean>(false)
 
-    const handleSumbit = () => {
-        if (!formData.email || !formData.password) {
+    const handleSumbit = async () => {
+        if (!formData.email || !formData.password || !formData.username || !formData.name) {
             console.log('Formulario incompleto');
             Alert.alert('Formulario incompleto', 'Por favor, complete todos los campos del formulario.')
             return
         }
 
+        setLoading(true)
         console.log(formData)
-        Alert.alert('Formulario enviado', 'El formulario se ha enviado correctamente')
+        const { error, data } = await useFetch({ url: `${API_URl}/user/save`, method: 'POST', body: {
+            id: generatorUID(),
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            name: formData.name,
+            role: TYPES_ROLES.USER,
+            created_at: new Date().toISOString(),
+            icon_url: ICON_DEFAULT
+        }})
+
+        if (error) {
+            setLoading(false)
+            Alert.alert('Error', `${error}`)
+        }
+
+        if (data) {
+            setLoading(false)
+            Alert.alert('BRD | Registro', `¡Bienvenido ${formData.name}, ya puedes iniciar sesión!`)
+            setFormData({ email: '', password: '', username: '', name: '' })
+            navigation.replace('Login')
+        }
     }
 
     const LogoApp = require('@/assets/images/app-logo.png')
 
     return (
         <View style={styleRegister.containerMainLogin}>
-            <Image source={{ uri: 'https://www.pngall.com/wp-content/uploads/12/Lines-PNG-HD-Image.png' }} style={styleRegister.decorateHeader}/>
+            <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/bg-fabi-app.png?alt=media&token=b05f1d93-5108-4ed3-b670-a8bcbb25f1bc' }} style={styleRegister.decorateHeader}/>
             <View style={{ width: '88%', gap: 12, position: 'relative' }}>
                 <View style={{ marginBottom: 20, alignItems: 'center' }}>
                     <Image source={LogoApp} style={styleRegister.loginImg}/>
@@ -52,14 +81,14 @@ export default function Register({ navigation }: INavGlobal) {
                     <TextWithColor>Nombres</TextWithColor>
                     <TextInput placeholder="Primer nombre Segundo nombre..."
                     style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, name: text})}
+                    onChangeText={(text) => setFormData( { ...formData, name: text })}
                     value={formData.name}
                     />
 
                     <TextWithColor>Nombre de Usuario</TextWithColor>
                     <TextInput placeholder="example.cuenta"
                     style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, username: text})}
+                    onChangeText={(text) => setFormData( { ...formData, username: text.toLowerCase().trim() })}
                     value={formData.username}
                     />
 
@@ -79,11 +108,11 @@ export default function Register({ navigation }: INavGlobal) {
                 </View>
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 15 }}>
-                    <TouchableOpacity style={styleRegister.buttonLogin}
+                    {!loading ? <TouchableOpacity style={styleRegister.buttonLogin}
                     onPress={handleSumbit}
                     >
                         <TextWithColor color="white">Registrarme</TextWithColor>
-                    </TouchableOpacity>
+                    </TouchableOpacity> : <ActivityIndicator size="large" color="#c58bdf" />}
 
                    <View style={styleRegister.goToRegister}>
                         <TextWithColor>¿Ya tienes una cuenta?</TextWithColor>

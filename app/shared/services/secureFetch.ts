@@ -30,9 +30,9 @@ export const secureFetch = async ({ options, setLoading }: SecureFetchsProps) =>
         setLoading(false)
         const data = await res.json()
         return { response: data }
-    } catch (error) {
-        console.log(error)
+    } catch (error: any) {
+        console.log(error.message)
         setLoading(false)
-        return { error: error }
+        return { error: error.message }
     }
 }

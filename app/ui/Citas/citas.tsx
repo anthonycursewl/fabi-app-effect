@@ -7,6 +7,7 @@ import { styleDashboard } from "../dashboard/styles/stylesDashboard"
 // Components
 import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
+import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 
 // Hooks
 import { useState, useContext, useRef, useEffect } from "react"
@@ -21,6 +22,13 @@ export default function Citas() {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
     const { user, setUser } = useContext(AuthContext)
+
+    // State of the date
+    const defaultStyles = useDefaultStyles();
+    const [date, setDate] =useState<DateType>();
+
+    // today xd
+    const today = new Date();
 
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
@@ -42,7 +50,6 @@ export default function Citas() {
         duration: 700,
         useNativeDriver: true
     }).start()
-    
 
     return (
         <AuthenticatedLayout>
@@ -82,25 +89,25 @@ export default function Citas() {
                     </View>
 
                     <View style={stylesCitas.registerCitas}>
-                        <View style={{ gap: 10 }}>
+                        <View>
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Descripción / Motivo</TextWithColor>
-                            <TextInput style={stylesCitas.inputCitas}/>
+                            <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Tienes un limite de 20 para exhibir tus especialidades.</TextWithColor>
+                        </View>                     
+                        <TextInput style={{ width: '100%', borderWidth: 1, borderColor: 'rgb(159, 102, 209)', borderRadius: 12, paddingHorizontal: 10 }} 
+                        multiline
+                        />
+
+                        <View>
+                            <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Fecha para la cita</TextWithColor>
+                            <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Elige el espcialista de tu preferencia para revisar su disponibilidad.</TextWithColor>
                         </View>
 
-                        <View style={{ gap: 10 }}>
-                            <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Fecha</TextWithColor>
-                            <TextInput style={stylesCitas.inputCitas}/>
-                        </View>
+                        <DateTimePicker mode="single" date={date} 
+                        onChange={({ date }) => setDate(date)}
+                        minDate={today}
+                        styles={defaultStyles}/>           
 
-                        <View style={{ gap: 10 }}>
-                            <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Hora</TextWithColor>
-                            <TextInput style={stylesCitas.inputCitas}/>
-                        </View>
-
-                        <View style={{ gap: 10 }}>
-                            <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Profesional</TextWithColor>
-                            <TextInput style={stylesCitas.inputCitas}/>
-                        </View>
+                      
 
                     </View>
                 </View>

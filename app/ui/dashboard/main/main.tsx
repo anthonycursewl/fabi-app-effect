@@ -7,6 +7,7 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 import AuthenticatedLayout from "../../../shared/components/AuthenticatedLayout";
 import StatusBarApp from "../components/StatusBarApp";
 import InfoApproach from "../components/InfoApproach/InfoApproach";
+import FirstStepMain from "../components/FirstStep/FirstStepMain";
 
 // Services
 import { secureFetch } from "@/app/shared/services/secureFetch";
@@ -75,7 +76,6 @@ export default function Main({ navigation }: INavGlobal) {
                 <SafeAreaView style={styleDashboard.dashboard}>
                     <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'transparent' : 'transparent'} style="dark"/>
 
-
                     <View style={styleDashboard.mainContainer}>
                         <View style={styleDashboard.userDashboard}>
                             <TextWithColor style={{ fontSize: 24, fontWeight: 'bold' }} color="rgba(40, 40, 41, 0.83)">{loading ? 'Cargando...' : `¡Hola ${user.name.split(' ')[0]}!`}</TextWithColor>
@@ -98,8 +98,7 @@ export default function Main({ navigation }: INavGlobal) {
                             </View>
                         </View>
 
-                        
-
+                        <FirstStepMain user={user} navigation={navigation}/>
 
                         <View style={styleDashboard.citasRecientes}>
                             <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">¿Como agendar una cita?</TextWithColor>

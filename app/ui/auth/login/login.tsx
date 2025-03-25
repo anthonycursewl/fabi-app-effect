@@ -11,7 +11,6 @@ import { useFetch } from "@/app/shared/services/useFetch";
 import { API_URl } from "@/app/config/api.breadriuss.config";
 
 // services
-import { handleLogin } from "./services/hadleLogin";
 import { storeData } from "@/app/store/storeData";
 
 interface FormDataLogin {
@@ -34,11 +33,11 @@ export default function Login({ navigation }: INavGlobal) {
         }
 
         setLoading(true)
-        const { error, data } = await useFetch({ url: `${API_URl}/auth/login`, method: 'POST', body: JSON.stringify(formData) })
+        const { error, data } = await useFetch({ url: `${API_URl}/auth/login`, method: 'POST', body: formData })
 
         if (error) {
             setLoading(false)
-            Alert.alert('Error | Error', `${JSON.stringify(error)}`)
+            Alert.alert('BRD | Error', `${error}`)
         }
 
         if (data) {
@@ -54,7 +53,7 @@ export default function Login({ navigation }: INavGlobal) {
 
     return (
         <View style={styleLogin.containerMainLogin}>
-            <Image source={{ uri: 'https://www.pngall.com/wp-content/uploads/12/Lines-PNG-HD-Image.png' }} style={styleLogin.decorateHeader}/>
+            <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/bg-fabi-app.png?alt=media&token=b05f1d93-5108-4ed3-b670-a8bcbb25f1bc' }} style={styleLogin.decorateHeader}/>
             <View style={{ width: '88%', gap: 12, position: 'relative' }}>
                 <View style={{ marginBottom: 20, alignItems: 'center', position: 'relative' }}>
                     <Image source={LogoApp} style={styleLogin.loginImg}/>
@@ -83,7 +82,7 @@ export default function Login({ navigation }: INavGlobal) {
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 15 }}>
                     <TouchableOpacity style={styleLogin.buttonLogin}
-                    onPress={handleSumbit}
+                    onPress={loading ? () => {} : handleSumbit}
                     >
                         
                         <TextWithColor color="white">{loading ? 'Cargando...' : 'Iniciar Sesión'}</TextWithColor>

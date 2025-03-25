@@ -1,0 +1,1 @@
+export const ICON_DEFAULT: string = 'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/profile-default.jpg?alt=media&token=60f5b6dc-6e9f-4c7a-8399-018d8796b831'

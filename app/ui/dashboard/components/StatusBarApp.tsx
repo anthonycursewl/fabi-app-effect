@@ -1,6 +1,29 @@
-import { SafeAreaView, View, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView, View, TouchableOpacity, Image, Alert } from "react-native";
+
+// Services
+import { removeItem } from "@/app/store/removeItem"; 
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { AuthContext } from "@/app/shared/context/ContextProvider";
 
 export default function StatusBarApp({ scrollPosition, styleDashboard }: { scrollPosition: number, styleDashboard: any }) {
+  const { setUser } = useContext(AuthContext)
+  const nav = useNavigation()
+  const deleteSesion = async (key: string) => {
+    Alert.alert('Cerrar Sesión', 
+      '¿Desea cerrar sesión?', 
+      [
+        {text: 'No', style: 'cancel'}, 
+        {text: 'Si', onPress: async () => {
+          await removeItem(key)
+          nav.goBack()
+          setUser({ id: '', username: '', email: '', password: '', created_at: '', role: '', name: '', iat: 0, exp: 0, jti: '' })
+        }}
+      ]
+      )
+  }
+  
+  
   return (
     <SafeAreaView
       style={[
@@ -27,13 +50,19 @@ export default function StatusBarApp({ scrollPosition, styleDashboard }: { scrol
           </TouchableOpacity>
         </View>
 
-        <View>
-          <Image
-            source={{
-              uri: "https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg",
-            }}
-            style={styleDashboard.profilePicture}
-          />
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 4 }}>
+          <TouchableOpacity onPress={() => {deleteSesion('AuthToken')}}>
+            <Image source={require("../../../../assets/images/logout-icon.png")} style={{ width: 32, height: 32 }}/>
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={() => {}}>
+            <Image
+              source={{
+                uri: "https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/profile-default.jpg?alt=media&token=60f5b6dc-6e9f-4c7a-8399-018d8796b831",
+              }}
+              style={styleDashboard.profilePicture}
+              />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
