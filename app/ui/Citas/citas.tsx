@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, TouchableOpacity, StyleSheet, useAnimatedValue, TextInput } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, TouchableOpacity, StyleSheet, useAnimatedValue, TextInput, Modal, FlatList } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -8,13 +8,13 @@ import { styleDashboard } from "../dashboard/styles/stylesDashboard"
 import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
+import { CustomPicker } from "./components/CustomPicker"
 
 // Hooks
 import { useState, useContext, useRef, useEffect } from "react"
 import { AuthContext } from "@/app/shared/context/ContextProvider"
 
 // Constans
-import { newCitas } from "@/app/shared/constants/mockCitas"
 import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles"
 
 export default function Citas() {
@@ -29,6 +29,10 @@ export default function Citas() {
 
     // today xd
     const today = new Date();
+
+    // Test of the picker
+    const [selectedValue, setSelectedValue] = useState<string | null>(null);
+    const values = ['Arroz', 'pollo', 'Pescado', 'toto']
 
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
@@ -50,6 +54,8 @@ export default function Citas() {
         duration: 700,
         useNativeDriver: true
     }).start()
+
+    
 
     return (
         <AuthenticatedLayout>
@@ -94,8 +100,14 @@ export default function Citas() {
                             <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Tienes un limite de 20 para exhibir tus especialidades.</TextWithColor>
                         </View>                     
                         <TextInput style={{ width: '100%', borderWidth: 1, borderColor: 'rgb(159, 102, 209)', borderRadius: 12, paddingHorizontal: 10 }} 
-                        multiline
-                        />
+                        multiline />
+
+                        <View>
+                            <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Especialista</TextWithColor>
+                            <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Aquí tienes una lista de especialistas para elegir de tu preferencia. Haz tap aquí para ver la lista más a detalle.</TextWithColor>
+                        </View>
+
+                        <CustomPicker items={values} selectedValue={selectedValue} onValueChange={setSelectedValue} placeholder="Especialidad"/>
 
                         <View>
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Fecha para la cita</TextWithColor>
@@ -106,8 +118,6 @@ export default function Citas() {
                         onChange={({ date }) => setDate(date)}
                         minDate={today}
                         styles={defaultStyles}/>           
-
-                      
 
                     </View>
                 </View>

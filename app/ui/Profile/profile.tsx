@@ -101,6 +101,7 @@ export default function CreateProfileContador() {
     }
 
     const handleSumbit = async () => {
+        console.log(profile)
         if (!profile.description || !profile.expertises.length || !profile.pro_contact.length) {
             return Alert.alert('BRD | Error', 'No puedes dejar campos vacios!')
         }
@@ -113,12 +114,18 @@ export default function CreateProfileContador() {
             return Alert.alert('BRD | Error', 'No puedes dejar menos de 2 especialidades o contactos!')
         }
 
-        setProfile({...profile, id: generatorUID() })
         const { error, response } = await secureFetch({ 
             options: {
                 url: `${API_URl}/user/save/profile`,
                 method: 'POST',
-                body: profile
+                body: {
+                    id: generatorUID(),
+                    expertises: profile.expertises,
+                    pro_contact: profile.pro_contact,
+                    description: profile.description,
+                    is_verified: profile.is_verified,
+                    user_id: profile.user_id
+                }
             },
             setLoading
         })
@@ -190,7 +197,9 @@ export default function CreateProfileContador() {
                                 profile.expertises.map((item, i) => (
                                         <TouchableOpacity onPress={() => {
                                             removeThing(i, 'expertises')
-                                        }}>
+                                        }}
+                                        key={i}
+                                        >
                                             <Image source={require('@/assets/images/cross-expertise.png')} style={{ width: 14, height: 14, position: 'absolute', top: -7, right: -7 }} />
                                             <TextWithColor style={{ fontSize: 14, backgroundColor: 'rgb(155, 128, 255)', paddingVertical: 4, paddingHorizontal: 10, borderRadius: 14 }} color="rgb(255, 255, 255)" key={i}>{item}</TextWithColor>
                                         </TouchableOpacity>
@@ -220,7 +229,9 @@ export default function CreateProfileContador() {
                                 profile.pro_contact.map((item, i) => (
                                         <TouchableOpacity onPress={() => {
                                             removeThing(i, 'contacts')
-                                        }}>
+                                        }}
+                                        key={i}
+                                        >
                                             <Image source={require('@/assets/images/cross-expertise.png')} style={{ width: 14, height: 14, position: 'absolute', top: -7, right: -7 }} />
                                             <TextWithColor style={{ fontSize: 14, backgroundColor: 'rgb(155, 128, 255)', paddingVertical: 4, paddingHorizontal: 10, borderRadius: 14 }} color="rgb(255, 255, 255)" key={i}>{item}</TextWithColor>
                                         </TouchableOpacity>
@@ -247,8 +258,8 @@ export default function CreateProfileContador() {
                                     width: '100%', justifyContent: 'center', 
                                     alignItems: 'center', backgroundColor: 'rgb(155, 128, 255)', 
                                     paddingVertical: 10, borderRadius: 12 }}
-                                    onPress={async () => {
-                                        await handleSumbit()
+                                    onPress={() => {
+                                        handleSumbit()
                                     }}>
                                 <TextWithColor color="rgb(255, 255, 255)">Crear perfil</TextWithColor>
                             </TouchableOpacity> : 
