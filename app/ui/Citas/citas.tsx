@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, TouchableOpacity, StyleSheet, useAnimatedValue, TextInput, Modal, FlatList } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, StyleSheet, useAnimatedValue, TextInput, Alert, ActivityIndicator } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -16,6 +16,10 @@ import { AuthContext } from "@/app/shared/context/ContextProvider"
 
 // Constans
 import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles"
+import { ColorsApp } from "@/app/shared/constants/ColorsApp"
+import { secureFetch } from "@/app/shared/services/secureFetch"
+import { API_URl } from "@/app/config/api.breadriuss.config"
+import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
 
 export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -27,12 +31,31 @@ export default function Citas() {
     const defaultStyles = useDefaultStyles();
     const [date, setDate] =useState<DateType>();
 
-    // today xd
-    const today = new Date();
-
     // Test of the picker
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
-    const values = ['Arroz', 'pollo', 'Pescado', 'toto']
+    const [conts, setConts] = useState<ContadorProfileData[]>([])
+
+    const getAllCont = async () => {
+        const { error, response } = await secureFetch({
+            options: {
+                url: `${API_URl}/user/all/cont?take=${10}&skip=${0}`,
+                method: 'GET',
+            },
+            setLoading
+        })
+
+        if (error) {
+            return Alert.alert('BRD | Un error ha ocurrido', `${error}`)
+        }
+
+        if (response) {
+            setConts(response)
+            console.log(response)
+        }
+    }
+
+    // today xd
+    const today = new Date();
 
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
@@ -46,6 +69,10 @@ export default function Citas() {
 
     useEffect(() => {
         console.log(user.role === TYPES_ROLES.USER)
+    }, [])
+
+    useEffect(() => {
+        getAllCont()
     }, [])
 
     const stateAim = useAnimatedValue(0)
@@ -99,15 +126,22 @@ export default function Citas() {
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Descripción / Motivo</TextWithColor>
                             <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Tienes un limite de 20 para exhibir tus especialidades.</TextWithColor>
                         </View>                     
-                        <TextInput style={{ width: '100%', borderWidth: 1, borderColor: 'rgb(159, 102, 209)', borderRadius: 12, paddingHorizontal: 10 }} 
-                        multiline />
+                        <TextInput style={{ width: '100%', borderWidth: 1, borderColor: ColorsApp.primary.color, borderRadius: 12, paddingHorizontal: 10 }} 
+                        multiline 
+                        placeholder="Escribe tu motivo..."
+                        />
 
                         <View>
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Especialista</TextWithColor>
                             <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Aquí tienes una lista de especialistas para elegir de tu preferencia. Haz tap aquí para ver la lista más a detalle.</TextWithColor>
                         </View>
-
-                        <CustomPicker items={values} selectedValue={selectedValue} onValueChange={setSelectedValue} placeholder="Especialidad"/>
+                        {
+                            !loading ? 
+                            <CustomPicker items={conts} selectedValue={selectedValue} onValueChange={setSelectedValue} placeholder="Selecciona a tu especialista..." /> :
+                            <View>
+                                <ActivityIndicator size="large" color={ColorsApp.primary.color} />
+                            </View>
+                        }
 
                         <View>
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Fecha para la cita</TextWithColor>

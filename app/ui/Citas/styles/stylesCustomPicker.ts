@@ -1,3 +1,4 @@
+import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 import { StyleSheet } from "react-native";
 
 export const stylesPicker = StyleSheet.create({
@@ -40,14 +41,15 @@ export const stylesPicker = StyleSheet.create({
       borderBottomColor: '#eee',
     },
     closeButton: {
-      backgroundColor: '#ddd',
+      backgroundColor: ColorsApp.primary.color,
       padding: 10,
-      borderRadius: 5,
+      borderRadius: 14,
       alignItems: 'center',
       marginTop: 10,
     },
     closeButtonText: {
       fontSize: 16,
+      color: 'white'
     },
     selectedText: {
       marginTop: 20,

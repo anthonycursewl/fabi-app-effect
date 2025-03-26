@@ -6,6 +6,8 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 import { stylesPicker } from "../styles/stylesCustomPicker";
 // Interfaces
 import { CustomPickerProps } from "../interfaces/CustomPickerProps";
+import { ColorsApp } from "@/app/shared/constants/ColorsApp";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
 export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerProps) => {
@@ -32,8 +34,8 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
       
         return (
           <View>
-            <TouchableOpacity style={stylesPicker.pickerButton} onPress={openModal}>
-              <TextWithColor style={stylesPicker.pickerButtonText}>
+            <TouchableOpacity style={{ borderWidth: 1, borderColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '100%', borderRadius: 12 }} onPress={openModal}>
+              <TextWithColor style={{ fontSize: 14, color: ColorsApp.placeholders.color }}>
                 {selectedValue ? selectedValue : placeholder}
               </TextWithColor>
             </TouchableOpacity>
@@ -44,7 +46,6 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
                   <FlatList
                     data={items}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item}
                   />
                   <TouchableOpacity style={stylesPicker.closeButton} onPress={closeModal}>
                     <TextWithColor style={stylesPicker.closeButtonText}>Cerrar</TextWithColor>

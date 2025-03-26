@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity, Image, Alert } from "react-native"
 
 // interfaces
@@ -24,7 +24,7 @@ export default function Login({ navigation }: INavGlobal) {
         password: ''
     })
     const [loading, setLoading] = useState<boolean>(false)
-    const { setUserToken } = useContext(AuthContext)
+    const { setUserToken, user } = useContext(AuthContext)
 
     const handleSumbit = async () => {
         if (!formData.email || !formData.password) {
@@ -48,6 +48,16 @@ export default function Login({ navigation }: INavGlobal) {
             navigation.navigate('Dashboard')
         }
     }
+
+    useEffect(() => {
+        if (user) {
+            navigation.navigate('Citas')
+        }
+
+        return () => {
+            setLoading(false)
+        }
+    }, [])
 
     const LogoApp = require('@/assets/images/app-logo.png') 
 
