@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, StyleSheet, useAnimatedValue, TextInput, Alert, ActivityIndicator } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, StyleSheet, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -32,13 +32,13 @@ export default function Citas() {
     const [date, setDate] =useState<DateType>();
 
     // Test of the picker
-    const [selectedValue, setSelectedValue] = useState<string | null>(null);
+    const [selectedValue, setSelectedValue] = useState<ContadorProfileData | null>(null);
     const [conts, setConts] = useState<ContadorProfileData[]>([])
 
     const getAllCont = async () => {
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/user/all/cont?take=${10}&skip=${0}`,
+                url: `${API_URl}/user/all/cont?take=${10}&skip=${1}`,
                 method: 'GET',
             },
             setLoading
@@ -154,9 +154,13 @@ export default function Citas() {
                         styles={defaultStyles}/>           
 
                     </View>
+
+                    <View>
+                        <TouchableOpacity>
+                            <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">Registrar cita</TextWithColor>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-
-
             </SafeAreaView>
         </ScrollView>
     </AuthenticatedLayout>

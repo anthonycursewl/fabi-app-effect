@@ -8,6 +8,7 @@ import { stylesPicker } from "../styles/stylesCustomPicker";
 import { CustomPickerProps } from "../interfaces/CustomPickerProps";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile";
 
 
 export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerProps) => {
@@ -26,9 +27,9 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
           closeModal();
         };
       
-        const renderItem = ({ item }: { item: any}) => (
+        const renderItem = ({ item }: { item: ContadorProfileData }) => (
           <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item)}>
-            <TextWithColor>{item}</TextWithColor>
+            <TextWithColor>{item.users.name}</TextWithColor>
           </TouchableOpacity>
         );
       
@@ -36,7 +37,7 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
           <View>
             <TouchableOpacity style={{ borderWidth: 1, borderColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '100%', borderRadius: 12 }} onPress={openModal}>
               <TextWithColor style={{ fontSize: 14, color: ColorsApp.placeholders.color }}>
-                {selectedValue ? selectedValue : placeholder}
+                {selectedValue ? selectedValue.users.name : placeholder}
               </TextWithColor>
             </TouchableOpacity>
       
