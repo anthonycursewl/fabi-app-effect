@@ -20,6 +20,7 @@ import { ColorsApp } from "@/app/shared/constants/ColorsApp"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
+import { Cita } from "@/app/shared/interfaces/CitaType"
 
 export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -34,6 +35,8 @@ export default function Citas() {
     // Test of the picker
     const [selectedValue, setSelectedValue] = useState<ContadorProfileData | null>(null);
     const [conts, setConts] = useState<ContadorProfileData[]>([])
+    // store data to register
+    const [cita, setCita] = useState<Cita>({} as Cita)
 
     const getAllCont = async () => {
         const { error, response } = await secureFetch({
@@ -82,7 +85,10 @@ export default function Citas() {
         useNativeDriver: true
     }).start()
 
-    
+
+    const handleRegisterCita = () => {
+        console.log(date)
+    }
 
     return (
         <AuthenticatedLayout>
@@ -129,6 +135,8 @@ export default function Citas() {
                         <TextInput style={{ width: '100%', borderWidth: 1, borderColor: ColorsApp.primary.color, borderRadius: 12, paddingHorizontal: 10 }} 
                         multiline 
                         placeholder="Escribe tu motivo..."
+                        value={cita.des_or_reason}
+                        onChangeText={text => setCita({ ...cita, des_or_reason: text })}
                         />
 
                         <View>
@@ -155,9 +163,11 @@ export default function Citas() {
 
                     </View>
 
-                    <View>
-                        <TouchableOpacity>
-                            <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">Registrar cita</TextWithColor>
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 8, paddingHorizontal: 15, borderRadius: 18, width: '100%', alignItems: 'center' }}
+                        onPress={handleRegisterCita}
+                        >
+                            <TextWithColor style={{ fontSize: 15 }} color="rgba(255, 255, 255, 0.83)">Registrar cita</TextWithColor>
                         </TouchableOpacity>
                     </View>
                 </View>
