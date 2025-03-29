@@ -221,11 +221,17 @@ export default function Citas() {
                     </View>
 
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 8, paddingHorizontal: 15, borderRadius: 18, width: '100%', alignItems: 'center' }}
-                        onPress={handleRegisterCita}
-                        >
+                        {
+                        !loading ?
+                            <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 8, paddingHorizontal: 15, borderRadius: 18, width: '100%', alignItems: 'center' }}
+                            onPress={handleRegisterCita}
+                            >
                             <TextWithColor style={{ fontSize: 15 }} color="rgba(255, 255, 255, 0.83)">Registrar cita</TextWithColor>
-                        </TouchableOpacity>
+                        </TouchableOpacity> :
+                        <View>
+                            <ActivityIndicator size="large" color={ColorsApp.primary.color} />
+                        </View>
+                        }
                     </View>
                 </View>
             </SafeAreaView>
