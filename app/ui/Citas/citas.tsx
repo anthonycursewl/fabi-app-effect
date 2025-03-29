@@ -21,12 +21,16 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
 import { Cita } from "@/app/shared/interfaces/CitaType"
+import { CustomTimePicker } from "./components/PickerTime"
+import { TimePickerType } from "./interfaces/CustomPickerTime"
+import { generatorUID } from "@/app/shared/services/UUIDGenerator"
+import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas"
 
 export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
-    const { user, setUser } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
     // State of the date
     const defaultStyles = useDefaultStyles();
@@ -37,6 +41,20 @@ export default function Citas() {
     const [conts, setConts] = useState<ContadorProfileData[]>([])
     // store data to register
     const [cita, setCita] = useState<Cita>({} as Cita)
+
+    // Time picker info
+    const [time, setTime] = useState<TimePickerType>({ value: '', label: '' })
+    const schedule = [
+        { value: '09:00 AM', label: '09:00 AM' },
+        { value: '10:00 AM', label: '10:00 AM' },
+        { value: '11:00 AM', label: '11:00 AM' },
+        { value: '12:00 PM', label: '12:00 PM' },
+        { value: '01:00 PM', label: '01:00 PM' },
+        { value: '02:00 PM', label: '02:00 PM' },
+        { value: '03:00 PM', label: '03:00 PM' },
+        { value: '04:00 PM', label: '04:00 PM' },
+        { value: '05:00 PM', label: '05:00 PM' },
+    ]
 
     const getAllCont = async () => {
         const { error, response } = await secureFetch({
@@ -86,8 +104,39 @@ export default function Citas() {
     }).start()
 
 
-    const handleRegisterCita = () => {
-        console.log(date)
+    const handleRegisterCita = async () => {
+        if (!selectedValue || date === undefined || time.value === '' || cita.des_or_reason === '') {
+            return Alert.alert('BRD | Un error ha ocurrido', 'Por favor, completa todos los campos.')
+        }
+
+        // Verificar si la cita no es en un domingo
+        if (`${date}`.includes('Sun')) {
+            return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita en un domingo.')
+        }   
+
+        const newCita = {
+            id: generatorUID(),
+            des_or_reason: cita.des_or_reason,
+            date: date, 
+            cont_id: selectedValue.id,
+            status: TYPES_STATUS_CITAS.PENDING,
+            user_id: user.id
+        }
+        
+        const { response, error } = await secureFetch({
+            options: {
+                url: `${API_URl}/cita/save`,
+                method: 'POST',
+                body: newCita
+            }, setLoading})
+
+            if (error) {
+                return Alert.alert('BRD | Un error ha ocurrido', `${error}`)
+            }
+
+            if (response) {
+                return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
+            }
     }
 
     return (
@@ -159,8 +208,11 @@ export default function Citas() {
                         <DateTimePicker mode="single" date={date} 
                         onChange={({ date }) => setDate(date)}
                         minDate={today}
-                        styles={defaultStyles}/>           
+                        styles={defaultStyles}/>    
 
+                        <View style={{ marginTop: 10, marginBottom: 20 }}>
+                            <CustomTimePicker items={schedule} selectedValue={time} onValueChange={setTime} placeholder="Selecciona la hora de la cita..." />
+                        </View>
                     </View>
 
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>

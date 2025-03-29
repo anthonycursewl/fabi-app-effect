@@ -5,10 +5,10 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 // Styles 
 import { stylesPicker } from "../styles/stylesCustomPicker";
 // Interfaces
-import { CustomPickerProps } from "../interfaces/CustomPickerProps";
+import { CustomPickerTimeProps, TimePickerType } from "../interfaces/CustomPickerTime";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 
-export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerProps) => {
+export const CustomTimePicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerTimeProps) => {
         const [modalVisible, setModalVisible] = useState<boolean>(false);
       
         const openModal = () => {
@@ -24,17 +24,17 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
           closeModal();
         };
       
-        const renderItem = ({ item }: { item: any }) => (
+        const renderItem = ({ item }: { item: TimePickerType }) => (
           <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item)}>
-            <TextWithColor>{item?.users?.name}</TextWithColor>
+            <TextWithColor>{item.value}</TextWithColor>
           </TouchableOpacity>
         );
       
         return (
           <View>
             <TouchableOpacity style={{ borderWidth: 1, borderColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '100%', borderRadius: 12 }} onPress={openModal}>
-              <TextWithColor style={{ fontSize: 14, color: ColorsApp.placeholders.color }}>
-                {selectedValue ? selectedValue.users.name : placeholder}
+              <TextWithColor style={{ fontSize: 14, color: selectedValue?.value ? 'rgb(24, 24, 24)' : ColorsApp.placeholders.color }}>
+                {selectedValue?.value ? selectedValue.label : placeholder}
               </TextWithColor>
             </TouchableOpacity>
       
