@@ -9,22 +9,26 @@ import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 import { CustomPicker } from "./components/CustomPicker"
+import { CustomTimePicker } from "./components/PickerTime"
 
 // Hooks
 import { useState, useContext, useRef, useEffect } from "react"
 import { AuthContext } from "@/app/shared/context/ContextProvider"
 
 // Constans
-import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles"
 import { ColorsApp } from "@/app/shared/constants/ColorsApp"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
+import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas"
+
+// interfaces
 import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
 import { Cita } from "@/app/shared/interfaces/CitaType"
-import { CustomTimePicker } from "./components/PickerTime"
 import { TimePickerType } from "./interfaces/CustomPickerTime"
+import { PaginationType } from "./interfaces/PaginationTypes"
+
+// Services
 import { generatorUID } from "@/app/shared/services/UUIDGenerator"
-import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas"
 
 export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -44,6 +48,12 @@ export default function Citas() {
 
     // Time picker info
     const [time, setTime] = useState<TimePickerType>({ value: '', label: '' })
+
+    // This is the schedule of the counters. It will be displayed in the picker
+    /**
+     * Obviously, this is supposed to be refactor in the future. So far, I'll move it to a constant
+     * 
+     */
     const schedule = [
         { value: '09:00 AM', label: '09:00 AM' },
         { value: '10:00 AM', label: '10:00 AM' },
@@ -56,10 +66,16 @@ export default function Citas() {
         { value: '05:00 PM', label: '05:00 PM' },
     ]
 
+    const [pagination, setPagination] = useState<PaginationType>({ skip: 1, take: 10, isEnd: false })
     const getAllCont = async () => {
+        if (pagination.isEnd) {
+            console.log('No hay mas contadores')
+            return
+        }
+
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/user/all/cont?take=${10}&skip=${1}`,
+                url: `${API_URl}/user/all/cont?take=${pagination.take}&skip=${pagination.skip}`,
                 method: 'GET',
             },
             setLoading
@@ -70,6 +86,9 @@ export default function Citas() {
         }
 
         if (response) {
+            if (response.length < pagination.take) {
+                setPagination({ ...pagination, isEnd: true })
+            }
             setConts(response)
             console.log(response)
         }
@@ -88,9 +107,6 @@ export default function Citas() {
         };
       }, [scrollY]);
 
-    useEffect(() => {
-        console.log(user.role === TYPES_ROLES.USER)
-    }, [])
 
     useEffect(() => {
         getAllCont()
@@ -216,7 +232,15 @@ export default function Citas() {
                         styles={defaultStyles}/>    
 
                         <View style={{ marginTop: 10, marginBottom: 20 }}>
-                            <CustomTimePicker items={schedule} selectedValue={time} onValueChange={setTime} placeholder="Selecciona la hora de la cita..." />
+                            <CustomTimePicker 
+                            items={schedule} 
+                            selectedValue={time} 
+                            onValueChange={setTime} 
+                            placeholder="Selecciona la hora de la cita..." 
+                            loadMore={getAllCont}
+                            pagination={pagination}
+                            setPagination={setPagination}
+                            />
                         </View>
                     </View>
 

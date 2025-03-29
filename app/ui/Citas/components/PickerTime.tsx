@@ -8,7 +8,7 @@ import { stylesPicker } from "../styles/stylesCustomPicker";
 import { CustomPickerTimeProps, TimePickerType } from "../interfaces/CustomPickerTime";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 
-export const CustomTimePicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerTimeProps) => {
+export const CustomTimePicker = ({ items, selectedValue, onValueChange, placeholder, loadMore, pagination, setPagination }: CustomPickerTimeProps) => {
         const [modalVisible, setModalVisible] = useState<boolean>(false);
       
         const openModal = () => {
@@ -44,6 +44,10 @@ export const CustomTimePicker = ({ items, selectedValue, onValueChange, placehol
                   <FlatList
                     data={items}
                     renderItem={renderItem}
+                    onEndReached={() => {
+                      setPagination({ ...pagination, skip: pagination.skip + 1})
+                      loadMore();
+                    }}
                   />
                   <TouchableOpacity style={stylesPicker.closeButton} onPress={closeModal}>
                     <TextWithColor style={stylesPicker.closeButtonText}>Cerrar</TextWithColor>
