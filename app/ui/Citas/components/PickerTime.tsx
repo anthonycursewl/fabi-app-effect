@@ -20,12 +20,12 @@ export const CustomTimePicker = ({ items, selectedValue, onValueChange, placehol
         };
       
         const handleItemPress = (item: any) => {
-          onValueChange(item);
+          onValueChange({ value: item, label: item });
           closeModal();
         };
       
         const renderItem = ({ item }: { item: TimePickerType }) => (
-          <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item)}>
+          <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item.value)}>
             <TextWithColor>{item.value}</TextWithColor>
           </TouchableOpacity>
         );

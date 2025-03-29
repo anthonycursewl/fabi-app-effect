@@ -120,7 +120,8 @@ export default function Citas() {
             date: date, 
             cont_id: selectedValue.id,
             status: TYPES_STATUS_CITAS.PENDING,
-            user_id: user.id
+            user_id: user.id,
+            hour: time.value
         }
         
         const { response, error } = await secureFetch({
@@ -138,6 +139,10 @@ export default function Citas() {
                 return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
             }
     }
+
+    useEffect(() => {
+        console.log(time.value)
+    }, [])
 
     return (
         <AuthenticatedLayout>
