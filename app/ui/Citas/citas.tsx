@@ -156,10 +156,6 @@ export default function Citas() {
             }
     }
 
-    useEffect(() => {
-        console.log(time.value)
-    }, [])
-
     return (
         <AuthenticatedLayout>
             <ScrollView scrollEventThrottle={16}
