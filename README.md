@@ -1,6 +1,5 @@
 # Fabi Effect: La App de Citas para Contadores 💖💼
 
-![Logo de Fabi Effect](./assets/logo.png)
 - I'll add my logo here soon xoxo.
 
 **Fabi Effect** es una innovadora aplicación móvil diseñada para conectar a contadores con sus clientes y ofrecer el tipo de servicio que necesitan.  Con esto, poder llevar su agenda de una manera más clara y precisa, evitando saturar fechas y no dejar clientes con citas inconclusas. 
@@ -67,3 +66,7 @@ Este proyecto está bajo la licencia [MIT License](LICENSE) - consulta el archiv
 ---
 
 **Fabi Effect - Conectando Contadores, Creando Relaciones 💖💼**
+
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; margin-top: 50px;">
+    <img src='https://www.breadriuss.com/logo_recortado.png' style='width: 70px; height: auto;'/>
+</div>
