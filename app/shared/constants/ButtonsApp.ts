@@ -8,8 +8,7 @@ export const ButtonsApp = [
     { 
         icon: require("@/assets/images/nav/profile-icon.png"), 
         name: "Mis citas",
-        namePath: "MisCitas"
-         
+        namePath: "CitasUser"
     },
     { 
         icon: require("@/assets/images/nav/citas-icon.png"), 

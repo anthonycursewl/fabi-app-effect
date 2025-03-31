@@ -1,15 +1,23 @@
 import { getData } from "@/app/store/getData"
 
+type MethodsAllowed = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' 
+
 interface SecureFetchsProps {
     options: { 
         url: string
-        method: string
+        method: MethodsAllowed
         body?: any
         headers?: any
      }
      setLoading: (value: boolean) => void
 }
-
+/**
+ * Función para hacer peticiones seguras
+ * Aquí ya se maneja el envio del token al servidor para los permisos.
+ * @param options 
+ * @returns { response: any, error: string }
+ * 
+*/
 export const secureFetch = async ({ options, setLoading }: SecureFetchsProps) => {
     try {
         setLoading(true)
