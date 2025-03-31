@@ -7,8 +7,7 @@ export default function CitaUser() {
     return  (
         <AuthenticatedLayout>
             <TextWithColor>Epa</TextWithColor>
-
-
+            
         </AuthenticatedLayout>
     )
 }
