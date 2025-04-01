@@ -211,7 +211,7 @@ export default function Citas() {
                         minDate={today}
                         styles={defaultStyles}/>    
 
-                        <View style={{ marginTop: 10, marginBottom: 20 }}>
+                        <View style={{ marginBottom: 20 }}>
                             <CustomTimePicker 
                             items={schedule} 
                             selectedValue={time} 
@@ -243,7 +243,6 @@ export default function Citas() {
     </AuthenticatedLayout>
     )
 }
-
 
 const stylesCitas = StyleSheet.create({
     citasMain:{
