@@ -1,9 +1,36 @@
 import { ScrollView, View } from "react-native";
 import { OptionFilter } from "./OptionFilter";
 
-export default function FilterCitas() {
+
+interface FilterCitasProps {
+    filter: string;
+    setFilter: (filter: string) => void
+}
+
+export default function FilterCitas({ filter, setFilter }: FilterCitasProps) {
      // Constants to filter
-     const typeFilter = ['Pendiente', 'Atendida', 'Cancelada', 'Reagendada']
+  const typeFilter = [
+      {
+        name: "Todo",
+        value: "all"
+      },
+      {
+      name: "Pendiente",
+      value: "pending"
+      },
+      {
+        name: "Confirmada",
+        value: "confirmed"
+      },
+      {
+        name: "Cancelada",
+        value: "canceled"
+      },
+      {
+        name: "Reagendada",
+        value: "rescheduled"
+      }
+  ]
 
   return (
     <ScrollView horizontal style={{ width: "90%" }}
@@ -18,7 +45,7 @@ export default function FilterCitas() {
         }}
       >
         {typeFilter.map((item, index) => (
-          <OptionFilter key={index} item={item} />
+          <OptionFilter key={index} item={item} setFilter={setFilter} filter={filter}/>
         ))}
       </View>
     </ScrollView>

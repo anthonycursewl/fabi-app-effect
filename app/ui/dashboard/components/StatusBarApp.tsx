@@ -23,7 +23,6 @@ export default function StatusBarApp({ scrollPosition, styleDashboard }: { scrol
       )
   }
   
-  
   return (
     <SafeAreaView
       style={[

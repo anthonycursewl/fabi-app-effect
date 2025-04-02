@@ -17,7 +17,7 @@ export default function FirstStepMain({ user, navigation }: FirstStepMainProps) 
 
     if (user.role === TYPES_ROLES.ADMIN) {
         return (
-            <View style={{ alignItems: 'flex-start', justifyContent: 'center', width: '100%', marginTop: 20, gap: 5 }}>
+        <View style={{ alignItems: 'flex-start', justifyContent: 'center', width: '100%', marginTop: 20, gap: 5 }}>
             <TextWithColor style={{ fontSize: 24 }}>Revisa la actividad de tus especialistas y gestiona <TextWithColor style={{ fontSize: 24, color: 'rgb(199, 136, 253)', fontWeight: 'bold' }}>Actividades</TextWithColor> para mejorar la experiencia de usuario!</TextWithColor>
             
             <TouchableOpacity style={{ backgroundColor: 'rgb(199, 136, 253)', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 12 }}>
