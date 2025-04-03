@@ -41,6 +41,7 @@ export default function CitaUser() {
     })
 
     const MAIN_PART_URL = `${API_URl}/cita/get/all/byuserid/${user.id}`
+    // Move this to a function.
     const FILTER_URL = `${MAIN_PART_URL}?take=${pagination.take}&skip=${pagination.skip}&filter=${filter}` 
 
     const getAllData = async () => {
