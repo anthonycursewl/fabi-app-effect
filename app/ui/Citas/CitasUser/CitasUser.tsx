@@ -121,7 +121,7 @@ export default function CitaUser() {
                         </TextWithColor>
                         <TextWithColor style={{ fontSize: 13 }} color="rgba(128, 128, 128, 0.83)">
                             ¡Bienvenido a la sección de citas!
-                            Aquí podrás ver tus citas y gestionarlas.
+                            Aquí podrás ver tus citas y gestionarlas
                         </TextWithColor>
                     </View>
 
@@ -134,7 +134,7 @@ export default function CitaUser() {
                     showsVerticalScrollIndicator={false}
                     style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
                     contentContainerStyle={{ gap: 10 }}
-                    renderItem={({ item }) => CardContentC(item)}
+                    renderItem={({ item }) => <CardContentC item={item}/>}
                     ListEmptyComponent={ListEmptyComponent}
                     onEndReachedThreshold={0.1}
                     onEndReached={() => {
