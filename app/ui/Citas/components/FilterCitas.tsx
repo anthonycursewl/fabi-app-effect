@@ -1,10 +1,10 @@
 import { ScrollView, View } from "react-native";
 import { OptionFilter } from "./OptionFilter";
-
+import { TypeFilter } from "../interfaces/TypeFilter";
 
 interface FilterCitasProps {
     filter: string;
-    setFilter: (filter: string) => void
+    setFilter: (filter: TypeFilter) => void
 }
 
 export default function FilterCitas({ filter, setFilter }: FilterCitasProps) {
@@ -45,7 +45,7 @@ export default function FilterCitas({ filter, setFilter }: FilterCitasProps) {
         }}
       >
         {typeFilter.map((item, index) => (
-          <OptionFilter key={index} item={item} setFilter={setFilter} filter={filter}/>
+          <OptionFilter key={index} item={item as { name: TypeFilter, value: TypeFilter }} setFilter={setFilter} filter={filter}/>
         ))}
       </View>
     </ScrollView>

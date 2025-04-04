@@ -16,6 +16,7 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 
 // Interfaces
 import { Cita } from "@/app/shared/interfaces/CitaType"
+import { TypeFilter } from "../interfaces/TypeFilter"
 
 interface TypesCitas {
     all: Cita[];
@@ -25,13 +26,27 @@ interface TypesCitas {
     rescheduled: Cita[];
 }
 
+interface PaginationType {
+    all: { skip: number; take: number; isEnd: boolean };
+    pending: { skip: number; take: number; isEnd: boolean };
+    confirmed: { skip: number; take: number; isEnd: boolean };
+    canceled: { skip: number; take: number; isEnd: boolean };
+    rescheduled: { skip: number; take: number; isEnd: boolean };
+}
+
 export default function CitaUser() {
     const { user } = useContext(AuthContext)
-    const [pagination, setPagination] = useState({ skip: 1, take: 10, isEnd: false })
+    const [pagination, setPagination] = useState<PaginationType>({
+        all: { skip: 1, take: 10, isEnd: false },
+        pending: { skip: 1, take: 10, isEnd: false },
+        confirmed: { skip: 1, take: 10, isEnd: false },
+        canceled: { skip: 1, take: 10, isEnd: false },
+        rescheduled: { skip: 1, take: 10, isEnd: false },
+    })
     const [loading, setLoading] = useState<boolean>(false)
 
     // Status of the filter
-    const [filter, setFilter] = useState<string>('all')
+    const [filter, setFilter] = useState<TypeFilter>('all')
     const [filteredCitas, setFilteredCitas] = useState<TypesCitas>({
         all: [],
         pending: [],
@@ -41,53 +56,58 @@ export default function CitaUser() {
     })
 
     const MAIN_PART_URL = `${API_URl}/cita/get/all/byuserid/${user.id}`
-    // Move this to a function.
-    const FILTER_URL = `${MAIN_PART_URL}?take=${pagination.take}&skip=${pagination.skip}&filter=${filter}` 
 
-    const getAllData = async () => {
-        if (pagination.isEnd) return 
+    // I was about to use this function to do something but I can't remember what. xoxo
+    // I'll leave it here to remember.
+    const resetPagination = () => {
+        setPagination({
+            all: { skip: 1, take: 10, isEnd: false },
+            pending: { skip: 1, take: 10, isEnd: false },
+            confirmed: { skip: 1, take: 10, isEnd: false },
+            canceled: { skip: 1, take: 10, isEnd: false },
+            rescheduled: { skip: 1, take: 10, isEnd: false },
+        })
+    }
 
+    const getFilterdUrl = (fetchFilter: TypeFilter, pagination: PaginationType): string  => {
+        const paginationConfig = pagination[fetchFilter]
+        if (!paginationConfig) return 'Invalid fetchFilter.'
+
+        return `${MAIN_PART_URL}?take=${paginationConfig.take}&skip=${paginationConfig.skip}&filter=${fetchFilter}`
+    }
+
+    const getAllFilteredData = async (filter: TypeFilter) => {
+        if (pagination[filter].isEnd) {
+            return
+        }
+
+        const FILTERED_URL = getFilterdUrl(filter, pagination)
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/cita/get/all/byuserid/${user.id}?take=${pagination.take}&skip=${pagination.skip}`,
+                url: FILTERED_URL,
                 method: 'GET',
             },
-            setLoading
+            setLoading: setLoading
         })
 
         if (error) {
+            console.log(error)
             return Alert.alert('BRD | Un error ha ocurrido', `${error}`)
         }
 
         if (response) {
-            if (response.length < pagination.take) {
-                setPagination({ ...pagination, isEnd: true })
+            if (response.length < pagination[filter].take) {
+                setPagination({ ...pagination, [filter]: { ...pagination[filter], isEnd: true }})
             }
 
-            if (filter === 'all') {
-                setFilteredCitas(prev => ({ ...prev, all: [...prev.all, ...response] }))
-            }
-
-            if (filter === 'pending') {
-                setFilteredCitas(prev => ({ ...prev, pending: [...prev.pending, ...response] }))
-            }
-
-            if (filter === 'confirmed') {
-                setFilteredCitas(prev => ({ ...prev, confirmed: [...prev.confirmed, ...response] }))
-            }
-
-            if (filter === 'canceled') {
-                setFilteredCitas(prev => ({ ...prev, canceled: [...prev.canceled, ...response] }))
-            }
-
-            if (filter === 'rescheduled') {
-                setFilteredCitas(prev => ({ ...prev, rescheduled: [...prev.rescheduled, ...response] }))
-            }
+            setFilteredCitas({ ...filteredCitas, [filter]: response })
         }
+
     }
 
     useEffect(() => {
-        getAllData()
+        console.log(`BRD | Filter has changed to ${filter}`)
+        getAllFilteredData(filter)
     }, [filter])
 
 
@@ -110,19 +130,19 @@ export default function CitaUser() {
 
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '76%' }}>
                     <FlatList 
-                    data={
-                        filter === 'all' ? filteredCitas.all :
-                        filter === 'pending' ? filteredCitas.pending :
-                        filter === 'confirmed' ? filteredCitas.confirmed :
-                        filter === 'canceled' ? filteredCitas.canceled :
-                        filteredCitas.rescheduled
-                    }
+                    data={filteredCitas[filter]}
                     showsVerticalScrollIndicator={false}
                     style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
                     contentContainerStyle={{ gap: 10 }}
                     renderItem={({ item }) => CardContentC(item)}
                     ListEmptyComponent={ListEmptyComponent}
                     onEndReachedThreshold={0.1}
+                    onEndReached={() => {
+                        if (!pagination[filter].isEnd && !loading) {
+                            setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
+                            getAllFilteredData(filter)
+                        }
+                    }}
                     />
                 </View>
             </>    
@@ -139,3 +159,4 @@ const styleCitasUser = StyleSheet.create({
         paddingTop: 20
     }
 })
+

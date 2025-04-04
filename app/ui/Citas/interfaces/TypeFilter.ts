@@ -1,0 +1,1 @@
+export type TypeFilter = 'all' | 'pending' | 'confirmed' | 'canceled' | 'rescheduled'
