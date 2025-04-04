@@ -1,24 +1,48 @@
-import { View, TouchableOpacity, Modal, Alert } from "react-native"
+import { View, TouchableOpacity, Modal, Alert, ActivityIndicator } from "react-native"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import { RenderTypeStatus } from "./RenderTypeStatus"
 import { useState } from "react"
+import { secureFetch } from "@/app/shared/services/secureFetch"
+import { API_URl } from "@/app/config/api.breadriuss.config"
 
 export const CardContentC = ({ item }: { item: any }): JSX.Element => { 
     const date = new Date(item.date)
     // state of the long press
     const [isSelected, setIsSelected] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleLongPress = () => {
         console.log('Long press detected here')
         setIsSelected(!isSelected)
     }
 
+
+    const handleDeleteCita = async () => {
+        const { response, error} = await secureFetch({
+            options: {
+                url: `${API_URl}/cita/delete/${item.id}`,
+                method: 'DELETE'
+            },
+            setLoading
+        })
+
+        if (error) {
+            return Alert.alert('Error', `${error}`)
+        }
+
+
+        if (response) {
+            return Alert.alert('Cita eliminada', 'La cita ha sido eliminada con exito')
+        }
+
+    }
+
     const handleDelete = () => {
         Alert.alert('Eliminar cita', 
             '¿Estas seguro de querer eliminar esta cita?', 
             [{ text: 'Si', 
-            onPress: () => console.log('Si') }, 
-            { text: 'No', onPress: () => console.log('No') }
+            onPress: () => handleDeleteCita() }, 
+            { text: 'No', onPress: () => {} }
         ])
     }
      
@@ -74,11 +98,12 @@ export const CardContentC = ({ item }: { item: any }): JSX.Element => {
                     </View>
 
                     <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
-                        <TouchableOpacity style={{ backgroundColor: 'red', padding: 10, borderRadius: 10, width: '100%', alignItems: 'center' }}
+                        {!loading ? <TouchableOpacity style={{ backgroundColor: 'red', padding: 10, borderRadius: 10, width: '100%', alignItems: 'center' }}
                         onPress={handleDelete}
                         >
                             <TextWithColor style={{ color: 'white', fontSize: 16 }}>Eliminar</TextWithColor>
-                        </TouchableOpacity>
+                        </TouchableOpacity> :
+                        <ActivityIndicator size={'large'} color={'red'} />}
                     </View>
                 </View>
             </View>
