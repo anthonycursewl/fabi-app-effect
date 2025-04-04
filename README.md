@@ -1,4 +1,4 @@
-# Fabi Effect: La App de Citas para Contadores 💖💼
+# Fabi Effect: La App de Citas para Contadores 💼
 
 - I'll add my logo here soon xoxo.
 
@@ -65,7 +65,7 @@ Este proyecto está bajo la licencia [MIT License](LICENSE) - consulta el archiv
 
 ---
 
-**Fabi Effect - Conectando Contadores, Creando Relaciones 💖💼**
+**Fabi Effect - Conectando Contadores, Creando Relaciones 💼**
 
 <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; margin-top: 50px;">
     <img src='https://www.breadriuss.com/logo_recortado.png' style='width: 70px; height: auto;'/>
