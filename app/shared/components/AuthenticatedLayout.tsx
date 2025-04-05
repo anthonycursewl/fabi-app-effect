@@ -14,38 +14,6 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
 
   const navigation = useNavigation();
   const currentPath = useNavigationState((state) => state.routes[state.index].name);
-  const routes = useNavigationState((state) => state.routes);
-  
-  useEffect(() => {
-
-    if (currentPath === 'Dashboard') {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            Alert.alert('BRD | Salir', '¿Desea salir de la app?', [
-                {
-                    text: 'No',
-                    onPress: () => {
-                        return true
-                    },
-                    style: 'cancel'
-                },
-                {
-                text: 'Si',
-                onPress: () => {
-                    BackHandler.exitApp()
-                    return true
-                }
-            }
-            ])
-            return true
-        })
-    }
-  
-    return () => {
-        BackHandler.removeEventListener('hardwareBackPress', () => {
-            return true
-         })
-     }
-  }, [currentPath])
 
   return (
     <>

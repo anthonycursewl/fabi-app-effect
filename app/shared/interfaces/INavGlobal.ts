@@ -1,7 +1,8 @@
 export interface INavGlobal {
     navigation: {
-        navigate: (routeName: string) => void;
+        navigate: (routeName: string, params?: any) => void;
         goBack: () => void;
         replace: (routeName: string) => void;
+        params: any
     }
 }

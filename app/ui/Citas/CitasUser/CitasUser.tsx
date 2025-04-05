@@ -18,6 +18,7 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 import { Cita } from "@/app/shared/interfaces/CitaType"
 import { TypeFilter } from "../interfaces/TypeFilter"
 import { RenderTypeStatus } from "../components/RenderTypeStatus"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
 interface TypesCitas {
     all: Cita[];
@@ -35,7 +36,7 @@ interface PaginationType {
     rescheduled: { skip: number; take: number; isEnd: boolean };
 }
 
-export default function CitaUser() {
+export default function CitaUser({ navigation }: INavGlobal) {
     const { user } = useContext(AuthContext)
     const [pagination, setPagination] = useState<PaginationType>({
         all: { skip: 1, take: 10, isEnd: false },
@@ -73,7 +74,7 @@ export default function CitaUser() {
 
     const getFilterdUrl = (fetchFilter: TypeFilter, pagination: PaginationType): string  => {
         const paginationConfig = pagination[fetchFilter]
-        if (!paginationConfig) return 'Invalid fetchFilter.'
+        if (!paginationConfig) return 'BRD | Invalid fetchFilter.'
 
         return `${MAIN_PART_URL}?take=${paginationConfig.take}&skip=${paginationConfig.skip}&filter=${fetchFilter}`
     }
@@ -130,7 +131,7 @@ export default function CitaUser() {
                         showsVerticalScrollIndicator={false}
                         style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
                         contentContainerStyle={{ gap: 10 }}
-                        renderItem={({ item }) => <CardContentC item={item}/>}
+                        renderItem={({ item }) => <CardContentC item={item} navigation={{ navigation: navigation }}/>}
                         ListEmptyComponent={<ListEmptyComponent type={filter} />}
                         onEndReachedThreshold={0.1}
                         onEndReached={() => {

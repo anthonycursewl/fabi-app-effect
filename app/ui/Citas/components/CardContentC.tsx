@@ -5,8 +5,9 @@ import { useState } from "react"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import { useNavigation } from "expo-router"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
-export const CardContentC = ({ item }: { item: any }): JSX.Element => { 
+export const CardContentC = ({ item, navigation }: { item: any, navigation: INavGlobal }): JSX.Element => { 
     const date = new Date(item.date)
     // state of the long press
     const [isSelected, setIsSelected] = useState<boolean>(false)
@@ -16,8 +17,6 @@ export const CardContentC = ({ item }: { item: any }): JSX.Element => {
         console.log('Long press detected here')
         setIsSelected(!isSelected)
     }
-
-    const navigation = useNavigation()
 
     const handleDeleteCita = async () => {
         const { response, error} = await secureFetch({
@@ -52,7 +51,7 @@ export const CardContentC = ({ item }: { item: any }): JSX.Element => {
         <>
         <TouchableOpacity
         onPress={() => {
-            console.log(`go to the details ${item.id}`)
+            navigation.navigation.navigate('CitaDetails', { item: item })
         }}
         onLongPress={() => {handleLongPress()}}
         >

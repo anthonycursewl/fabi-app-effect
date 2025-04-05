@@ -45,15 +45,11 @@ export default function Login({ navigation }: INavGlobal) {
             Alert.alert('BRD | Inicio de sesión', `¡Bienvenido de vuelta!`)
             setUserToken({ access_token: data.access_token, refresh_token: data.refresh_token })
             await storeData('AuthToken', data.access_token)
-            navigation.navigate('Dashboard')
+            navigation.replace('Dashboard')
         }
     }
 
     useEffect(() => {
-        if (user) {
-            navigation.navigate('Citas')
-        }
-
         return () => {
             setLoading(false)
         }
