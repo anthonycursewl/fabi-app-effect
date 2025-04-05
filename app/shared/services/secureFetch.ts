@@ -18,7 +18,7 @@ interface SecureFetchsProps {
  * @returns { response: any, error: string }
  * 
 */
-export const secureFetch = async ({ options, setLoading }: SecureFetchsProps) => {
+export const secureFetch = async ({ options, setLoading }: SecureFetchsProps): Promise<{ response: any, error: string }> => {
     try {
         setLoading(true)
         const res = await fetch(options.url, {
@@ -37,10 +37,10 @@ export const secureFetch = async ({ options, setLoading }: SecureFetchsProps) =>
         
         setLoading(false)
         const data = await res.json()
-        return { response: data }
+        return { response: data, error: '' }
     } catch (error: any) {
         console.log(error.message)
         setLoading(false)
-        return { error: error.message }
+        return { error: error.message, response: null }
     }
 }

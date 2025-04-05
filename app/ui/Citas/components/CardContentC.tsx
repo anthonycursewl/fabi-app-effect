@@ -4,6 +4,7 @@ import { RenderTypeStatus } from "./RenderTypeStatus"
 import { useState } from "react"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
+import { useNavigation } from "expo-router"
 
 export const CardContentC = ({ item }: { item: any }): JSX.Element => { 
     const date = new Date(item.date)
@@ -16,6 +17,7 @@ export const CardContentC = ({ item }: { item: any }): JSX.Element => {
         setIsSelected(!isSelected)
     }
 
+    const navigation = useNavigation()
 
     const handleDeleteCita = async () => {
         const { response, error} = await secureFetch({
@@ -103,7 +105,10 @@ export const CardContentC = ({ item }: { item: any }): JSX.Element => {
                         >
                             <TextWithColor style={{ color: 'white', fontSize: 16 }}>Eliminar</TextWithColor>
                         </TouchableOpacity> :
-                        <ActivityIndicator size={'large'} color={'red'} />}
+                        <View style={{ width: '100%', alignItems: 'center' }}>
+                            <ActivityIndicator size={'large'} color={'red'} />
+                        </View>
+                        }
                     </View>
                 </View>
             </View>
