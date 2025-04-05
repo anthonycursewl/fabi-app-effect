@@ -1,4 +1,4 @@
-import { SafeAreaView, View, FlatList, Alert, StatusBar } from "react-native"
+import { SafeAreaView, View, FlatList, Alert, StatusBar, ActivityIndicator } from "react-native"
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import { useContext, useEffect, useState } from "react"
 import { StyleSheet } from "react-native"
@@ -17,6 +17,7 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 // Interfaces
 import { Cita } from "@/app/shared/interfaces/CitaType"
 import { TypeFilter } from "../interfaces/TypeFilter"
+import { RenderTypeStatus } from "../components/RenderTypeStatus"
 
 interface TypesCitas {
     all: Cita[];
@@ -59,6 +60,7 @@ export default function CitaUser() {
 
     // I was about to use this function to do something but I can't remember what. xoxo
     // I'll leave it here to remember.
+    // ily
     const resetPagination = () => {
         setPagination({
             all: { skip: 1, take: 10, isEnd: false },
@@ -90,10 +92,6 @@ export default function CitaUser() {
             setLoading: setLoading
         })
 
-        if (error) {
-            console.log(error)
-            return Alert.alert('BRD | Un error ha ocurrido', `${error}`)
-        }
 
         if (response) {
             if (response.length < pagination[filter].take) {
@@ -102,14 +100,11 @@ export default function CitaUser() {
 
             setFilteredCitas({ ...filteredCitas, [filter]: response })
         }
-
     }
 
     useEffect(() => {
-        console.log(`BRD | Filter has changed to ${filter}`)
         getAllFilteredData(filter)
     }, [filter])
-
 
     return (
         <AuthenticatedLayout>
@@ -129,21 +124,23 @@ export default function CitaUser() {
                 </SafeAreaView>
 
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '76%' }}>
-                    <FlatList 
-                    data={filteredCitas[filter]}
-                    showsVerticalScrollIndicator={false}
-                    style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
-                    contentContainerStyle={{ gap: 10 }}
-                    renderItem={({ item }) => <CardContentC item={item}/>}
-                    ListEmptyComponent={ListEmptyComponent}
-                    onEndReachedThreshold={0.1}
-                    onEndReached={() => {
-                        if (!pagination[filter].isEnd && !loading) {
-                            setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
-                            getAllFilteredData(filter)
-                        }
-                    }}
-                    />
+                    {
+                        <FlatList 
+                        data={filteredCitas[filter]}
+                        showsVerticalScrollIndicator={false}
+                        style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
+                        contentContainerStyle={{ gap: 10 }}
+                        renderItem={({ item }) => <CardContentC item={item}/>}
+                        ListEmptyComponent={<ListEmptyComponent type={filter} />}
+                        onEndReachedThreshold={0.1}
+                        onEndReached={() => {
+                            if (!pagination[filter].isEnd && !loading) {
+                                setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
+                                getAllFilteredData(filter)
+                            }
+                        }}
+                        />
+                    }
                 </View>
             </>    
         </AuthenticatedLayout>
