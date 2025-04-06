@@ -85,7 +85,7 @@ export default function CitaUser({ navigation }: INavGlobal) {
         }
 
         const FILTERED_URL = getFilterdUrl(filter, pagination)
-        const { error, response } = await secureFetch({
+        const { response } = await secureFetch({
             options: {
                 url: FILTERED_URL,
                 method: 'GET',

@@ -14,12 +14,11 @@ export const CardContentC = ({ item, navigation }: { item: any, navigation: INav
     const [loading, setLoading] = useState<boolean>(false)
 
     const handleLongPress = () => {
-        console.log('Long press detected here')
-        setIsSelected(!isSelected)
+        setIsSelected(true)
     }
 
     const handleDeleteCita = async () => {
-        const { response, error} = await secureFetch({
+        const { response, error } = await secureFetch({
             options: {
                 url: `${API_URl}/cita/delete/${item.id}`,
                 method: 'DELETE'
@@ -28,12 +27,14 @@ export const CardContentC = ({ item, navigation }: { item: any, navigation: INav
         })
 
         if (error) {
-            return Alert.alert('Error', `${error}`)
+            Alert.alert('Error', `${error}`)
         }
 
 
         if (response) {
-            return Alert.alert('Cita eliminada', 'La cita ha sido eliminada con exito')
+            setIsSelected(false)
+            Alert.alert('Cita eliminada', 'La cita ha sido eliminada con exito')
+            navigation.navigation.replace('Dashboard')
         }
 
     }
