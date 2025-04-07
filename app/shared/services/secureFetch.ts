@@ -24,11 +24,12 @@ interface SecureFetchsProps {
 export const secureFetch = async ({ options, setLoading, singal }: SecureFetchsProps): Promise<{ response: any, error: string }> => {
     try {
         setLoading(true)
+        const AuthToken = await getData('AuthToken')
         const res = await fetch(options.url, {
             method: options.method,
             body: options.method !== 'GET' && options.body ? JSON.stringify(options.body) : null,
             headers: {
-                'Authorization': `${await getData('AuthToken')}`,
+                'Authorization': `${AuthToken}`,
                 'Content-Type': 'application/json'
             },
             signal: singal
