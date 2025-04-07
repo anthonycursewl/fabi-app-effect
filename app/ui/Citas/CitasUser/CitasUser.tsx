@@ -17,7 +17,6 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 // Interfaces
 import { Cita } from "@/app/shared/interfaces/CitaType"
 import { TypeFilter } from "../interfaces/TypeFilter"
-import { RenderTypeStatus } from "../components/RenderTypeStatus"
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
 interface TypesCitas {
@@ -59,19 +58,6 @@ export default function CitaUser({ navigation }: INavGlobal) {
 
     const MAIN_PART_URL = `${API_URl}/cita/get/all/byuserid/${user.id}`
 
-    // I was about to use this function to do something but I can't remember what. xoxo
-    // I'll leave it here to remember.
-    // ily
-    const resetPagination = () => {
-        setPagination({
-            all: { skip: 1, take: 10, isEnd: false },
-            pending: { skip: 1, take: 10, isEnd: false },
-            confirmed: { skip: 1, take: 10, isEnd: false },
-            canceled: { skip: 1, take: 10, isEnd: false },
-            rescheduled: { skip: 1, take: 10, isEnd: false },
-        })
-    }
-
     const getFilterdUrl = (fetchFilter: TypeFilter, pagination: PaginationType): string  => {
         const paginationConfig = pagination[fetchFilter]
         if (!paginationConfig) return 'BRD | Invalid fetchFilter.'
@@ -92,7 +78,6 @@ export default function CitaUser({ navigation }: INavGlobal) {
             },
             setLoading: setLoading
         })
-
 
         if (response) {
             if (response.length < pagination[filter].take) {
