@@ -83,7 +83,6 @@ export const CardContentC = ({ item, navigation }: { item: any, navigation: INav
         </TouchableOpacity>
 
         {/* // If you're read this, let me tell you that I love u u-u. Don't complain bro just love xoxoxo */}
-
         <Modal visible={isSelected} onRequestClose={() => setIsSelected(!isSelected)}
         animationType="fade" transparent
         >

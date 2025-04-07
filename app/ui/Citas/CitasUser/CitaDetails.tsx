@@ -1,50 +1,193 @@
-import { SafeAreaView, View } from "react-native"
-// Components
-import TextWithColor from "@/app/shared/components/TextWithColor"
-import { useEffect } from "react"
-import { useNavigation, useRoute } from "@react-navigation/native"
+import { SafeAreaView, View, StyleSheet, TouchableOpacity, Image, ScrollView, Alert, ActivityIndicator } from "react-native"; // Import StyleSheet
+// Components 
+import TextWithColor from "@/app/shared/components/TextWithColor";
+import { useRoute } from "@react-navigation/native";
+
+// utils
+import { formatTimeUntil } from "@/app/shared/services/formatDateUntil";
+import { RenderTypeStatus } from "../components/RenderTypeStatus";
+import SlideButton from "@/app/shared/components/SlideButton";
+import { MiniCard } from "./components/MiniCard";
+// interfaces
+import { TypeCitaDetails } from "../interfaces/TypeCitaDetails";
+import { CitaParams } from "../interfaces/CitaParams";
+import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas";
+import { secureFetch } from "@/app/shared/services/secureFetch";
+import { API_URl } from "@/app/config/api.breadriuss.config";
+import { useState } from "react";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
 
-interface CitaParams {
-    params: {
-        item: any
-    }
-    name: string;
-    key: string;
-    path?: string | undefined;
-}
+export default function CitaDetails({ navigation}: INavGlobal) {
+    const [loading, setLoading] = useState<boolean>(false)
+    const route = useRoute<CitaParams>();
+    const item: TypeCitaDetails = route.params?.item || {} as TypeCitaDetails;
 
-interface TypeCitaDetails {
-    id: string;
-    date: string;
-    des_or_reason: string;
-    status: string;
-    hour: string;
-    contdr_profile: {
-        users: {
-            name: string
+    const gridData = [
+        { title: "Fecha", info: item.date ? new Date(item.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A', type: "date" },
+        { title: "Hora", info: item.hour || 'N/A', type: "info" },
+        { title: "Estado", info: item.status, type: "status" },
+        { title: "Próxima acción", info: formatTimeUntil(item.date), type: "info" },
+    ];
+
+    const handleCancelCita = async () => {
+        const { response, error } = await secureFetch({
+            options: {
+                url: `${API_URl}/cita/change/status?id=${item.id}&status=${TYPES_STATUS_CITAS.CANCELED}`,
+                method: 'PUT',
+            },
+            setLoading
+        })
+
+        if (error) {
+            Alert.alert('Error', `${error}`)
         }
-        description: string;
-    } 
-}
 
-export default function CitaDetails() {
-    const route = useRoute<CitaParams>()
-    const { item }: { item: TypeCitaDetails } = route.params
-
-    useEffect(() => {
-        console.log(item)   
-    }, [])
+        if (response) {
+            Alert.alert('Cita cancelada', 'La cita ha sido cancelada con exito')
+            navigation.replace('CitasUser')
+        }
+    };
 
     return (
-        <SafeAreaView style={{ width: '100%', alignItems: 'center', justifyContent: 'flex-start', backgroundColor: 'white', height: '100%' }}>
-               <View style={{ width: '90%', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-                    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-                        <TextWithColor style={{ fontSize: 25, fontWeight: 'bold' }}>{item.contdr_profile.users.name}</TextWithColor>
-                        <TextWithColor style={{ color: 'black', fontSize: 14, backgroundColor: 'rgba(179, 179, 179, 0.83)', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 12 }}>Contador asignado</TextWithColor>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <SafeAreaView style={styles.safeArea}>
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <TextWithColor style={styles.headerName}>
+                            {item.contdr_profile.users.name}
+                        </TextWithColor>
+                        <TextWithColor style={styles.headerTag}>
+                            Contador asignado
+                        </TextWithColor>
+                    </View>
+
+                    {item.contdr_profile.description&& (
+                    <View style={styles.descriptionContainer}>
+                        <TextWithColor style={styles.descriptionLabel}>Descripción del Contador</TextWithColor>
+                        <TextWithColor>{item.contdr_profile.description}</TextWithColor>
+                    </View>
+                    )}
+
+                    {item.des_or_reason && (
+                    <View style={styles.descriptionContainer}>
+                        <TextWithColor style={styles.descriptionLabel}>Descripción</TextWithColor>
+                        <TextWithColor>{item.des_or_reason}</TextWithColor>
+                    </View>
+                    )}
+
+                    <View style={styles.gridContainer}>
+                        {gridData.map((data, index) => (
+                            <MiniCard key={index} title={data.title} info={data.info} type={data.type} styles={styles}/>
+                        ))}
                     </View>
                     
-                </View>                
-        </SafeAreaView>
-    )
+                    {
+                    item.status === TYPES_STATUS_CITAS.PENDING &&
+                    <View style={styles.advisementClient}>
+                        <TextWithColor>Esta cita se encuentra en estado <RenderTypeStatus status={item.status}/>. Debes esperar la confirmación del contador.
+                        Ten en cuenta que la cita puede se <TextWithColor color="rgba(24, 97, 165, 0.83)" style={{ fontWeight: 'bold' }}>reprogramada</TextWithColor> por el contador, podrás aceptar o rechazar la programación.
+                        </TextWithColor>
+                    </View>
+                    }
+                </View>
+
+                {!loading ?
+                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
+                    <SlideButton onSlideSuccess={() => {console.log("wola")}} title="Desliza para confirmar la cita"
+                        thumbIcon={<Image style={{ width: 30, height: 30 }} source={require('../../../../assets/images/arrow-right-cita.png')} />}
+                        />
+
+                    <TouchableOpacity
+                    style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+                    onPress={() => {
+                        handleCancelCita();
+                    }}>
+                        <TextWithColor color="rgb(255, 255, 255)">Cancelar cita</TextWithColor>
+                    </TouchableOpacity>
+                </View> :
+                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
+                    <ActivityIndicator size="large" color="rgb(255, 105, 112)" />
+                </View>
+                }
+            </SafeAreaView>
+        </ScrollView>
+    );
 }
+
+// --- StyleSheet ---
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    container: {
+        flex: 1,
+        width: '90%',
+        alignSelf: 'center', 
+        paddingTop: 10, 
+        paddingBottom: 10,
+        gap: 20, 
+    },
+    header: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 5,
+        marginTop: 10,
+    },
+    headerName: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    headerTag: {
+        color: 'black',
+        fontSize: 13,
+        backgroundColor: 'rgba(226, 226, 226, 0.83)',
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 12,
+        overflow: 'hidden',
+    },
+    descriptionContainer: {
+        width: '100%',
+    },
+    descriptionLabel: {
+        color: 'rgb(73, 73, 73)',
+        marginBottom: 2,
+    },
+    gridContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',     
+        gap: 10,           
+    },
+    miniCard: {
+        flexGrow: 1,
+        flexBasis: '45%',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(236, 233, 233, 0.83)',
+        borderWidth: .5,
+        borderColor: 'rgba(211, 211, 211, 0.83)',
+        boxShadow: '0px 4px 5px rgba(36, 36, 36, 0.06)',
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        borderRadius: 12,
+        minHeight: 70, 
+    },
+    miniCardTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 2,
+    },
+    miniCardInfo: {
+        fontSize: 14, 
+    },
+    advisementClient: {
+        borderWidth: 1.2,
+        borderColor: 'rgba(95, 95, 95, 0.83)',
+        borderStyle: 'dashed',
+        padding: 15,
+        borderRadius: 12
+    }
+});
