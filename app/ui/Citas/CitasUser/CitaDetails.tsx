@@ -2,6 +2,7 @@ import { SafeAreaView, View, StyleSheet, TouchableOpacity, Image, ScrollView, Al
 // Components 
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import { useRoute } from "@react-navigation/native";
+import ActionsCita from "./components/ActionsCita/ActionsCita";
 
 // utils
 import { formatTimeUntil } from "@/app/shared/services/formatDateUntil";
@@ -29,24 +30,7 @@ export default function CitaDetails({ navigation}: INavGlobal) {
         { title: "Próxima acción", info: formatTimeUntil(item.date), type: "info" },
     ];
 
-    const handleCancelCita = async () => {
-        const { response, error } = await secureFetch({
-            options: {
-                url: `${API_URl}/cita/change/status?id=${item.id}&status=${TYPES_STATUS_CITAS.CANCELED}`,
-                method: 'PUT',
-            },
-            setLoading
-        })
-
-        if (error) {
-            Alert.alert('Error', `${error}`)
-        }
-
-        if (response) {
-            Alert.alert('Cita cancelada', 'La cita ha sido cancelada con exito')
-            navigation.replace('CitasUser')
-        }
-    };
+    
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -91,24 +75,7 @@ export default function CitaDetails({ navigation}: INavGlobal) {
                     }
                 </View>
 
-                {!loading ?
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
-                    <SlideButton onSlideSuccess={() => {console.log("wola")}} title="Desliza para confirmar la cita"
-                        thumbIcon={<Image style={{ width: 30, height: 30 }} source={require('../../../../assets/images/arrow-right-cita.png')} />}
-                        />
-
-                    <TouchableOpacity
-                    style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
-                    onPress={() => {
-                        handleCancelCita();
-                    }}>
-                        <TextWithColor color="rgb(255, 255, 255)">Cancelar cita</TextWithColor>
-                    </TouchableOpacity>
-                </View> :
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
-                    <ActivityIndicator size="large" color="rgb(255, 105, 112)" />
-                </View>
-                }
+                <ActionsCita item={item} navigation={{ navigation: navigation }}/>
             </SafeAreaView>
         </ScrollView>
     );
