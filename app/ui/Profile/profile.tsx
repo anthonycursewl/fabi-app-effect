@@ -1,33 +1,20 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, TouchableOpacity, StyleSheet, useAnimatedValue, TextInput, Image, Alert, ActivityIndicator } from "react-native"
-
+import { SafeAreaView, View, Animated, ScrollView, TouchableOpacity, useAnimatedValue, TextInput, Image, Alert, ActivityIndicator } from "react-native"
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
-
+import { stylesCreateProfile } from "./styles/styleCreateProfile"
 // Components
 import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
-
 // Hooks
 import { useState, useContext, useRef, useEffect } from "react"
 import { AuthContext } from "@/app/shared/context/ContextProvider"
-
 // Constans
-import { newCitas } from "@/app/shared/constants/mockCitas"
-import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles"
-import { useGlobalState } from "@/app/store/zustand/useGlobalState"
 import { generatorUID } from "@/app/shared/services/UUIDGenerator"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
-
-interface TypeProfileContador {
-    id: string;
-    expertises: string[];
-    pro_contact: string[];
-    description: string;
-    is_verified: boolean;
-    user_id: string;
-}
+// Interfaces
+import { TypeProfileContador } from "./interfaces/TypeProfileContador"
 
 export default function CreateProfileContador() {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -39,9 +26,6 @@ export default function CreateProfileContador() {
 
     const [expertise, setExpertise] = useState<string>('')
     const [contact, setContact] = useState<string>('')
-
-    // Global state provided by Zustand
-    const { SuMarroz } = useGlobalState()
  
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
@@ -147,16 +131,16 @@ export default function CreateProfileContador() {
                 onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
                 style={{ flex: 1, width: '100%' }}>
                         
-            <SafeAreaView style={stylesCitas.citasMain}>
+            <SafeAreaView style={stylesCreateProfile.citasMain}>
                 <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'rgb(241, 241, 241)' : 'transparent'} style="dark"/>
             
                 <View style={styleDashboard.mainContainer}>
-                    <View style={stylesCitas.headerName}>
-                        <View style={stylesCitas.decorationName}></View>
-                        <View style={stylesCitas.decorationName2}></View>
+                    <View style={stylesCreateProfile.headerName}>
+                        <View style={stylesCreateProfile.decorationName}></View>
+                        <View style={stylesCreateProfile.decorationName2}></View>
 
                         <Animated.Text 
-                            style={[stylesCitas.textName, { opacity: stateAim.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }), transform: [{ translateY: stateAim.interpolate({ inputRange: [0, 1], outputRange: [-20, 0] }) }] }]}
+                            style={[stylesCreateProfile.textName, { opacity: stateAim.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }), transform: [{ translateY: stateAim.interpolate({ inputRange: [0, 1], outputRange: [-20, 0] }) }] }]}
                             >
                             {loading ? 'Cargando...' : `¡Hola ${user.name.split(' ')[0]}!`}
                         </Animated.Text>
@@ -171,7 +155,7 @@ export default function CreateProfileContador() {
                         <TextWithColor color="rgba(51, 51, 51, 0.57)">Llena el formulario con los detalles relevantes.</TextWithColor>
                     </View>
 
-                    <View style={stylesCitas.registerCitas}>
+                    <View style={stylesCreateProfile.registerCitas}>
 
                         <View style={{ gap: 10, width: '100%' }}>
                             <View>
@@ -301,61 +285,3 @@ export default function CreateProfileContador() {
     </AuthenticatedLayout>
     )
 }
-
-
-const stylesCitas = StyleSheet.create({
-    citasMain:{
-        width: '100%',
-        height: '100%',
-        justifyContent: 'flex-start',
-        alignItems: 'center', 
-        marginTop: 60,
-        marginBottom: 45
-    },
-    decorationName: {
-        position: 'absolute',
-        width: 60,
-        height: 60,
-        backgroundColor: 'rgba(154, 101, 253, 0.91)',
-        filter: 'blur(20px)',
-        borderRadius: 50,
-        right: '52%',
-        top: '20%',
-        pointerEvents: 'none',
-        zIndex: -1
-    },
-    decorationName2:{
-        position: 'absolute',
-        width: 60,
-        height: 60,
-        backgroundColor: 'rgba(157, 175, 255, 0.91)',
-        filter: 'blur(20px)',
-        borderRadius: 50,
-        left: '52%',
-        top: '-20%',
-        pointerEvents: 'none',
-        zIndex: -1
-    },
-    headerName: {
-        position: 'relative',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    textName: {
-        fontSize: 20,
-        fontWeight: 'bold'
-    },
-    registerCitas: {
-        marginTop: 20,
-        gap: 15
-    },
-    inputCitas: {
-        backgroundColor: 'rgba(224, 224, 224, 0.89)',
-        width: '100%',
-        borderRadius: 12,
-        borderColor: 'gray',
-        borderWidth: 0.3,
-        padding: 12
-    }
-})
