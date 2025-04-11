@@ -10,6 +10,7 @@ import Citas from './ui/Citas/citas';
 import CreateProfileContador from './ui/Profile/profile';
 import CitaUser from './ui/Citas/CitasUser/CitasUser';
 import CitaDetails from './ui/Citas/CitasUser/CitaDetails';
+import Profesionals from './ui/Profesionals/profesionals';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -59,6 +60,9 @@ export default function Index() {
       <Stack.Screen name="Citas" component={Citas} options={{ headerShown: false }}/>
       <Stack.Screen name="CitasUser" component={CitaUser} options={{ headerShown: false }}/>
       <Stack.Screen name="CitaDetails" component={CitaDetails} options={{ headerShown: false }}/>
+
+      {/* Here's the route for profesionals */}
+      <Stack.Screen name="Profesionals" component={Profesionals} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }
