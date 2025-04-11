@@ -1,11 +1,8 @@
-import { View, ScrollView, Alert, BackHandler } from "react-native";
+import { View, ScrollView } from "react-native";
 import ButtonCard from "./ButtonCard";
 
 // Contants
 import { ButtonsApp } from "../constants/ButtonsApp";
-
-// Hooks
-import { useEffect } from "react";
 
 // Navigation
 import { useNavigation, useNavigationState } from "@react-navigation/native";
@@ -22,6 +19,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
       <View
         style={{
           width: "100%",
+          flexGrow: 1,
           alignItems: "center",
           justifyContent: "center",
           position: "fixed",
@@ -54,7 +52,6 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
             {ButtonsApp.map((item, index) => (
               <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} navigation={{ navigation: navigation }}/>
             ))}
-
 
           </View>
         </ScrollView>

@@ -68,7 +68,7 @@ export default function Main({ navigation }: INavGlobal) {
         <AuthenticatedLayout>
             <ScrollView scrollEventThrottle={16} stickyHeaderIndices={[0]}
                 onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
-                style={{ flex: 1, width: '100%' }}
+                style={{ flexGrow: 1, width: '100%' }}
                 >
 
                 <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} />

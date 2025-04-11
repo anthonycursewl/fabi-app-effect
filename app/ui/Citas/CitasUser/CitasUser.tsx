@@ -1,7 +1,8 @@
-import { SafeAreaView, View, FlatList, Alert, StatusBar, ActivityIndicator } from "react-native"
+import { SafeAreaView, View, FlatList, StatusBar } from "react-native"
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import { useContext, useEffect, useState } from "react"
 import { StyleSheet } from "react-native"
+
 
 // Components
 import TextWithColor from "@/app/shared/components/TextWithColor"
@@ -57,7 +58,6 @@ export default function CitaUser({ navigation }: INavGlobal) {
     })
 
     const MAIN_PART_URL = `${API_URl}/cita/get/all/byuserid/${user.id}`
-
     const getFilterdUrl = (fetchFilter: TypeFilter, pagination: PaginationType): string  => {
         const paginationConfig = pagination[fetchFilter]
         if (!paginationConfig) return 'BRD | Invalid fetchFilter.'
@@ -95,21 +95,19 @@ export default function CitaUser({ navigation }: INavGlobal) {
     return (
         <AuthenticatedLayout>
             <>
+            <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0)'} />
                 <SafeAreaView style={styleCitasUser.mainContent}>
-                    <View style={{ width: '90%'}}>
-                        <TextWithColor style={{ fontSize: 24, fontWeight: 'bold' }}>
-                            ¡Hola {user.name.split(' ')[0]}!
-                        </TextWithColor>
-                        <TextWithColor style={{ fontSize: 13 }} color="rgba(128, 128, 128, 0.83)">
+                    <View style={{ width: '90%' }}>
+                        <TextWithColor style={{ fontSize: 12 }} color="rgba(128, 128, 128, 0.83)">
                             ¡Bienvenido a la sección de citas!
                             Aquí podrás ver tus citas y gestionarlas
                         </TextWithColor>
                     </View>
 
-                    <FilterCitas filter={filter} setFilter={setFilter}/>
+                    <FilterCitas filter={filter} setFilter={setFilter} />
                 </SafeAreaView>
 
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '76%' }}>
+                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '76%', flexGrow: 1 }}>
                     {
                         <FlatList 
                         data={filteredCitas[filter]}
@@ -139,7 +137,7 @@ const styleCitasUser = StyleSheet.create({
         height: 'auto',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 20
+        marginTop: 45
     }
 })
 

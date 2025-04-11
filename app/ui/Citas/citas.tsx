@@ -148,7 +148,7 @@ export default function Citas() {
         <AuthenticatedLayout>
             <ScrollView scrollEventThrottle={16}
                 onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
-                style={{ flex: 1, width: '100%' }}>
+                style={{ flexGrow: 1, width: '100%' }}>
                         
             <SafeAreaView style={stylesCitas.citasMain}>
                 <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'rgb(241, 241, 241)' : 'transparent'} style="dark"/>

@@ -17,9 +17,9 @@ import { secureFetch } from "@/app/shared/services/secureFetch";
 import { API_URl } from "@/app/config/api.breadriuss.config";
 import { useState } from "react";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
+import { StatusBar } from "expo-status-bar";
 
 export default function CitaDetails({ navigation}: INavGlobal) {
-    const [loading, setLoading] = useState<boolean>(false)
     const route = useRoute<CitaParams>();
     const item: TypeCitaDetails = route.params?.item || {} as TypeCitaDetails;
 
@@ -28,12 +28,11 @@ export default function CitaDetails({ navigation}: INavGlobal) {
         { title: "Hora", info: item.hour || 'N/A', type: "info" },
         { title: "Estado", info: item.status, type: "status" },
         { title: "Próxima acción", info: formatTimeUntil(item.date), type: "info" },
-    ];
-
-    
+    ];    
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <StatusBar style="dark" backgroundColor="transparent" translucent/>
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.container}>
                     <View style={styles.header}>
@@ -84,11 +83,11 @@ export default function CitaDetails({ navigation}: INavGlobal) {
 // --- StyleSheet ---
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: 'white',
     },
     container: {
-        flex: 1,
+        flexGrow: 1,
         width: '90%',
         alignSelf: 'center', 
         paddingTop: 10, 
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 5,
-        marginTop: 10,
+        marginTop: 30,
     },
     headerName: {
         fontSize: 25,

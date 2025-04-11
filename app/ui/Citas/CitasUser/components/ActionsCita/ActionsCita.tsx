@@ -13,6 +13,7 @@ import { TYPES_ROLES } from '@/app/shared/constants/TypesRoles';
 import { INavGlobal } from '@/app/shared/interfaces/INavGlobal';
 import { TypeFilter } from '../../../interfaces/TypeFilter';
 import { AuthContext } from '@/app/shared/context/ContextProvider';
+
 interface ActionsCitaProps {
     item: TypeCitaDetails
     navigation: INavGlobal
@@ -24,7 +25,7 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
 
     // All these functions are goint to be moved to a service class in the future.
     const handleChangeStatusCita = async (status: TypeFilter) => {
-            const { response, error } = await secureFetch({
+        const { response, error } = await secureFetch({
                 options: {
                     url: `${API_URl}/cita/change/status?id=${item.id}&status=${status}`,
                     method: 'PUT',
@@ -42,6 +43,15 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
             }
     };
 
+    const handleAlertCancel = (): void => {
+        Alert.alert('BRD | Cancelación de cita', 
+            '¿Estas seguro de querer cancelar esta cita?', 
+            [{ text: 'Si', 
+            onPress: async () => handleChangeStatusCita(TYPES_STATUS_CITAS.CANCELED as TypeFilter) }, 
+            { text: 'No', onPress: () => {} }
+        ])
+    } 
+
     // We wanted to use a soft delete, but the client didn't like that. He's already saving data in the other services, 
     // So we're gonna use a hard delete (DELETE FROM blabla WHERE id = X)
     const handleDeleteCita = async () => {
@@ -57,10 +67,9 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
             Alert.alert('Error', `${error}`)
         }
 
-
         if (response) {
             Alert.alert('Cita eliminada', 'La cita ha sido eliminada con exito')
-            navigation.navigation.replace('Dashboard')
+            navigation.navigation.replace('CitaUser')
         }
     }
 
@@ -82,12 +91,16 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
                 }
                 />
             }
-            <View style={{ width: '50%', alignItems: 'center', justifyContent: 'center', gap: 10, flexDirection: 'row' }}>
                 {item.status !== TYPES_STATUS_CITAS.CANCELED &&
                     <TouchableOpacity
-                    style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+                    style={{ 
+                    backgroundColor: 'rgb(255, 105, 112)', 
+                    paddingVertical: 10, paddingHorizontal: 12, 
+                    borderRadius: 12, width: '100%', 
+                    alignItems: 'center', justifyContent: 'center',
+                }}
                     onPress={() => {
-                        handleChangeStatusCita(TYPES_STATUS_CITAS.CANCELED as TypeFilter);
+                        handleAlertCancel();
                     }}>
                         <TextWithColor color="rgb(255, 255, 255)">Cancelar</TextWithColor>
                 </TouchableOpacity>
@@ -101,17 +114,16 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
                         <TextWithColor color="rgb(255, 255, 255)">Reprogramar</TextWithColor>
                 </TouchableOpacity>
                 }
-            </View>
-            {
-                item.status === TYPES_STATUS_CITAS.CANCELED &&
-                <TouchableOpacity
-                    style={{ backgroundColor: 'rgba(255, 105, 113, 0.99)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
-                    onPress={() => {
-                        handleAlertDelete();
-                    }}>
-                        <TextWithColor color="rgb(255, 255, 255)">Eliminar</TextWithColor>
-                </TouchableOpacity>
-            }
+                {
+                    item.status === TYPES_STATUS_CITAS.CANCELED &&
+                    <TouchableOpacity
+                        style={{ backgroundColor: 'rgba(255, 105, 113, 0.99)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+                        onPress={() => {
+                            handleAlertDelete();
+                        }}>
+                            <TextWithColor color="rgb(255, 255, 255)">Eliminar</TextWithColor>
+                    </TouchableOpacity>
+                }
         </View> 
         :
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>

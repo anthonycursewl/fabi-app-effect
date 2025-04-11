@@ -53,7 +53,7 @@ export default function Register({ navigation }: INavGlobal) {
 
         if (error) {
             setLoading(false)
-            Alert.alert('Error', `${error}`)
+            Alert.alert('BRD | Error', `${error}`)
         }
 
         if (data) {
