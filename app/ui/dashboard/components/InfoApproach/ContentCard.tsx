@@ -7,7 +7,7 @@ import TextWithColor from "@/app/shared/components/TextWithColor"
 // interfaces 
 import { ContentCardTypes } from "@/app/shared/interfaces/ContentCardApproachTypes"
 
-export const ContentCard = ({ title, description, button, note, isEnd, icon }: ContentCardTypes) => {
+export const ContentCard = ({ title, description, button, note, isEnd, icon, navigation }: ContentCardTypes) => {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', maxWidth: '90%', gap: 12 }}>
             <View style={{ alignItems: 'center', justifyContent: 'center', maxWidth: '30%' }}>
@@ -33,8 +33,12 @@ export const ContentCard = ({ title, description, button, note, isEnd, icon }: C
                 <TextWithColor color="rgba(128, 128, 128, 0.83)" style={{ fontSize: 12, marginTop: 5 }}>{description}</TextWithColor>
                 { button?.text &&
                     <TouchableOpacity style={{ ...styleDashboard.buttonVerEspecialistas, marginTop: 8 }}
-                    onPress={button.onPress}
-                    >
+                    onPress={
+                        () => {
+                            navigation ? navigation.navigation.navigate('Profesionals') :
+                            null
+                        }
+                    }>
                         <TextWithColor color="rgb(73, 73, 73)">{button.text}</TextWithColor>
                     </TouchableOpacity>
                 }

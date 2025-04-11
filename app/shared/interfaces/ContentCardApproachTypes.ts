@@ -1,3 +1,5 @@
+import { INavGlobal } from "./INavGlobal";
+
 type TypeNotes = ['info', 'success', 'warning', 'error']
 export interface ContentCardTypes {
     title: string;
@@ -12,4 +14,5 @@ export interface ContentCardTypes {
     }
     isEnd?: boolean,
     icon: string
+    navigation?: INavGlobal
 }

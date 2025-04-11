@@ -105,7 +105,7 @@ export default function Main({ navigation }: INavGlobal) {
                             <TextWithColor color="rgba(51, 51, 51, 0.57)">Con este pequeño tutorial podrás aprender a como agendar tu cita de manera sencilla y en pocos taps.</TextWithColor>
                         </View>
 
-                        <InfoApproach styleDashboard={styleDashboard} />  
+                        <InfoApproach styleDashboard={styleDashboard} navigation={{ navigation }}/>  
                     </View>
                 </SafeAreaView>
 

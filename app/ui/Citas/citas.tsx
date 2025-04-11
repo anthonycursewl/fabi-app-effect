@@ -60,7 +60,7 @@ export default function Citas() {
 
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/user/all/cont?take=${pagination.take}&skip=${pagination.skip}`,
+                url: `${API_URl}/user/all/cont?take=${pagination.take}&skip=${pagination.skip}&filter=rs-data`,
                 method: 'GET',
             },
             setLoading
@@ -74,8 +74,11 @@ export default function Citas() {
             if (response.length < pagination.take) {
                 setPagination({ ...pagination, isEnd: true })
             }
-            setConts(response)
-            console.log(response)
+
+            if (!pagination.isEnd) {
+                setConts(response)
+                console.log(response)
+            }
         }
     }
 
