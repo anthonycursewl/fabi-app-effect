@@ -44,13 +44,11 @@ export default function Main({ navigation }: INavGlobal) {
         }, setLoading })
 
         if (error) {
-            console.log(error)
-            navigation.navigate('Login')
+            navigation.replace('Login')
             Alert.alert('BRD | Error de autenticación', `${error}`)
         }
 
         if (response) {
-            console.log(response)
             setUser(response)
         }
     }
@@ -71,7 +69,7 @@ export default function Main({ navigation }: INavGlobal) {
                 style={{ flexGrow: 1, width: '100%' }}
                 >
 
-                <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} />
+                <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} nav={{ navigation }}/>
 
                 <SafeAreaView style={styleDashboard.dashboard}>
                     <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'transparent' : 'transparent'} style="dark"/>
