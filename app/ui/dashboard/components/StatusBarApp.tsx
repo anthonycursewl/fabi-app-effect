@@ -2,13 +2,16 @@ import { SafeAreaView, View, TouchableOpacity, Image, Alert } from "react-native
 
 // Services
 import { removeItem } from "@/app/store/removeItem"; 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useContext } from "react";
 import { AuthContext } from "@/app/shared/context/ContextProvider";
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
 
-export default function StatusBarApp({ scrollPosition, styleDashboard }: { scrollPosition: number, styleDashboard: any }) {
-  const { setUser } = useContext(AuthContext)
-  const nav = useNavigation()
+export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { scrollPosition: number, styleDashboard: any, nav: INavGlobal }) {
+  const { setUser, user } = useContext(AuthContext)
+
+  const navi = useNavigation()
+
   const deleteSesion = async (key: string) => {
     Alert.alert('Cerrar Sesión', 
       '¿Desea cerrar sesión?', 
@@ -16,7 +19,7 @@ export default function StatusBarApp({ scrollPosition, styleDashboard }: { scrol
         {text: 'No', style: 'cancel'}, 
         {text: 'Si', onPress: async () => {
           await removeItem(key)
-          nav.goBack()
+          navi.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Login' }] }))
           setUser({ id: '', username: '', email: '', password: '', created_at: '', role: '', name: '', iat: 0, exp: 0, jti: '' })
         }}
       ]
