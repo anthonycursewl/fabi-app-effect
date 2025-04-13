@@ -5,4 +5,5 @@ export interface CustomPickerProps {
     selectedValue: ContadorProfileData | null;
     onValueChange: (value: ContadorProfileData) => void;
     placeholder: string;
+    loadMoreData: () => void
 }

@@ -8,7 +8,7 @@ import { stylesPicker } from "../styles/stylesCustomPicker";
 import { CustomPickerProps } from "../interfaces/CustomPickerProps";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 
-export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder }: CustomPickerProps) => {
+export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder, loadMoreData }: CustomPickerProps) => {
         const [modalVisible, setModalVisible] = useState<boolean>(false);
       
         const openModal = () => {
@@ -44,6 +44,9 @@ export const CustomPicker = ({ items, selectedValue, onValueChange, placeholder 
                   <FlatList
                     data={items}
                     renderItem={renderItem}
+                    onEndReachedThreshold={0.1}
+                    showsVerticalScrollIndicator={false}
+                    onEndReached={loadMoreData}
                   />
                   <TouchableOpacity style={stylesPicker.closeButton} onPress={closeModal}>
                     <TextWithColor style={stylesPicker.closeButtonText}>Cerrar</TextWithColor>
