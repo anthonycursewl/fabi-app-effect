@@ -1,5 +1,5 @@
 // Components
-import { FlatList, View, SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, Modal, Alert } from "react-native"
+import { FlatList, View, SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, Modal, Alert, Animated } from "react-native"
 // Components
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import TextWithColor from "@/app/shared/components/TextWithColor"
@@ -7,7 +7,7 @@ import TextWithColor from "@/app/shared/components/TextWithColor"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import * as Clipboard from 'expo-clipboard'
 // Hooks
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 // Constants & Config
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import { TypeProfileContador } from "../Profile/interfaces/TypeProfileContador"
@@ -20,6 +20,7 @@ export default function Profesionals() {
     const [profesionals, setProfesionals] = useState<TypeProfileContador[]>([])
     const maxLineLimit = 14
     const [showModalSucess, setShowModalSucess] = useState<boolean>(false)
+    const scaleAnim = useRef(new Animated.Value(0)).current;
 
     const getProfesionalsData = async () => {
         if (pagination.isEnd) {
@@ -46,7 +47,6 @@ export default function Profesionals() {
             }
  
             setProfesionals([...profesionals, ...response])
-            console.log(response)
         }
     }
 
@@ -58,6 +58,19 @@ export default function Profesionals() {
     useEffect(() => {
         getProfesionalsData()
     }, [])
+
+    useEffect(() => {
+        if (showModalSucess) {
+            Animated.spring(scaleAnim, {
+                toValue: 1,
+                friction: 5,        
+                tension: 60,        
+                useNativeDriver: true
+            }).start();
+        } else {
+            scaleAnim.setValue(0);
+        }
+    }, [showModalSucess, scaleAnim]);
 
     
     const CardProfesional = ({ item }: { item: TypeProfileContador }): JSX.Element => {
@@ -104,6 +117,12 @@ export default function Profesionals() {
                         ))}
                     </View>
                 </View>
+
+                <View>
+                    <TouchableOpacity style={styleProfesionals.btnVerPerfil}>
+                        <TextWithColor style={{ fontSize: 14, color: 'white', textAlign: 'center' }}>Ver Perfil</TextWithColor>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -120,7 +139,7 @@ export default function Profesionals() {
                     <FlatList
                     style={{ width: '100%', flexGrow: 1 }}
                     data={profesionals}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id}                    
                     renderItem={CardProfesional}
                     onEndReached={() => {
                         if (!pagination.isEnd && !loading) {
@@ -133,10 +152,22 @@ export default function Profesionals() {
                 </View>
 
             </SafeAreaView>
-            <Modal statusBarTranslucent visible={showModalSucess} animationType="fade">
+
+            <Modal statusBarTranslucent visible={showModalSucess} animationType="fade"
+            onRequestClose={() => setShowModalSucess(false)}>
                 <View style={{ justifyContent: 'center', alignItems: 'center', gap: 10, height: '100%', width: '100%' }}>
-                    <Image source={require('@/assets/images/copy-success.png')} style={{ width: 80, height: 80 }}/>
+                    <View style={{ position: 'relative' }}>
+                        <View style={styleProfesionals.backgroundDecorationCopy}></View>
+                        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                            <Image source={require('@/assets/images/copy-success.png')} style={{ width: 80, height: 80 }}/>
+                        </Animated.View>
+                    </View>
+
                     <TextWithColor style={{ fontSize: 20, textAlign: 'center' }}>¡El texto ha sido copiado a portapapeles!</TextWithColor>
+
+                    <TouchableOpacity style={styleProfesionals.buttonClose} onPress={() => setShowModalSucess(false)}>
+                        <TextWithColor color="white" style={{ fontSize: 16, textAlign: 'center' }}>Cerrar</TextWithColor>
+                    </TouchableOpacity>
                 </View>
             </Modal>
         </AuthenticatedLayout>
@@ -196,5 +227,27 @@ const styleProfesionals = StyleSheet.create({
         fontFamily: 'OnestRegular',
         flexDirection: 'row',
         gap: 5
+    },
+    backgroundDecorationCopy: { 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: 100, 
+        height: 100, 
+        backgroundColor: 'rgba(81, 224, 117, 0.47)',
+        filter: 'blur(30px)'
+    }, 
+    buttonClose: {
+        backgroundColor: ColorsApp.primary.color,
+        paddingVertical: 5,
+        paddingHorizontal: 12,
+        borderRadius: 16, 
+    },
+    btnVerPerfil: {
+        width: '100%',
+        backgroundColor: ColorsApp.primary.color,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 16
     }
 })

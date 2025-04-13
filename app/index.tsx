@@ -63,6 +63,7 @@ export default function Index() {
 
       {/* Here's the route for profesionals */}
       <Stack.Screen name="Profesionals" component={Profesionals} options={{ headerShown: false }}/>
+      <Stack.Screen name="ProfesionalDetail" component={Profesionals} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }
