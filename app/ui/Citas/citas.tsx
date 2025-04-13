@@ -36,6 +36,7 @@ export default function Citas() {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
+    const [loadingMore, setLoadingMore] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
 
     // State of the date
@@ -47,14 +48,18 @@ export default function Citas() {
     const [conts, setConts] = useState<ContadorProfileData[]>([])
     // store data to register
     const [cita, setCita] = useState<Cita>({} as Cita)
-
     // Time picker info
     const [time, setTime] = useState<TimePickerType>({ value: '', label: '' })
-
     const [pagination, setPagination] = useState<PaginationType>({ skip: 1, take: 10, isEnd: false })
+    let isMounted = false
+
     const getAllCont = async () => {
+        isMounted = true
         if (pagination.isEnd) {
-            console.log('No hay mas contadores')
+            return
+        }
+
+        if (loading) {
             return
         }
 
@@ -63,7 +68,7 @@ export default function Citas() {
                 url: `${API_URl}/user/all/cont?take=${pagination.take}&skip=${pagination.skip}&filter=rs-data`,
                 method: 'GET',
             },
-            setLoading
+            setLoading: isMounted ? setLoadingMore : setLoading
         })
 
         if (error) {
@@ -75,10 +80,8 @@ export default function Citas() {
                 setPagination({ ...pagination, isEnd: true })
             }
 
-            if (!pagination.isEnd) {
-                setConts(response)
-                console.log(response)
-            }
+            setPagination({ ...pagination, skip: pagination.skip + 1 })
+            setConts([...conts, ...response])
         }
     }
 
@@ -106,7 +109,6 @@ export default function Citas() {
         duration: 700,
         useNativeDriver: true
     }).start()
-
 
     const handleRegisterCita = async () => {
         if (!selectedValue || date === undefined || time.value === '' || cita.des_or_reason === '') {
@@ -202,7 +204,13 @@ export default function Citas() {
                         </View>
                         {
                             !loading ? 
-                            <CustomPicker items={conts} selectedValue={selectedValue} onValueChange={setSelectedValue} placeholder="Selecciona a tu especialista..." /> :
+                            <CustomPicker 
+                            items={conts} 
+                            selectedValue={selectedValue} 
+                            onValueChange={setSelectedValue} 
+                            placeholder="Selecciona a tu especialista..."
+                            loadMoreData={getAllCont}
+                            /> :
                             <View>
                                 <ActivityIndicator size="large" color={ColorsApp.primary.color} />
                             </View>
