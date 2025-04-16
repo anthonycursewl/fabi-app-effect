@@ -70,6 +70,10 @@ export default function CitaUser({ navigation }: INavGlobal) {
             return
         }
 
+        if (loading) {
+            return
+        }
+
         const FILTERED_URL = getFilterdUrl(filter, pagination)
         const { response } = await secureFetch({
             options: {
@@ -84,6 +88,7 @@ export default function CitaUser({ navigation }: INavGlobal) {
                 setPagination({ ...pagination, [filter]: { ...pagination[filter], isEnd: true }})
             }
 
+            setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
             setFilteredCitas({ ...filteredCitas, [filter]: response })
         }
     }
@@ -117,12 +122,7 @@ export default function CitaUser({ navigation }: INavGlobal) {
                         renderItem={({ item }) => <CardContentC item={item} navigation={{ navigation: navigation }}/>}
                         ListEmptyComponent={<ListEmptyComponent type={filter} />}
                         onEndReachedThreshold={0.1}
-                        onEndReached={() => {
-                            if (!pagination[filter].isEnd && !loading) {
-                                setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
-                                getAllFilteredData(filter)
-                            }
-                        }}
+                        onEndReached={() => getAllFilteredData(filter)}
                         />
                     }
                 </View>

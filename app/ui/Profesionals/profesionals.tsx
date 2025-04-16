@@ -75,7 +75,7 @@ export default function Profesionals() {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => item.id}                    
                     renderItem={({ item }) => (
-                        <CardProfesional item={item} setShowModalSucess={setShowModalSucess}/>
+                        <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess}/>
                     )}
                     onEndReached={() => {
                         getProfesionalsData()
