@@ -11,6 +11,8 @@ import CreateProfileContador from './ui/Profile/profile';
 import CitaUser from './ui/Citas/CitasUser/CitasUser';
 import CitaDetails from './ui/Citas/CitasUser/CitaDetails';
 import Profesionals from './ui/Profesionals/profesionals';
+import ProfesionalDetails from './ui/Profesionals/components/ProfesionalDetails/ProfesionalsDetails';
+import UserProfile from './ui/UserProfile/userprofile';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -63,7 +65,10 @@ export default function Index() {
 
       {/* Here's the route for profesionals */}
       <Stack.Screen name="Profesionals" component={Profesionals} options={{ headerShown: false }}/>
-      <Stack.Screen name="ProfesionalDetail" component={Profesionals} options={{ headerShown: false }}/>
+      <Stack.Screen name="ProfesionalDetail" component={ProfesionalDetails} options={{ headerShown: false }}/>
+
+      {/* Here's the route for UserProfile */}
+      <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }

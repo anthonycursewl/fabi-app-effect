@@ -5,27 +5,28 @@ import { styleProfesionals } from "../../styles/styleProfesionals"
 
 // services
 import { handleCopyToClipboard } from "@/app/shared/services/coyToClipboard"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
-export const CardProfesional = ({ item, setShowModalSucess }: { item: TypeProfileContador, setShowModalSucess: (value: boolean) => void }): JSX.Element => {
+export const CardProfesional = ({ item, setShowModalSucess, nav }: { item: TypeProfileContador, setShowModalSucess: (value: boolean) => void, nav: INavGlobal }): JSX.Element => {
     const maxLineLimit = 14
 
     return (
         <View style={styleProfesionals.cardProfesional}>
             <View style={styleProfesionals.infoProfesional}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                    <Image source={{ uri: item.users.icon_url }}
+                    <Image source={{ uri: item.users?.icon_url }}
                     style={{ width: 40, height: 40, borderRadius: 50 }}
                     />
 
                     <View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-                            <TextWithColor style={{ fontSize: 16 }}>{item.users.name}</TextWithColor>
+                            <TextWithColor style={{ fontSize: 16 }}>{item.users?.name}</TextWithColor>
                             {item.is_verified && <Image source={require('@/assets/images/verified-contador-img.png')}
                             style={{ width: 19, height: 19 }} 
                             />}
                         </View>
 
-                        <TextWithColor color="gray">@{item.users.username}</TextWithColor>
+                        <TextWithColor color="gray">@{item.users?.username}</TextWithColor>
                     </View>
                 </View>
                 <TextWithColor style={{ fontSize: 15 }}>{item.description}</TextWithColor>
@@ -54,7 +55,9 @@ export const CardProfesional = ({ item, setShowModalSucess }: { item: TypeProfil
             </View>
 
             <View>
-                <TouchableOpacity style={styleProfesionals.btnVerPerfil}>
+                <TouchableOpacity style={styleProfesionals.btnVerPerfil}
+                onPress={() => nav.navigation.navigate('ProfesionalDetail', { item: item })}
+                >
                     <TextWithColor style={{ fontSize: 14, color: 'white', textAlign: 'center' }}>Ver Perfil</TextWithColor>
                 </TouchableOpacity>
             </View>

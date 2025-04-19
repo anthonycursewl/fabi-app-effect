@@ -5,5 +5,5 @@ export interface TypeProfileContador {
     description: string;
     is_verified: boolean;
     user_id: string;
-    users: { name: string, username: string, icon_url: string }
+    users?: { name: string, username: string, icon_url: string }
 }

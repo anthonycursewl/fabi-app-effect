@@ -10,3 +10,8 @@ export interface User {
     exp: number;
     jti: string;
 }
+
+
+export interface IUserProfile extends Omit<User, 'password' | 'iat' | 'exp' | 'jti'> {
+    icon_url: string;
+}

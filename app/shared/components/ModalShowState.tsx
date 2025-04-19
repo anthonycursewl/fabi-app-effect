@@ -3,13 +3,7 @@ import { useEffect, useRef } from "react";
 import TextWithColor from "./TextWithColor";
 import { ColorsApp } from "../constants/ColorsApp";
 
-export default function ModalShowState({
-  setActiveModal,
-  stateModal,
-}: {
-  setActiveModal: (value: boolean) => void;
-  stateModal: boolean;
-}) {
+export default function ModalShowState({ setActiveModal, stateModal, message = "¡El texto ha sido copiado a portapapeles!" }: { setActiveModal: (value: boolean) => void; stateModal: boolean, message?: string }) {
   // Animations
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
@@ -62,8 +56,8 @@ export default function ModalShowState({
           </Animated.View>
         </View>
 
-        <TextWithColor style={{ fontSize: 20, textAlign: "center" }}>
-          ¡El texto ha sido copiado a portapapeles!
+        <TextWithColor style={{ fontSize: 20, textAlign: "center", maxWidth: "80%" }}>
+            {message}
         </TextWithColor>
 
         <TouchableOpacity

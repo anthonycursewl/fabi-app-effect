@@ -14,8 +14,9 @@ import { TypeProfileContador } from "../Profile/interfaces/TypeProfileContador"
 // styles
 import { styleProfesionals } from "./styles/styleProfesionals"
 import { CardProfesional } from "./components/CardProfesional/CardProfesional"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
-export default function Profesionals() {
+export default function Profesionals({ navigation }: INavGlobal) {
     // States of the component
     const [loading, setLoading] = useState<boolean>(false)
     const [pagination, setPagination] = useState<{ skip: number; take: number; isEnd: boolean }>({ skip: 1, take: 10, isEnd: false })
@@ -72,10 +73,9 @@ export default function Profesionals() {
                     <FlatList
                     style={{ width: '100%', flexGrow: 1 }}
                     data={profesionals}
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}                    
+                    showsVerticalScrollIndicator={false}                    
                     renderItem={({ item }) => (
-                        <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess}/>
+                        <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
                     )}
                     onEndReached={() => {
                         getProfesionalsData()

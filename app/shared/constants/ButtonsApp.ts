@@ -25,7 +25,7 @@ export const ButtonsApp = [
     { 
         icon: require("@/assets/images/nav/profile-icon.png"), 
         name: "Perfil",
-        namePath: "Profile"
+        namePath: "UserProfile"
          
     },
 ];
