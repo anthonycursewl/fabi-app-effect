@@ -37,7 +37,7 @@ export const CardContentC = ({ item, navigation }: { item: any, navigation: INav
             navigation.navigation.replace('Dashboard')
         }
     }
-
+    
     const handleDelete = () => {
         Alert.alert('Eliminar cita', 
             '¿Estas seguro de querer eliminar esta cita?', 
