@@ -23,8 +23,10 @@ export default function Login({ navigation }: INavGlobal) {
         email: '',
         password: ''
     })
+
+    // perr
     const [loading, setLoading] = useState<boolean>(false)
-    const { setUserToken, user } = useContext(AuthContext)
+    const { setUserToken } = useContext(AuthContext)
 
     const handleSumbit = async () => {
         if (!formData.email || !formData.password) {

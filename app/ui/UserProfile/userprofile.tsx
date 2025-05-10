@@ -5,19 +5,21 @@ import { secureFetch } from "@/app/shared/services/secureFetch";
 import { API_URl } from "@/app/config/api.breadriuss.config";
 import { useEffect, useState } from "react";
 import { IUserProfile } from "@/app/shared/interfaces/User";
-
+import { iconsProfile } from "./constants/IconsProfile";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
-// Components
-import { CustomTimePicker } from "../Citas/components/PickerTime";
+import { parseRole } from "./services/parseRole";
+
+// constants
 import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function UserProfile() {
     const [loading, setLoading] = useState<boolean>(false);
     const [user, setUser] = useState<IUserProfile>({ id: "", username: "", email: "", created_at: "", role: "", name: "", icon_url: "" });
+    const [selectedIcon, setSelectedIcon] = useState<string>("")
 
     // state for modal
     const [isEditing, setIsEditing] = useState<boolean>(false) 
+    const [isChangePassword, setIsChangePassword] = useState<boolean>(false)
 
     const getProfileData = async () => {
         const { error, response } = await secureFetch({
@@ -34,57 +36,54 @@ export default function UserProfile() {
         }
 
         if (response) {
-            console.log(response)
             setUser(response);
         }
     }
 
-    const updateProfileData = async () => {
+    const handleUpdateUserProfile = async () => {
+        if (selectedIcon) {
+            user.icon_url = selectedIcon
+        }
+
+        if (user.name === "" || user.email === "" || user.username === "") {
+            Alert.alert("BRD | Error", "Todos los campos son requeridos!");
+            return;
+        }
+
+        if (user.name.length < 3 || user.email.length < 3 || user.username.length < 3) {
+            Alert.alert("BRD | Error", "Todos los campos deben tener al menos 3 caracteres!");
+            return;
+        }
+
+        if (user.email.length > 255) {
+            Alert.alert("BRD | Error", "El correo electrónico debe tener menos de 100 caracteres!");
+            return;
+        }
+
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/user/n/profile`,
+                url: `${API_URl}/user/update/u/profile`,
                 method: "PUT",
                 body: user
             },
             setLoading
         })
-
+        
         if (error) {
             Alert.alert("BRD | Error", `${error}`);
             return;
         }
-
+        
         if (response) {
-            setUser(response);
+            Alert.alert("BRD | Éxito!", "Perfil actualizado correctamente!");
+            setIsEditing(false)
+            return
         }
     }
 
     useEffect(() => {
         getProfileData()
     }, [])
-
-
-    const parseRole = (role: string) => {
-        if (role === "Admin") return "Administrador";
-        if (role === "Contdr") return "Contador";
-        if (role === "Default") return "Usuario";
-
-        return ""
-    }
-
-    const roles = [
-        { label: "Administrador", value: "Admin" },
-        { label: "Contador", value: "Contdr" },
-        { label: "Usuario", value: "Default" },
-    ]
-
-    const iconsProfile = [
-        'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/fabiicons%2Fsegunda_profile.jpg?alt=media&token=bd037257-9690-4d8a-82cf-b9a5a4e1e9b1', 
-        'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/fabiicons%2Ftercera_profile.jpg?alt=media&token=917fab76-1b79-4240-a5fc-d96b8d0863f4',
-        'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/fabiicons%2Fcuarta_profile.jpg?alt=media&token=9d7f1f83-4aae-4285-9d88-e74a27d2ac4b', 
-        'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/fabiicons%2Fquinta_profile.jpg?alt=media&token=11e04b66-7be7-4099-95a4-db254c5b22ea', 
-        'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/profile-default.jpg?alt=media&token=60f5b6dc-6e9f-4c7a-8399-018d8796b831'
-    ]
 
   return (
     <AuthenticatedLayout>
@@ -94,7 +93,7 @@ export default function UserProfile() {
             {loading ? <ActivityIndicator size={"large"} color="#0000ff" /> :
             <View style={{ width: "90%", height: "100%" }}>
 
-                <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "flex-start", marginTop: 60 }}>
+                <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "flex-start", marginTop: 60, marginBottom: 20 }}>
                     <View style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
                         {user.icon_url && <Image source={{ uri: user.icon_url }} style={{ width: 100, height: 100, borderRadius: 50 }}/>}
 
@@ -120,6 +119,11 @@ export default function UserProfile() {
                         <View style={{ gap: 10 }}>
                             <TextWithColor style={{ fontSize: 16, color: "rgba(128, 128, 128, 0.83)" }}>Nombres</TextWithColor>
                             <TextWithColor style={{ fontSize: 16, color: "rgba(49, 49, 49, 0.83)" }}>{user.name}</TextWithColor>
+                        </View>
+
+                        <View style={{ gap: 10 }}>
+                            <TextWithColor style={{ fontSize: 16, color: "rgba(128, 128, 128, 0.83)" }}>Username</TextWithColor>
+                            <TextWithColor style={{ fontSize: 16, color: "rgba(49, 49, 49, 0.83)" }}>{user.username}</TextWithColor>
                         </View>
 
                         <View style={{ gap: 10 }}>
@@ -151,7 +155,10 @@ export default function UserProfile() {
 
         <Modal visible={isEditing} statusBarTranslucent onRequestClose={() => setIsEditing(false)}
             style={{ justifyContent: 'space-between' }}
+            animationType="slide"
             >
+            <ScrollView style={{ flex: 1 }}>
+
             <View style={styleModalEditProfile.modalMain}>
                 <View style={styleModalEditProfile.modalProfilePicture}>
                     {user.icon_url && <Image source={{ uri: user.icon_url }} style={{ width: 70, height: 70, borderRadius: 50 }}/>}
@@ -166,17 +173,24 @@ export default function UserProfile() {
                             borderRadius: 12, marginTop: 10
                          }}>
                             {iconsProfile.map((img: string, index: number) => (
-                                <Image key={index} source={{ uri: img }} style={{ width: 50, height: 50, borderRadius: 100 }}/>
+                                <TouchableOpacity key={index} onPress={() => setSelectedIcon(img)} style={{ position: 'relative'}}>
+                                    <Image source={{ uri: img }} style={{ width: 50, height: 50, borderRadius: 100, opacity: selectedIcon === img ? 1 : 0.5 }} />
+                                    {selectedIcon === img && 
+                                        <View style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: '100%', boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.87)' }}>
+                                            <Image source={require('@/assets/icons/icon-check.png')} style={{ width: 20, height: 20, position: 'absolute', top: 0, right: 0 }}/>
+                                        </View>
+                                    }
+                                </TouchableOpacity>
                             ))}
                         </View>
                     </View>
 
-                    <View style={{ gap: 10 }}>
-                        <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Nombres</TextWithColor>
-                        <TextInput value={user.name} style={styleModalEditProfile.modalInputs} 
-                        onChangeText={(text) => {setUser({ ...user, name: text })}}
-                        />
-                    </View>
+                        <View style={{ gap: 10 }}>
+                            <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Nombres</TextWithColor>
+                            <TextInput value={user.name} style={styleModalEditProfile.modalInputs} 
+                            onChangeText={(text) => {setUser({ ...user, name: text })}}
+                            />
+                        </View>
 
                     <View style={{ gap: 10 }}>
                         <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Correo Electrónico</TextWithColor>
@@ -186,11 +200,46 @@ export default function UserProfile() {
                     </View>
 
                     <View style={{ gap: 10 }}>
+                        <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Username</TextWithColor>
+                        <TextInput value={user.username} style={styleModalEditProfile.modalInputs} 
+                        onChangeText={(text) => {setUser({ ...user, username: text })}}
+                        />
+                    </View>
+
+                    <View style={{ gap: 10 }}>
                         <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Contraseña</TextWithColor>
-                        <TouchableOpacity style={styleModalEditProfile.modalContainerChangePassword}>
+                        <TouchableOpacity style={styleModalEditProfile.modalContainerChangePassword} onPress={() => {
+                            setIsChangePassword(true)
+                        }}>
                             <TextWithColor color="rgb(189, 71, 71)">Cambiar contraseña</TextWithColor>
                         </TouchableOpacity>
                     </View>
+
+                    <Modal visible={isChangePassword} statusBarTranslucent onRequestClose={() => setIsChangePassword(false)}>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', gap: 10 }}>
+                            <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                                <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Contraseña actual</TextWithColor>
+                                <TextInput style={styleModalEditProfile.modalInputs} />
+                            </View>
+
+                            <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                                <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Nueva contraseña</TextWithColor>
+                                <TextInput style={styleModalEditProfile.modalInputs} />
+                            </View>
+
+                            <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                                <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Confirmar contraseña</TextWithColor>
+                                <TextInput style={styleModalEditProfile.modalInputs} />
+                            </View>
+
+                            {
+                            loading ? <ActivityIndicator size={"large"} color="#0000ff" /> :
+                            <TouchableOpacity style={{ ...styleModalEditProfile.buttonSave, marginTop: 20 }} onPress={() => {handleUpdateUserProfile()}}>
+                                <TextWithColor style={{ color: 'white', textAlign: 'center' }}>Guardar</TextWithColor>
+                            </TouchableOpacity>
+                            }
+                        </View>
+                    </Modal>
 
                     <View style={{ gap: 10 }}>
                         <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Rol</TextWithColor>
@@ -209,10 +258,14 @@ export default function UserProfile() {
             </View>
             
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity style={styleModalEditProfile.buttonSave}>
+                {
+                loading ? <ActivityIndicator size={"large"} color="#0000ff" /> :
+                <TouchableOpacity style={styleModalEditProfile.buttonSave} onPress={() => {handleUpdateUserProfile()}}>
                     <TextWithColor style={{ color: 'white', textAlign: 'center' }}>Guardar</TextWithColor>
                 </TouchableOpacity>
+                }
             </View>
+        </ScrollView>
         </Modal>
     </AuthenticatedLayout>
   );
@@ -232,7 +285,8 @@ const styleModalEditProfile = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 12,
         paddingHorizontal: 10,
-        fontFamily: 'OnestRegular'
+        fontFamily: 'OnestRegular',
+        width: '100%'
     },
     modalTitleInputs: {
         fontSize: 16

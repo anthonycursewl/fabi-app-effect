@@ -86,10 +86,8 @@ export default function Main({ navigation }: INavGlobal) {
 
                             <View style={styleDashboard.newCitas}>
                                 {
-                                    newCitas.slice(0, 5).map((cita, _) => (
-                                        <>
-                                            <Image source={{ uri: cita.profilePic }} style={{ ...styleDashboard.picCitaInfo, opacity: _ > 0 ? 1 - (_ / newCitas.length) : 0.9 }} key={cita.id}/>
-                                        </>
+                                    newCitas.slice(0, 5).map((cita, index) => (
+                                        <Image source={{ uri: cita.profilePic }} style={{ ...styleDashboard.picCitaInfo, opacity: index > 0 ? 1 - (index / newCitas.length) : 0.9 }} key={cita.id}/>
                                     ))
                                 }
                                 {newCitas.length > 5 ? <TextWithColor style={{ fontSize: 20 }} color="rgba(155, 123, 206, 0.83)">{`+${restates.toString()}`}</TextWithColor> : null}
