@@ -20,12 +20,14 @@ import { styleDashboard } from "../styles/stylesDashboard";
 // Constants
 import { API_URl } from "@/app/config/api.breadriuss.config";
 import { newCitas } from "@/app/shared/constants/mockCitas";
+import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 export default function Main({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
     const { user, setUser } = useContext(AuthContext)
+    const { setUser: setUserGlobal } = useGlobalState()
 
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
@@ -41,14 +43,17 @@ export default function Main({ navigation }: INavGlobal) {
         const { response, error } = await secureFetch({ options: {
             url: `${API_URl}/auth/verify?type=access_token`,
             method: 'GET',
-        }, setLoading })
+            }, setLoading
+        })
 
         if (error) {
+            // Replacing current screen with login screen
             navigation.replace('Login')
             Alert.alert('BRD | Error de autenticación', `${error}`)
         }
 
         if (response) {
+            setUserGlobal(response)
             setUser(response)
         }
     }
@@ -101,7 +106,7 @@ export default function Main({ navigation }: INavGlobal) {
                             <TextWithColor color="rgba(51, 51, 51, 0.57)">Con este pequeño tutorial podrás aprender a como agendar tu cita de manera sencilla y en pocos taps.</TextWithColor>
                         </View>
 
-                        <InfoApproach styleDashboard={styleDashboard} navigation={{ navigation }}/>  
+                        <InfoApproach styleDashboard={styleDashboard} navigation={{ navigation }} />  
                     </View>
                 </SafeAreaView>
 
