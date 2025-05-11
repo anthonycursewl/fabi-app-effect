@@ -13,6 +13,7 @@ import CitaDetails from './ui/Citas/CitasUser/CitaDetails';
 import Profesionals from './ui/Profesionals/profesionals';
 import ProfesionalDetails from './ui/Profesionals/components/ProfesionalDetails/ProfesionalsDetails';
 import UserProfile from './ui/UserProfile/userprofile';
+import Admin from './ui/Admin/Admin';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -69,6 +70,9 @@ export default function Index() {
 
       {/* Here's the route for UserProfile */}
       <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }}/>
+
+      {/* Here's the route for Admin */}
+      <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }
