@@ -12,6 +12,7 @@ import { API_URl } from "@/app/config/api.breadriuss.config";
 
 // services
 import { storeData } from "@/app/store/storeData";
+import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 interface FormDataLogin {
     email: string;
@@ -23,6 +24,9 @@ export default function Login({ navigation }: INavGlobal) {
         email: '',
         password: ''
     })
+
+    // This state is for development purposes
+    const { user } = useGlobalState() 
 
     // perr
     const [loading, setLoading] = useState<boolean>(false)
@@ -54,6 +58,12 @@ export default function Login({ navigation }: INavGlobal) {
     useEffect(() => {
         return () => {
             setLoading(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (user.id !== '') {
+            navigation.replace('Admin')
         }
     }, [])
 
