@@ -6,9 +6,12 @@ import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useContext } from "react";
 import { AuthContext } from "@/app/shared/context/ContextProvider";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
+import { useGlobalSearchParams } from "expo-router";
+import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { scrollPosition: number, styleDashboard: any, nav: INavGlobal }) {
   const { setUser, user } = useContext(AuthContext)
+  const { user: userGlobal } = useGlobalState()
 
   const navi = useNavigation()
 
@@ -60,7 +63,7 @@ export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { 
           <TouchableOpacity onPress={() => {}}>
             <Image
               source={{
-                uri: "https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/profile-default.jpg?alt=media&token=60f5b6dc-6e9f-4c7a-8399-018d8796b831",
+                uri: userGlobal.icon_url,
               }}
               style={styleDashboard.profilePicture}
               />
