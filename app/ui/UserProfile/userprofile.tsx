@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Image, Alert, ActivityIndicator, ScrollView, TouchableOpacity, Modal, TextInput, StyleSheet } from "react-native";
+import { SafeAreaView, View, Image, Alert, ActivityIndicator, ScrollView, TouchableOpacity, Modal, TextInput, StyleSheet, CursorValue } from "react-native";
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import { secureFetch } from "@/app/shared/services/secureFetch";
@@ -8,9 +8,11 @@ import { IUserProfile } from "@/app/shared/interfaces/User";
 import { iconsProfile } from "./constants/IconsProfile";
 import { ColorsApp } from "@/app/shared/constants/ColorsApp";
 import { parseRole } from "./services/parseRole";
-
 // constants
 import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
+// interfaces
+import { IChangePassword } from "./interfaces/IChangePassword";
+import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 export default function UserProfile() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -20,6 +22,9 @@ export default function UserProfile() {
     // state for modal
     const [isEditing, setIsEditing] = useState<boolean>(false) 
     const [isChangePassword, setIsChangePassword] = useState<boolean>(false)
+    const [password, setPassword] = useState<IChangePassword>({ currentPassword: "", newPassword: "", confirmPassword: "" })
+
+    const { user: userGlobal, setUser: setUserGlobal } = useGlobalState()
 
     const getProfileData = async () => {
         const { error, response } = await secureFetch({
@@ -37,12 +42,14 @@ export default function UserProfile() {
 
         if (response) {
             setUser(response);
+            setUserGlobal(response)
         }
     }
 
     const handleUpdateUserProfile = async () => {
         if (selectedIcon) {
             user.icon_url = selectedIcon
+            setUserGlobal({ ...userGlobal, icon_url: selectedIcon })
         }
 
         if (user.name === "" || user.email === "" || user.username === "") {
@@ -78,6 +85,55 @@ export default function UserProfile() {
             Alert.alert("BRD | Éxito!", "Perfil actualizado correctamente!");
             setIsEditing(false)
             return
+        }
+    }
+
+    const handleChangePassword = async () => {
+        if (password.currentPassword === "" || password.newPassword === "" || password.confirmPassword === "") {
+            Alert.alert("BRD | Error", "Todos los campos son requeridos!");
+            return;
+        }
+
+        if (password.currentPassword === password.newPassword) {
+            Alert.alert("BRD | Error", "La contraseña actual y la nueva contraseña no pueden ser iguales!");
+            return;
+        }
+
+        if (password.newPassword !== password.confirmPassword) {
+            Alert.alert("BRD | Error", "Las contraseñas no coinciden!");
+            return;
+        }
+
+        if (password.newPassword.length < 8) {
+            Alert.alert("BRD | Error", "La contraseña debe tener al menos 8 caracteres!");
+            return;
+        }
+        
+
+        const { error, response } = await secureFetch({
+            options: {
+                url: `${API_URl}/user/changepass`,
+                method: 'PUT',
+                body: {
+                    currentPassword: password.currentPassword,
+                    newPassword: password.newPassword
+                }
+            }, 
+            setLoading
+        })
+
+        if (error) {
+            Alert.alert("BRD | Error", `${error}`);
+            return;
+        }
+
+        if (response) {
+            Alert.alert("BRD | Éxito!", "Contraseña actualizada correctamente!");
+            setIsChangePassword(false)
+            setIsEditing(false)
+
+            setPassword({ currentPassword: "", newPassword: "", confirmPassword: "" })
+            return;
         }
     }
 
@@ -219,22 +275,31 @@ export default function UserProfile() {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', gap: 10 }}>
                             <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
                                 <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Contraseña actual</TextWithColor>
-                                <TextInput style={styleModalEditProfile.modalInputs} />
+                                <TextInput style={styleModalEditProfile.modalInputs} 
+                                value={password.currentPassword}
+                                onChangeText={(text) => {setPassword({ ...password, currentPassword: text })}} 
+                                />
                             </View>
 
                             <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
                                 <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Nueva contraseña</TextWithColor>
-                                <TextInput style={styleModalEditProfile.modalInputs} />
+                                <TextInput style={styleModalEditProfile.modalInputs} 
+                                value={password.newPassword}
+                                onChangeText={(text) => {setPassword({ ...password, newPassword: text })}} 
+                                />
                             </View>
 
                             <View style={{ gap: 10, width: '90%', justifyContent: 'center', alignItems: 'flex-start' }}>
                                 <TextWithColor style={styleModalEditProfile.modalTitleInputs}>Confirmar contraseña</TextWithColor>
-                                <TextInput style={styleModalEditProfile.modalInputs} />
+                                <TextInput style={styleModalEditProfile.modalInputs} 
+                                value={password.confirmPassword}
+                                onChangeText={(text) => {setPassword({ ...password, confirmPassword: text })}} 
+                                />
                             </View>
 
                             {
                             loading ? <ActivityIndicator size={"large"} color="#0000ff" /> :
-                            <TouchableOpacity style={{ ...styleModalEditProfile.buttonSave, marginTop: 20 }} onPress={() => {handleUpdateUserProfile()}}>
+                            <TouchableOpacity style={{ ...styleModalEditProfile.buttonSave, marginTop: 20 }} onPress={() => {handleChangePassword()}}>
                                 <TextWithColor style={{ color: 'white', textAlign: 'center' }}>Guardar</TextWithColor>
                             </TouchableOpacity>
                             }
@@ -247,7 +312,7 @@ export default function UserProfile() {
                             {
                                 user.role === TYPES_ROLES.ADMIN 
                                 ? 
-                                <TextWithColor color="rgb(85, 85, 85)">Si quieres cambiar roles debes hacerlo desde el apartado del perfil.</TextWithColor>
+                                <TextWithColor color="rgb(85, 85, 85)">Si quieres cambiar roles debes hacerlo desde el apartado de usuarios.</TextWithColor>
                                 :
                                 <TextWithColor color="rgb(85, 85, 85)">No tienes permisos para cambiar roles.</TextWithColor>
                             }
