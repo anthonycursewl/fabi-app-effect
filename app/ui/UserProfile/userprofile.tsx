@@ -16,7 +16,7 @@ import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 export default function UserProfile() {
     const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<IUserProfile>({ id: "", username: "", email: "", created_at: "", role: "", name: "", icon_url: "" });
+    const [user, setUser] = useState<IUserProfile>({ id: "", username: "", email: "", created_at: "", role: "", name: "", icon_url: "", is_active: true });
     const [selectedIcon, setSelectedIcon] = useState<string>("")
 
     // state for modal

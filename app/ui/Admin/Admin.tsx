@@ -1,13 +1,14 @@
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import TextWithColor from "@/app/shared/components/TextWithColor"
-import { User } from "@/app/shared/interfaces/User"
+import { IUserProfile, User } from "@/app/shared/interfaces/User"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { useState, useEffect } from "react"
-import { View, SafeAreaView, Alert, FlatList, StyleSheet, ActivityIndicator } from "react-native"
+import { View, SafeAreaView, Alert, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native"
 import { StatusBar } from "expo-status-bar"
 import { useGlobalState } from "@/app/store/zustand/useGlobalState"
 import { parseRole } from "../UserProfile/services/parseRole"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
 interface Pagination {
     page: number
@@ -16,8 +17,8 @@ interface Pagination {
     isEnd: boolean
 }
 
-export default function Admin() {
-    const [user, setUsers] = useState<User[]>([])
+export default function Admin({ navigation }: INavGlobal) {
+    const [user, setUsers] = useState<IUserProfile[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
@@ -62,29 +63,34 @@ export default function Admin() {
         getUsers()
     }, [])
 
-    const RenderItem = ({ item }: { item: User }) => {
+    const RenderItem = ({ item }: { item: IUserProfile }) => {
         return (
-            <View style={{ width: '100%', backgroundColor: 'rgb(245, 245, 245)', borderRadius: 10, marginBottom: 10, 
-                padding: 12, borderWidth: 1, borderColor: 'rgb(230, 230, 230)', gap: 10
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('UserDetails', { user: item })
             }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <TextWithColor style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</TextWithColor>
-                    <TextWithColor>@{item.username}</TextWithColor>
-                </View>
-                <View>
-                    <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Correo Electrónico</TextWithColor>
-                    <TextWithColor>{item.email}</TextWithColor>
-                </View>
-                <View>
-                    <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Fecha de Creación</TextWithColor>
-                    <TextWithColor>{item.created_at}</TextWithColor>
-                </View>
+                <View style={{ width: '100%', backgroundColor: 'rgb(245, 245, 245)', borderRadius: 10, marginBottom: 10, 
+                    padding: 12, borderWidth: 1, borderColor: 'rgb(230, 230, 230)', gap: 10
+                }}
+                >
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <TextWithColor style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</TextWithColor>
+                        <TextWithColor>@{item.username}</TextWithColor>
+                    </View>
+                    <View>
+                        <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Correo Electrónico</TextWithColor>
+                        <TextWithColor>{item.email}</TextWithColor>
+                    </View>
+                    <View>
+                        <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Fecha de Creación</TextWithColor>
+                        <TextWithColor>{item.created_at}</TextWithColor>
+                    </View>
 
-                <View>  
-                    <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Rol</TextWithColor>
-                    <TextWithColor>{parseRole(item.role)}</TextWithColor>
+                    <View>  
+                        <TextWithColor style={{ fontSize: 14, color: 'gray' }}>Rol</TextWithColor>
+                        <TextWithColor>{parseRole(item.role)}</TextWithColor>
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 
