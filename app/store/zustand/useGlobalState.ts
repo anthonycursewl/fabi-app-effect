@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 interface IGlobalState {
     user: IUserProfile, 
-    setUser: (user: IUserProfile) => void
+    setUser: (user: IUserProfile) => void;
 }
 
 export const useGlobalState = create<IGlobalState>((_set) => ({
@@ -12,7 +12,8 @@ export const useGlobalState = create<IGlobalState>((_set) => ({
         id: '', username: '', 
         email: '', password: '', 
         created_at: '', role: '', 
-        name: '', icon_url: '' 
+        name: '', icon_url: '',
+        is_active: true
     },
-    setUser: (user: IUserProfile) => _set({ user })
+    setUser: (user: IUserProfile) => _set({ user }),
 }));
