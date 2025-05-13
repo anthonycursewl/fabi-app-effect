@@ -14,6 +14,7 @@ import Profesionals from './ui/Profesionals/profesionals';
 import ProfesionalDetails from './ui/Profesionals/components/ProfesionalDetails/ProfesionalsDetails';
 import UserProfile from './ui/UserProfile/userprofile';
 import Admin from './ui/Admin/Admin';
+import UserDetails from './ui/Admin/UserDetails/UserDetails';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -73,6 +74,7 @@ export default function Index() {
 
       {/* Here's the route for Admin */}
       <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }}/>
+      <Stack.Screen name="UserDetails" component={UserDetails} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }
