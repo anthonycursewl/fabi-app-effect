@@ -14,4 +14,5 @@ export interface User {
 
 export interface IUserProfile extends Omit<User, 'password' | 'iat' | 'exp' | 'jti'> {
     icon_url: string;
+    is_active: boolean;
 }
