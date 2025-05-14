@@ -7,4 +7,5 @@ export interface Cita {
     cont_id: string;
     status: string; 
     user_id: string;
+    hour: string;
 }

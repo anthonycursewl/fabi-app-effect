@@ -15,6 +15,7 @@ import ProfesionalDetails from './ui/Profesionals/components/ProfesionalDetails/
 import UserProfile from './ui/UserProfile/userprofile';
 import Admin from './ui/Admin/Admin';
 import UserDetails from './ui/Admin/UserDetails/UserDetails';
+import RescheduleCita from './ui/Citas/RescheduleCita/RescheduleCita';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -64,6 +65,7 @@ export default function Index() {
       <Stack.Screen name="Citas" component={Citas} options={{ headerShown: false }}/>
       <Stack.Screen name="CitasUser" component={CitaUser} options={{ headerShown: false }}/>
       <Stack.Screen name="CitaDetails" component={CitaDetails} options={{ headerShown: false }}/>
+      <Stack.Screen name="RescheduleCita" component={RescheduleCita} options={{ headerShown: false }}/>
 
       {/* Here's the route for profesionals */}
       <Stack.Screen name="Profesionals" component={Profesionals} options={{ headerShown: false }}/>
