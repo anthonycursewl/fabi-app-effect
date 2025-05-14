@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, StyleSheet, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -144,7 +144,7 @@ export default function Citas() {
             if (response) {
                 setTime({ value: '', label: '' })
                 setSelectedValue(null)
-                setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '' })    
+                setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })    
                 return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
             }
     }

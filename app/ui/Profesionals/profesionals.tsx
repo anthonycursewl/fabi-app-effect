@@ -73,6 +73,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
                     <FlatList
                     style={{ width: '100%', flexGrow: 1 }}
                     data={profesionals}
+                    keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}                    
                     renderItem={({ item }) => (
                         <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
