@@ -61,12 +61,6 @@ export default function Login({ navigation }: INavGlobal) {
         }
     }, [])
 
-    useEffect(() => {
-        if (user.id !== '') {
-            navigation.replace('Admin')
-        }
-    }, [])
-
     const LogoApp = require('@/assets/images/app-logo.png') 
 
     return (
