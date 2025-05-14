@@ -84,13 +84,23 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
 
     return (!loading ?
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
-            {item.status !== TYPES_STATUS_CITAS.CANCELED && item.status !== TYPES_STATUS_CITAS.CONFIRMED && user.role === TYPES_ROLES.PROFESIONAL &&
+            {item.status !== TYPES_STATUS_CITAS.CANCELED && item.status !== TYPES_STATUS_CITAS.CONFIRMED && user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN &&
                 <SlideButton onSlideSuccess={() => handleChangeStatusCita(TYPES_STATUS_CITAS.CONFIRMED as TypeFilter)} title="Desliza para confirmar la cita"
                 thumbIcon={
                     <Image style={{ width: 30, height: 30 }} source={require('@/assets/images/arrow-right-cita.png')} />
                 }
                 />
             }
+                {item.status !== TYPES_STATUS_CITAS.CANCELED && user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN &&
+                        <TouchableOpacity
+                        style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+                        onPress={() => {
+                            navigation.navigation.replace('RescheduleCita', { item: item });
+                        }}>
+                            <TextWithColor color="rgb(255, 255, 255)">Reprogramar</TextWithColor>
+                    </TouchableOpacity>
+                }
+
                 {item.status !== TYPES_STATUS_CITAS.CANCELED &&
                     <TouchableOpacity
                     style={{ 
@@ -103,15 +113,6 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
                         handleAlertCancel();
                     }}>
                         <TextWithColor color="rgb(255, 255, 255)">Cancelar</TextWithColor>
-                </TouchableOpacity>
-                }
-                {item.status !== TYPES_STATUS_CITAS.CANCELED && user.role === TYPES_ROLES.PROFESIONAL &&
-                    <TouchableOpacity
-                    style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
-                    onPress={() => {
-                        navigation.navigation.replace('RescheduleCita', { cita: item });
-                    }}>
-                        <TextWithColor color="rgb(255, 255, 255)">Reprogramar</TextWithColor>
                 </TouchableOpacity>
                 }
                 {

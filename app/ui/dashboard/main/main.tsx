@@ -47,7 +47,6 @@ export default function Main({ navigation }: INavGlobal) {
         })
 
         if (error) {
-            // Replacing current screen with login screen
             navigation.replace('Login')
             Alert.alert('BRD | Error de autenticación', `${error}`)
         }
