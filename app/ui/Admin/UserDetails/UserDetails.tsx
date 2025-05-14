@@ -10,8 +10,9 @@ import { ScrollView } from "react-native"
 import { ColorsApp } from "@/app/shared/constants/ColorsApp"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
-export default function UserDetails() { 
+export default function UserDetails({ navigation }: INavGlobal) { 
 
     const [roleSelected, setRoleSelected] = useState<{ value: string, label: string }>({ value: '', label: '' })
     const [loading, setLoading] = useState(false)
@@ -48,7 +49,7 @@ export default function UserDetails() {
 
         const { error, response } = await secureFetch({
             options: {
-                url: `${API_URl}/user/update/u/profile`,
+                url: `${API_URl}/user/update/u/role/${user.id}`,
                 method: 'PUT',
                 body: newRole
             }, setLoading
@@ -59,7 +60,8 @@ export default function UserDetails() {
         }
 
         if (response) {
-            Alert.alert('BRD | Success', `${response.message}`)
+            Alert.alert('BRD | Success', 'Rol actualizado correctamente!')
+            navigation.goBack()
         }
     }
 
@@ -164,7 +166,9 @@ export default function UserDetails() {
                     </View>
                 
                     <View style={{ marginTop: 20, gap: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '48%', borderRadius: 12 }}>
+                        <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '48%', borderRadius: 12 }}
+                        onPress={handleChangeRole}
+                        >
                             <TextWithColor style={{ color: 'white', textAlign: 'center' }}>
                                 Guardar cambios
                             </TextWithColor>
