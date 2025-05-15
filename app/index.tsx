@@ -16,6 +16,7 @@ import UserProfile from './ui/UserProfile/userprofile';
 import Admin from './ui/Admin/Admin';
 import UserDetails from './ui/Admin/UserDetails/UserDetails';
 import RescheduleCita from './ui/Citas/RescheduleCita/RescheduleCita';
+import Notifications from './ui/Notifications/notifications';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -77,6 +78,9 @@ export default function Index() {
       {/* Here's the route for Admin */}
       <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }}/>
       <Stack.Screen name="UserDetails" component={UserDetails} options={{ headerShown: false }}/>
+
+      {/* Here's the route for Notifications */}
+      <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }}/>
     </Stack.Navigator> 
   );
 }
