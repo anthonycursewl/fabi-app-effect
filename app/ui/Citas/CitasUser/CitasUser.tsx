@@ -1,143 +1,130 @@
-import { SafeAreaView, View, FlatList, StatusBar } from "react-native"
-import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { useContext, useEffect, useState } from "react"
-import { StyleSheet } from "react-native"
-
+import { SafeAreaView, View, FlatList, StatusBar, ActivityIndicator, BackHandler } from "react-native";
+import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout";
+import { useCallback, useContext, useEffect } from "react"; 
+import { StyleSheet } from "react-native";
 
 // Components
-import TextWithColor from "@/app/shared/components/TextWithColor"
-import FilterCitas from "../components/FilterCitas"
-import { ListEmptyComponent } from "../components/ListEmptyComponent"
-import { CardContentC } from "../components/CardContentC"
-// Constants
-import { API_URl } from "@/app/config/api.breadriuss.config"
+import TextWithColor from "@/app/shared/components/TextWithColor";
+import FilterCitas from "../components/FilterCitas";
+import { ListEmptyComponent } from "../components/ListEmptyComponent";
+import { CardContentC } from "../components/CardContentC";
+
 // Services
-import { AuthContext } from "@/app/shared/context/ContextProvider"
-import { secureFetch } from "@/app/shared/services/secureFetch"
+import { AuthContext } from "@/app/shared/context/ContextProvider";
 
 // Interfaces
-import { Cita } from "@/app/shared/interfaces/CitaType"
-import { TypeFilter } from "../interfaces/TypeFilter"
-import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
-
-interface TypesCitas {
-    all: Cita[];
-    pending: Cita[];
-    confirmed: Cita[];
-    canceled: Cita[];
-    rescheduled: Cita[];
-}
-
-interface PaginationType {
-    all: { skip: number; take: number; isEnd: boolean };
-    pending: { skip: number; take: number; isEnd: boolean };
-    confirmed: { skip: number; take: number; isEnd: boolean };
-    canceled: { skip: number; take: number; isEnd: boolean };
-    rescheduled: { skip: number; take: number; isEnd: boolean };
-}
+import { TypeFilter } from "../interfaces/TypeFilter";
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
+import { useCitasStore } from "@/app/store/zustand/useCitaStore";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function CitaUser({ navigation }: INavGlobal) {
-    const { user } = useContext(AuthContext)
-    const [pagination, setPagination] = useState<PaginationType>({
-        all: { skip: 1, take: 10, isEnd: false },
-        pending: { skip: 1, take: 10, isEnd: false },
-        confirmed: { skip: 1, take: 10, isEnd: false },
-        canceled: { skip: 1, take: 10, isEnd: false },
-        rescheduled: { skip: 1, take: 10, isEnd: false },
-    })
-    const [loading, setLoading] = useState<boolean>(false)
+    const { user } = useContext(AuthContext);
+    const {
+        citasByFilter,
+        paginationByFilter,
+        loading,
+        error,
+        currentFilter,
+        setFilter,
+        fetchCitas
+    } = useCitasStore();
 
-    // Status of the filter
-    const [filter, setFilter] = useState<TypeFilter>('all')
-    const [filteredCitas, setFilteredCitas] = useState<TypesCitas>({
-        all: [],
-        pending: [],
-        confirmed: [],
-        canceled: [],
-        rescheduled: [],
-    })
-
-    const MAIN_PART_URL = `${API_URl}/cita/get/all/byuserid/${user.id}`
-    const getFilterdUrl = (fetchFilter: TypeFilter, pagination: PaginationType): string  => {
-        const paginationConfig = pagination[fetchFilter]
-        if (!paginationConfig) return 'BRD | Invalid fetchFilter.'
-
-        return `${MAIN_PART_URL}?take=${paginationConfig.take}&skip=${paginationConfig.skip}&filter=${fetchFilter}`
-    }
-
-    const getAllFilteredData = async (filter: TypeFilter) => {
-        if (pagination[filter].isEnd) {
-            return
-        }
-
-        if (loading) {
-            return
-        }
-
-        const FILTERED_URL = getFilterdUrl(filter, pagination)
-        const { response } = await secureFetch({
-            options: {
-                url: FILTERED_URL,
-                method: 'GET',
-            },
-            setLoading: setLoading
-        })
-
-        if (response) {
-            if (response.length < pagination[filter].take) {
-                setPagination({ ...pagination, [filter]: { ...pagination[filter], isEnd: true }})
-            }
-
-            setPagination({ ...pagination, [filter]: { ...pagination[filter], skip: pagination[filter].skip + 1 } })
-            setFilteredCitas({ ...filteredCitas, [filter]: response })
-        }
-    }
+    const citasToShow = citasByFilter[currentFilter] || [];
+    const currentPageInfo = paginationByFilter[currentFilter] || { skip: 1, take: 10, isEnd: false };
 
     useEffect(() => {
-        getAllFilteredData(filter)
-    }, [filter])
+        fetchCitas(currentFilter, user.id, true);
+    }, [currentFilter, user.id]);
+
+    const handleLoadMore = () => {
+        if (!loading && !currentPageInfo.isEnd) {
+            fetchCitas(currentFilter, user.id, false);
+        }
+    };
+
+    const handleSetFilter = (newFilter: TypeFilter) => {
+        setFilter(newFilter);
+    };
+
+    const renderListEmptyComponent = () => {
+        if (loading && citasToShow.length === 0) {
+            return <ActivityIndicator style={{ marginTop: 50 }} size="large" color="rgb(128, 128, 128)" />;
+        }
+        if (!loading && citasToShow.length === 0) {
+            return <ListEmptyComponent type={currentFilter} />;
+        }
+        return null;
+    };
+
+    const renderListFooterComponent = () => {
+        if (loading && citasToShow.length > 0) {
+            return <ActivityIndicator style={{ marginVertical: 20 }} size="small" color="rgb(128, 128, 128)" />;
+        }
+        return null;
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                navigation.replace('Dashboard');
+                return true;
+            };
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () => {
+                subscription.remove();
+            };
+        }, [navigation])
+    );
 
     return (
         <AuthenticatedLayout>
             <>
-            <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0)'} />
-                <SafeAreaView style={styleCitasUser.mainContent}>
+                <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0)'} />
+                <SafeAreaView style={styles.mainContent}>
                     <View style={{ width: '90%' }}>
                         <TextWithColor style={{ fontSize: 12 }} color="rgba(128, 128, 128, 0.83)">
                             ¡Bienvenido a la sección de citas!
                             Aquí podrás ver tus citas y gestionarlas
                         </TextWithColor>
                     </View>
-
-                    <FilterCitas filter={filter} setFilter={setFilter} />
+                    <FilterCitas filter={currentFilter} setFilter={handleSetFilter} />
                 </SafeAreaView>
 
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '76%', flexGrow: 1 }}>
-                    {
-                        <FlatList 
-                        data={filteredCitas[filter]}
+                <View style={styles.listContainer}>
+                    <FlatList
+                        data={citasToShow}
+                        keyExtractor={(item) => item.id.toString()}
                         showsVerticalScrollIndicator={false}
-                        style={{ width: '90%', marginTop: 20, marginBottom: 20 }}
-                        contentContainerStyle={{ gap: 10 }}
-                        renderItem={({ item }) => <CardContentC item={item} navigation={{ navigation: navigation }}/>}
-                        ListEmptyComponent={<ListEmptyComponent type={filter} />}
-                        onEndReachedThreshold={0.1}
-                        onEndReached={() => getAllFilteredData(filter)}
-                        />
-                    }
+                        style={{ width: '90%' }}
+                        contentContainerStyle={{ gap: 10, paddingBottom: 20 }}
+                        renderItem={({ item }) => <CardContentC item={item} navigation={{ navigation: navigation }} />}
+                        ListEmptyComponent={renderListEmptyComponent}
+                        ListFooterComponent={renderListFooterComponent}
+                        onEndReachedThreshold={0.5}
+                        onEndReached={handleLoadMore}
+                        onRefresh={() => fetchCitas(currentFilter, user.id, true)}
+                        refreshing={loading && currentPageInfo.skip === 1} 
+                    />
                 </View>
-            </>    
+            </>
         </AuthenticatedLayout>
-    )
+    );
 }
 
-const styleCitasUser = StyleSheet.create({
+const styles = StyleSheet.create({
     mainContent: {
         width: '100%',
         height: 'auto',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 45
+        marginTop: 45,
+        paddingBottom: 10,
+    },
+    listContainer: {
+        width: '100%',
+        height: '76%',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
-})
-
+});

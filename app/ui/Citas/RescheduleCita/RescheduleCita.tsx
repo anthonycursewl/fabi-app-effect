@@ -27,7 +27,6 @@ import { schedule } from "../constants/schedule"
 import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
 import { Cita } from "@/app/shared/interfaces/CitaType"
 import { TimePickerType } from "../interfaces/CustomPickerTime"
-import { PaginationType } from "../interfaces/PaginationTypes"
 
 // Services
 import { generatorUID } from "@/app/shared/services/UUIDGenerator"
@@ -40,63 +39,26 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
-    const [loadingMore, setLoadingMore] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
 
     // State of the date
     const defaultStyles = useDefaultStyles();
-    const [date, setDate] =useState<DateType>(item.date);
+    const [date, setDate] =useState<DateType>();
 
     // Test of the picker
-    const [selectedValue, setSelectedValue] = useState<ContadorProfileData | null>(null);
-    const [conts, setConts] = useState<ContadorProfileData[]>([])
-    // store data to register
-
+    const [time, setTime] = useState<TimePickerType>({ value: item.hour, label: item.hour })
+    
+    // Initial data to update
     const [cita, setCita] = useState<Cita>({
         id: item.id,
         des_or_reason: item.des_or_reason,
-        date: item.date,
-        status: item.status,
+        date: date,
+        status: TYPES_STATUS_CITAS.RESCHEDULED,
         user_id: item.user_id,
         cont_id: item.cont_id,
-        hour: item.hour
+        hour: time.value
     })
     // Time picker info
-    const [time, setTime] = useState<TimePickerType>({ value: item.hour, label: item.hour })
-    const [pagination, setPagination] = useState<PaginationType>({ skip: 1, take: 10, isEnd: false })
-    let isMounted = false
-
-    const getAllCont = async () => {
-        isMounted = true
-        if (pagination.isEnd) {
-            return
-        }
-
-        if (loading) {
-            return
-        }
-
-        const { error, response } = await secureFetch({
-            options: {
-                url: `${API_URl}/user/all/cont?take=${pagination.take}&skip=${pagination.skip}&filter=rs-data`,
-                method: 'GET',
-            },
-            setLoading: isMounted ? setLoadingMore : setLoading
-        })
-
-        if (error) {
-            return Alert.alert('BRD | Un error ha ocurrido', `${error}`)
-        }
-
-        if (response) {
-            if (response.length < pagination.take) {
-                setPagination({ ...pagination, isEnd: true })
-            }
-
-            setPagination({ ...pagination, skip: pagination.skip + 1 })
-            setConts([...conts, ...response])
-        }
-    }
 
     // Instance if the date
     const today = new Date();
@@ -111,11 +73,6 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
         };
       }, [scrollY]);
 
-
-    useEffect(() => {
-        getAllCont()
-    }, [])
-
     const stateAim = useAnimatedValue(0)
     const translateLetters = Animated.timing(stateAim,  {
         toValue: 1,
@@ -124,31 +81,27 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
     }).start()
 
     const handleRescheduleCita = async () => {
-        if (!selectedValue || date === undefined || time.value === '' || cita.des_or_reason === '') {
-            return Alert.alert('BRD | Un error ha ocurrido', 'Por favor, completa todos los campos.')
+        if (date === undefined || time.value === '' || cita.des_or_reason === '') {
+            return Alert.alert('BRD | Un error ha ocurrido', 'Por favor, completa todos los campos de fechas y motivo.')
         } 
 
         // Verificar si la cita no es en un domingo
         if (`${date}`.includes('Sun')) {
             return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita en un domingo.')
-        }   
-
-        const newCita = {
-            id: generatorUID(),
-            des_or_reason: cita.des_or_reason,
-            date: date, 
-            cont_id: selectedValue.id,
-            status: TYPES_STATUS_CITAS.PENDING,
-            user_id: user.id,
-            hour: time.value
         }
         
         const { response, error } = await secureFetch({
             options: {
-                url: `${API_URl}/cita/save`,
-                method: 'POST',
-                body: newCita
-            }, setLoading})
+                url: `${API_URl}/cita/update/cita/${item.id}`,
+                method: 'PUT',
+                body: {
+                    date: date,
+                    hour: time.value,
+                    des_or_reason: cita.des_or_reason,
+                    status: TYPES_STATUS_CITAS.RESCHEDULED
+                }
+                }, setLoading
+            })
 
             if (error) {
                 Alert.alert('BRD | Un error ha ocurrido', `${error}`)
@@ -156,11 +109,12 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
 
             if (response) {
                 setTime({ value: '', label: '' })
-                setSelectedValue(null)
-                setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })    
-                return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
+                setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })
+                navigation.replace('CitasUser')
+
+                return Alert.alert('BRD | Cita creada', 'La cita ha sido reprogramada con éxito!')
             }
-    }
+        }
 
     return (
         <AuthenticatedLayout>
@@ -215,19 +169,10 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Especialista</TextWithColor>
                             <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Aquí tienes una lista de especialistas para elegir de tu preferencia. Haz tap aquí para ver la lista más a detalle.</TextWithColor>
                         </View>
-                        {
-                            !loading ? 
-                            <CustomPicker 
-                            items={conts} 
-                            selectedValue={selectedValue} 
-                            onValueChange={setSelectedValue} 
-                            placeholder="Selecciona a tu especialista..."
-                            loadMoreData={getAllCont}
-                            /> :
-                            <View>
-                                <ActivityIndicator size="large" color={ColorsApp.primary.color} />
-                            </View>
-                        }
+
+                        <TextWithColor style={{ fontSize: 16, fontWeight: 'bold' }} color="rgba(255, 83, 83, 0.83)">
+                            No puedes cambiar el especialista de la cita. 
+                        </TextWithColor>
 
                         <View>
                             <TextWithColor style={{ fontSize: 14 }} color="rgba(16, 16, 18, 0.83)">Fecha para la cita</TextWithColor>
@@ -245,9 +190,9 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
                             selectedValue={time} 
                             onValueChange={setTime} 
                             placeholder="Selecciona la hora de la cita..." 
-                            loadMore={getAllCont}
-                            pagination={pagination}
-                            setPagination={setPagination}
+                            loadMore={() => {}}
+                            setPagination={() => {}}
+                            pagination={{ skip: 0, take: 10, isEnd: false }}
                             />
                         </View>
                     </View>

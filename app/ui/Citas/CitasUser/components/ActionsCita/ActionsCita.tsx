@@ -3,7 +3,7 @@ import SlideButton from '@/app/shared/components/SlideButton';
 import TextWithColor from '@/app/shared/components/TextWithColor';
 // Services
 import { secureFetch } from '@/app/shared/services/secureFetch';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // Constants
 import { API_URl } from '@/app/config/api.breadriuss.config';
 import { TYPES_STATUS_CITAS } from '@/app/shared/constants/TypesStatusCitas';
@@ -13,6 +13,7 @@ import { TYPES_ROLES } from '@/app/shared/constants/TypesRoles';
 import { INavGlobal } from '@/app/shared/interfaces/INavGlobal';
 import { TypeFilter } from '../../../interfaces/TypeFilter';
 import { AuthContext } from '@/app/shared/context/ContextProvider';
+import { useCitasStore } from '@/app/store/zustand/useCitaStore';
 
 interface ActionsCitaProps {
     item: TypeCitaDetails
@@ -20,27 +21,36 @@ interface ActionsCitaProps {
 }
 
 export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loadingAction, setLoadingAction] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
 
+    // Estado global con zustand
+    const { fetchCitas, currentFilter} = useCitasStore() 
+
     // All these functions are goint to be moved to a service class in the future.
+    // No, they won't be classes at all. They'll be objects with methods using flux architecture.
+    // In order to center the logic in the service, we'll need to pass the service as a prop to the component.
     const handleChangeStatusCita = async (status: TypeFilter) => {
+        setLoadingAction(true)
         const { response, error } = await secureFetch({
                 options: {
                     url: `${API_URl}/cita/change/status?id=${item.id}&status=${status}`,
                     method: 'PUT',
                 },
-                setLoading
-            })
+            setLoading: () => {}
+        })
+        
+        setLoadingAction(false)
+
+        if (error) {
+            Alert.alert('Error', `${error}`)
+        }
     
-            if (error) {
-                Alert.alert('Error', `${error}`)
-            }
-    
-            if (response) {
-                Alert.alert('Cita cancelada', 'La cita ha sido cancelada con exito')
-                navigation.navigation.replace('CitasUser')
-            }
+        if (response) {
+            Alert.alert('Cita confirmada', '¡La cita ha sido confirmada con éxito!')
+            await fetchCitas(currentFilter, user.id, true)
+            navigation.navigation.goBack()
+        }
     };
 
     const handleAlertCancel = (): void => {
@@ -55,13 +65,15 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
     // We wanted to use a soft delete, but the client didn't like that. He's already saving data in the other services, 
     // So we're gonna use a hard delete (DELETE FROM blabla WHERE id = X)
     const handleDeleteCita = async () => {
+        setLoadingAction(true)
         const { response, error } = await secureFetch({
             options: {
                 url: `${API_URl}/cita/delete/${item.id}`,
                 method: 'DELETE'
             },
-            setLoading
+            setLoading: () => {}
         })
+        setLoadingAction(false)
 
         if (error) {
             Alert.alert('Error', `${error}`)
@@ -69,7 +81,8 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
 
         if (response) {
             Alert.alert('Cita eliminada', 'La cita ha sido eliminada con exito')
-            navigation.navigation.replace('CitaUser')
+            await fetchCitas(currentFilter, user.id, true)
+            navigation.navigation.goBack()
         }
     }
 
@@ -82,16 +95,19 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
         ])
     }
 
-    return (!loading ?
+    return (!loadingAction ?
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
-            {item.status !== TYPES_STATUS_CITAS.CANCELED && item.status !== TYPES_STATUS_CITAS.CONFIRMED && user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN &&
-                <SlideButton onSlideSuccess={() => handleChangeStatusCita(TYPES_STATUS_CITAS.CONFIRMED as TypeFilter)} title="Desliza para confirmar la cita"
-                thumbIcon={
-                    <Image style={{ width: 30, height: 30 }} source={require('@/assets/images/arrow-right-cita.png')} />
+                {
+                item.status !== TYPES_STATUS_CITAS.CANCELED && item.status !== TYPES_STATUS_CITAS.CONFIRMED && (user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN) &&
+                    <SlideButton onSlideSuccess={() => handleChangeStatusCita(TYPES_STATUS_CITAS.CONFIRMED as TypeFilter)} title="Desliza para confirmar la cita"
+                    thumbIcon={
+                        <Image style={{ width: 30, height: 30 }} source={require('@/assets/images/arrow-right-cita.png')} />
+                    }
+                    />
                 }
-                />
-            }
-                {item.status !== TYPES_STATUS_CITAS.CANCELED && user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN &&
+
+                {
+                item.status !== TYPES_STATUS_CITAS.CANCELED && (user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN) &&
                         <TouchableOpacity
                         style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
                         onPress={() => {

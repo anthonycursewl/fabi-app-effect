@@ -5,6 +5,8 @@ import { create } from "zustand";
 interface IGlobalState {
     user: IUserProfile, 
     setUser: (user: IUserProfile) => void;
+    users: IUserProfile[];
+    setUsers: (users: IUserProfile[]) => void;
 }
 
 export const useGlobalState = create<IGlobalState>((_set) => ({
@@ -16,4 +18,6 @@ export const useGlobalState = create<IGlobalState>((_set) => ({
         is_active: true
     },
     setUser: (user: IUserProfile) => _set({ user }),
+    setUsers: (users: IUserProfile[]) => _set({ users }),
+    users: [],  
 }));
