@@ -19,14 +19,14 @@ export const CustomTimePicker = ({ items, selectedValue, onValueChange, placehol
           setModalVisible(false);
         };
       
-        const handleItemPress = (item: any) => {
-          onValueChange({ value: item, label: item });
+        const handleItemPress = (item: TimePickerType) => {
+          onValueChange(item);
           closeModal();
         };
       
         const renderItem = ({ item }: { item: TimePickerType }) => (
-          <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item.value)}>
-            <TextWithColor>{item.value}</TextWithColor>
+          <TouchableOpacity style={stylesPicker.item} onPress={() => handleItemPress(item)}>
+            <TextWithColor>{item.label}</TextWithColor>
           </TouchableOpacity>
         );
       
@@ -34,7 +34,7 @@ export const CustomTimePicker = ({ items, selectedValue, onValueChange, placehol
           <View>
             <TouchableOpacity style={{ borderWidth: 1, borderColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '100%', borderRadius: 12 }} onPress={openModal}>
               <TextWithColor style={{ fontSize: 14, color: selectedValue?.value ? 'rgb(24, 24, 24)' : ColorsApp.placeholders.color }}>
-                {selectedValue?.value ? selectedValue.label : placeholder}
+                {selectedValue?.label || placeholder}
               </TextWithColor>
             </TouchableOpacity>
       

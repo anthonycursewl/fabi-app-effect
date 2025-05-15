@@ -1,5 +1,5 @@
-import { SafeAreaView, View, ScrollView, Image, Animated, Alert } from "react-native";
-import { useRef, useEffect, useState, useContext } from "react";
+import { SafeAreaView, View, ScrollView, Image, Animated, Alert, BackHandler } from "react-native";
+import { useRef, useEffect, useState, useContext, useCallback } from "react";
 
 // Components
 import { StatusBar } from "expo-status-bar";
@@ -21,6 +21,7 @@ import { styleDashboard } from "../styles/stylesDashboard";
 import { API_URl } from "@/app/config/api.breadriuss.config";
 import { newCitas } from "@/app/shared/constants/mockCitas";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Main({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -64,6 +65,21 @@ export default function Main({ navigation }: INavGlobal) {
     }, [user])
 
     let restates = newCitas.length - 5
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                BackHandler.exitApp()
+                return true
+            }
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+            return () => {
+                subscription.remove()
+            }
+        }, [])
+    )
 
     return (
         <>

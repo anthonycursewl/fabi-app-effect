@@ -1,4 +1,4 @@
-import { View, SafeAreaView, Image, TouchableOpacity, Alert } from "react-native"
+import { View, SafeAreaView, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native"
 import { useEffect, useReducer, useState } from "react"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import { useRoute } from "@react-navigation/native"
@@ -11,18 +11,19 @@ import { ColorsApp } from "@/app/shared/constants/ColorsApp"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
+import { useGlobalState } from "@/app/store/zustand/useGlobalState"
 
 export default function UserDetails({ navigation }: INavGlobal) { 
-
     const [roleSelected, setRoleSelected] = useState<{ value: string, label: string }>({ value: '', label: '' })
     const [loading, setLoading] = useState(false)
+    const { setUsers, users } = useGlobalState()
 
     const route = useRoute()
     const { user } = route.params as { user: IUserProfile }
 
     const roles = [{
-        value: 'Admin',
-        label: TYPES_ROLES.ADMIN
+        value: TYPES_ROLES.ADMIN,
+        label: 'Administrador'
     }, {
         value: TYPES_ROLES.USER,
         label: 'Usuario'
@@ -31,11 +32,18 @@ export default function UserDetails({ navigation }: INavGlobal) {
         label: 'Contador'
     }]
 
-    useEffect(() => {
-        console.log(user)
-    }, [user])
-
     const handleChangeRole = async () => {
+        if (roleSelected.value === '') {
+            Alert.alert('BRD | Error', 'No puedes seleccionar un rol vacío.')
+            return
+        }
+        
+        if (roleSelected.value === user.role) {
+            Alert.alert('BRD | Error', 'El rol seleccionado es el mismo que el actual.')
+            navigation.goBack()
+            return
+        }
+
         const newRole: IUserProfile = {
             id: user.id,
             name: user.name,
@@ -62,7 +70,41 @@ export default function UserDetails({ navigation }: INavGlobal) {
         if (response) {
             Alert.alert('BRD | Success', 'Rol actualizado correctamente!')
             navigation.goBack()
+            const userUpdated = users.map((user) => {
+                if (user.id === response.id) {
+                    return response
+                }
+                return user
+            })
+            setUsers(userUpdated)
         }
+    }
+
+    const handleDisableUser = async () => {
+        const { error, response } = await secureFetch({
+            options: {
+                url: `${API_URl}/user/update/u/admin/${user.id}`,
+                method: 'PUT',
+                body: { is_active: !user.is_active }
+            }, setLoading
+        })
+
+        if (error) {
+            Alert.alert('BRD | Error', `${error}`)
+        }
+
+        if (response) {
+            Alert.alert('BRD | Success', 'Usuario actualizado correctamente!')
+            const userUpdated = users.map((user) => {
+                if (user.id === response.id) {
+                    return response
+                }
+                return user
+            })
+            setUsers(userUpdated)
+            navigation.goBack()
+        }
+        
     }
 
     const parseIsActive = (is_active: boolean) => {
@@ -166,19 +208,33 @@ export default function UserDetails({ navigation }: INavGlobal) {
                     </View>
                 
                     <View style={{ marginTop: 20, gap: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                        {
+                        loading ? 
+                        <View style={{ width: '48%', alignItems: 'center', justifyContent: 'center' }}>
+                            <ActivityIndicator size="small" color={ColorsApp.primary.color} />
+                        </View> :
                         <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 12, paddingHorizontal: 10, width: '48%', borderRadius: 12 }}
                         onPress={handleChangeRole}
-                        >
+                            >
                             <TextWithColor style={{ color: 'white', textAlign: 'center' }}>
                                 Guardar cambios
                             </TextWithColor>
                         </TouchableOpacity>
+                        }
 
-                        <TouchableOpacity style={{ backgroundColor: 'rgb(236, 101, 101)', paddingVertical: 12, paddingHorizontal: 10, width: '48%', borderRadius: 12 }}>
+                        {
+                            loading ? 
+                            <View style={{ width: '48%', alignItems: 'center', justifyContent: 'center' }}>
+                                <ActivityIndicator size="small" color={ColorsApp.primary.color} />
+                            </View> :
+                            <TouchableOpacity style={{ backgroundColor: 'rgb(236, 101, 101)', paddingVertical: 12, paddingHorizontal: 10, width: '48%', borderRadius: 12 }}
+                            onPress={() => handleDisableUser()}
+                            >
                             <TextWithColor style={{ color: 'white', textAlign: 'center' }}>
-                                Eliminar usuario
+                                Desactivar usuario
                             </TextWithColor>
                         </TouchableOpacity>
+                        }
                     </View>
                 </View>
             </ScrollView>
