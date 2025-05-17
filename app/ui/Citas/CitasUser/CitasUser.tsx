@@ -42,7 +42,7 @@ export default function CitaUser({ navigation }: INavGlobal) {
             fetchCitas(currentFilter, user.id, false);
         }
     };
-
+    
     const handleSetFilter = (newFilter: TypeFilter) => {
         setFilter(newFilter);
     };
