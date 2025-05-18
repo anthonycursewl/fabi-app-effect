@@ -69,12 +69,14 @@ export default function Main({ navigation }: INavGlobal) {
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
-                BackHandler.exitApp()
+                Alert.alert('BRD | Salir', '¿Estás seguro de querer salir de la aplicación?', [
+                    { text: 'Cancelar', style: 'cancel' },
+                    { text: 'Salir', onPress: () => BackHandler.exitApp() }
+                ])
                 return true
             }
 
             const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
-
             return () => {
                 subscription.remove()
             }
