@@ -10,7 +10,7 @@ interface NotificationState {
     error: string | null;
     setNotifications: (notifications: INotification[]) => void;
     addNotification: (notification: INotification) => void;
-    markAsRead: (notificationId: string) => void;
+    markAsRead: (notificationId: string) => Promise<void>;
     markAllAsRead: () => void;
     removeNotification: (notificationId: string) => void;
     clearNotifications: () => void;
@@ -35,14 +35,24 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         notifications: [notification, ...state.notifications],
         unreadCount: state.unreadCount + 1
     })),
-    markAsRead: (notificationId) => set((state) => ({
-        notifications: state.notifications.map(notification =>
-            notification.id === notificationId
-                ? { ...notification, read: true }
-                : notification
-        ),
-        unreadCount: state.unreadCount - 1
-    })),
+    markAsRead: async (notificationId) => {
+        const { setLoading, setError, notifications, setNotifications } = get()
+        const { error, response } = await secureFetch({
+            options: {
+                url: `${API_URl}/notification/mark-as-read/${notificationId}`,
+                method: 'POST',
+            },
+            setLoading
+        })
+
+        if (error) {
+            setError(error)
+        }
+
+        if (response) {
+            setNotifications(notifications.map(notification => notification.id === notificationId ? { ...notification, read: true } : notification))
+        }
+    },
     markAllAsRead: () => set((state) => ({
         notifications: state.notifications.map(notification => ({
             ...notification,

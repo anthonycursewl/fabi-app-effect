@@ -35,13 +35,18 @@ export const secureFetch = async ({ options, setLoading, singal }: SecureFetchsP
             signal: singal
         })
         
+        let data;
+        try {
+            data = await res.json();
+        } catch (e) {
+            throw new Error(`El servidor ha respondido con un error: Status${res.status}`)
+        }
+
         if (!res.ok) {
-            const info = await res.json()
-            throw new Error(info.error)
+            throw new Error(data.error || data.message || 'Error en la petición');
         }
         
         setLoading(false)
-        const data = await res.json()
         return { response: data, error: '' }
     } catch (error: any) {
         console.log(error.message)

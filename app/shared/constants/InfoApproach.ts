@@ -8,7 +8,7 @@ export const TUTORIAL_CITAS: ContentCardTypes[] = [
             text: 'Ver especialistas',
             onPress: () => {}
         },
-        icon: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
+        icon: 'https://jevtuwchndehjsmaflia.supabase.co/storage/v1/object/public/anx-bucket/public/d4516749-6e3c-4528-be9f-0781c87c9971'
     },
     {
         title: '2. Busca el horario que se adapte a tus necesidades',
@@ -18,6 +18,6 @@ export const TUTORIAL_CITAS: ContentCardTypes[] = [
             type: 'info'
         },
         isEnd: true,
-        icon: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
+        icon: 'https://jevtuwchndehjsmaflia.supabase.co/storage/v1/object/public/anx-bucket/public/d4516749-6e3c-4528-be9f-0781c87c9971'
     }
 ]

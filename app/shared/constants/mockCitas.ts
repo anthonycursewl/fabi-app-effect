@@ -6,7 +6,7 @@ export const newCitas = [
             date: '2023-04-05',
             time: '10:00 AM',
             status: 'Pendiente',
-            profilePic: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'
+            profilePic: 'https://jevtuwchndehjsmaflia.supabase.co/storage/v1/object/public/anx-bucket/public/d4516749-6e3c-4528-be9f-0781c87c9971'
         },
         {
             id: 2,
