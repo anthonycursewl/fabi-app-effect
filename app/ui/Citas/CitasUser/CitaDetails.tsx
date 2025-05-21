@@ -13,9 +13,6 @@ import { MiniCard } from "./components/MiniCard";
 import { TypeCitaDetails } from "../interfaces/TypeCitaDetails";
 import { CitaParams } from "../interfaces/CitaParams";
 import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas";
-import { secureFetch } from "@/app/shared/services/secureFetch";
-import { API_URl } from "@/app/config/api.breadriuss.config";
-import { useState } from "react";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
 import { StatusBar } from "expo-status-bar";
 

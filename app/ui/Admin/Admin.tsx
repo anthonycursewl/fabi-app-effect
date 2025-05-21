@@ -3,7 +3,7 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 import { IUserProfile, User } from "@/app/shared/interfaces/User";
 import { secureFetch } from "@/app/shared/services/secureFetch";
 import { useState, useEffect } from "react";
-import { View, SafeAreaView, Alert, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from "react-native";
+import { View, SafeAreaView, Alert, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Text, BackHandler } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 import { parseRole } from "../UserProfile/services/parseRole";
@@ -88,6 +88,15 @@ export default function Admin({ navigation }: INavGlobal) {
     const parseIsActive = (is_active: boolean) => {
         return is_active ? 'Activo' : 'Inactivo'
     }
+
+    useEffect(() => {
+        const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+            navigation.replace('Dashboard')
+            return true
+        })
+
+        return () => sub.remove()
+    }, [])
 
     const RenderItem = ({ item }: { item: IUserProfile }) => {
         return (
