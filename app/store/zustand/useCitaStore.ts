@@ -2,31 +2,46 @@
 import { create } from 'zustand';
 import { secureFetch } from '@/app/shared/services/secureFetch';
 import { API_URl } from '@/app/config/api.breadriuss.config';
-import { Cita } from '@/app/shared/interfaces/CitaType';
+import { Cita, CitasCont } from '@/app/shared/interfaces/CitaType';
 import { TypeFilter } from '@/app/ui/Citas/interfaces/TypeFilter';
 
 
 interface CitasState {
     citasByFilter: { [key in TypeFilter]?: Cita[] };
+    citasContByFilter: { [key in TypeFilter]?: CitasCont[] };
     paginationByFilter: { [key in TypeFilter]?: { skip: number; take: number; isEnd: boolean } };
+    paginationContByFilter: { [key in TypeFilter]?: { skip: number; take: number; isEnd: boolean } };
     loading: boolean;
     error: string | null;
     currentFilter: TypeFilter;
+    currentContFilter: TypeFilter;
+    setLoading: (loading: boolean) => void;
 
     setFilter: (filter: TypeFilter) => void;
     fetchCitas: (filter: TypeFilter, userId: string, isRefresh?: boolean) => Promise<void>;
+    fetchCitasByContador: (filter: TypeFilter) => Promise<void>;
     clearError: () => void;
+    setError: (error: string) => void;
+    setContFilter: (filter: TypeFilter) => void;
 }
 
 const initialPagination = { skip: 1, take: 10, isEnd: false };
 
 export const useCitasStore = create<CitasState>((set, get) => ({
     citasByFilter: {},
+    citasContByFilter: {},
     paginationByFilter: {},
+    paginationContByFilter: {},
     loading: false,
     error: null,
     currentFilter: 'all',
-
+    currentContFilter: 'all',
+    setError: (error: string) => {
+        set({ error });
+    },
+    setContFilter: (filter: TypeFilter) => {
+        set({ currentContFilter: filter, error: null });
+    },
     setFilter: (filter) => {
         console.log('[STORE] setFilter called with:', filter);
         set({ currentFilter: filter, error: null });
@@ -34,6 +49,9 @@ export const useCitasStore = create<CitasState>((set, get) => ({
 
     clearError: () => {
         set({ error: null });
+    },
+    setLoading: (loading: boolean) => {
+        set({ loading: loading })
     },
 
     fetchCitas: async (filter, userId, isRefresh = false) => {
@@ -83,7 +101,6 @@ export const useCitasStore = create<CitasState>((set, get) => ({
             options: { url: URL, method: 'GET' },
             setLoading: () => {}
         });
-
         // --- Manejo de Error ---
         if (fetchErrorObject) {
             let errorMessage = "BRD | Ha ocurrido un error al obtener las citas.";
@@ -138,7 +155,6 @@ export const useCitasStore = create<CitasState>((set, get) => ({
             console.warn('[STORE] Response was not an array or was null/undefined. Assuming end of data for this request.');
             set(state => ({
                 loading: false,
-                // No necesariamente un error para mostrar al usuario, pero sí el final de los datos.
                 paginationByFilter: {
                     ...state.paginationByFilter,
                     [filter]: {
@@ -151,4 +167,39 @@ export const useCitasStore = create<CitasState>((set, get) => ({
         // --- Fin Manejo de Respuesta Exitosa ---
         console.log(`[STORE] fetchCitas SUCCESS/NO-DATA END: filter=${filter}`);
     },
+    fetchCitasByContador: async (filter: TypeFilter) => {
+        const { setError, setLoading, paginationContByFilter, loading } = get()
+        if (loading || paginationContByFilter[filter]?.isEnd) return;
+
+        const currentPaginationState = paginationContByFilter[filter] || initialPagination;
+        const skip = currentPaginationState.skip;
+        const take = currentPaginationState.take;
+        const URL = `${API_URl}/cita/get/all/cita/bycont?skip=${skip}&take=${take}&filter=${filter}`;
+        const { response, error: fetchErrorObject } = await secureFetch({
+            options: { url: URL, method: 'GET' },
+            setLoading: setLoading
+        });
+
+        if (fetchErrorObject) {
+            setError(fetchErrorObject)
+        }
+
+        if (response) {
+            set({
+                citasContByFilter: {
+                    ...get().citasContByFilter, 
+                    [filter]: response
+                },
+                paginationContByFilter: {
+                    ...get().paginationContByFilter,
+                    [filter]: {
+                        skip: skip + 1,
+                        take: take,
+                        isEnd: response.length < take
+                    }
+                }
+            })
+
+        }
+    }
 }));
