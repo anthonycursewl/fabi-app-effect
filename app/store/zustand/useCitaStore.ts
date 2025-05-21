@@ -19,7 +19,7 @@ interface CitasState {
 
     setFilter: (filter: TypeFilter) => void;
     fetchCitas: (filter: TypeFilter, userId: string, isRefresh?: boolean) => Promise<void>;
-    fetchCitasByContador: (filter: TypeFilter) => Promise<void>;
+    fetchCitasByContador: (filter: TypeFilter, isRefresh?: boolean) => Promise<void>;
     clearError: () => void;
     setError: (error: string) => void;
     setContFilter: (filter: TypeFilter) => void;
@@ -167,7 +167,15 @@ export const useCitasStore = create<CitasState>((set, get) => ({
         // --- Fin Manejo de Respuesta Exitosa ---
         console.log(`[STORE] fetchCitas SUCCESS/NO-DATA END: filter=${filter}`);
     },
-    fetchCitasByContador: async (filter: TypeFilter) => {
+    fetchCitasByContador: async (filter: TypeFilter, isRefresh = false) => {
+        if (isRefresh) {
+            set({
+                paginationContByFilter: {
+                    ...get().paginationContByFilter,
+                    [filter]: { ...initialPagination }
+                }
+            })
+        }
         const { setError, setLoading, paginationContByFilter, loading } = get()
         if (loading || paginationContByFilter[filter]?.isEnd) return;
 

@@ -1,17 +1,18 @@
 import { View, TouchableOpacity, Modal, Alert, ActivityIndicator } from "react-native"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import { RenderTypeStatus } from "./RenderTypeStatus"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
-import { useNavigation } from "expo-router"
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
+import { useRoute } from "@react-navigation/native"
 
 export const CardContentC = ({ item, navigation }: { item: any, navigation: INavGlobal }): JSX.Element => { 
     const date = new Date(item.date)
     // state of the long press
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
+    const route = useRoute()
 
     const handleLongPress = () => {
         setIsSelected(true)
@@ -46,12 +47,18 @@ export const CardContentC = ({ item, navigation }: { item: any, navigation: INav
             { text: 'No', onPress: () => {} }
         ])
     }
+
+    const dynamicRoute = route.name === 'CitasPendingCont' ? 'CitaDetailsCont' : 'CitaDetails'
+
+    useEffect(() => {
+        console.log(dynamicRoute)
+    }, [])
      
     return (
         <>
         <TouchableOpacity
         onPress={() => {
-            navigation.navigation.navigate('CitaDetails', { item: item })
+            navigation.navigation.navigate(dynamicRoute, { item: item })
         }}
         onLongPress={() => {handleLongPress()}}
         >

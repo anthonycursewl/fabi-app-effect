@@ -19,6 +19,7 @@ import RescheduleCita from './ui/Citas/RescheduleCita/RescheduleCita';
 import Notifications from './ui/Notifications/notifications';
 import NotificationDetails from './ui/Notifications/NotificationDetails/NotificationDetails';
 import CitasPendingCont from './ui/Citas/CitasPendingCont/CitasPendingCont';
+import CitaDetailsCont from './ui/Citas/CitasPendingCont/components/CitaDetailsCont';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync()
@@ -69,6 +70,7 @@ export default function Index() {
       <Stack.Screen name="CitasUser" component={CitaUser} options={{ headerShown: false }}/>
       <Stack.Screen name="CitaDetails" component={CitaDetails} options={{ headerShown: false }}/>
       <Stack.Screen name="CitasPendingCont" component={CitasPendingCont} options={{ headerShown: false }}/>
+      <Stack.Screen name="CitaDetailsCont" component={CitaDetailsCont} options={{ headerShown: false }}/>
       <Stack.Screen name="RescheduleCita" component={RescheduleCita} options={{ headerShown: false }}/>
 
       {/* Here's the route for profesionals */}
