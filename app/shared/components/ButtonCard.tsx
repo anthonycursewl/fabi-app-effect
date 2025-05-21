@@ -1,4 +1,4 @@
-import React, { TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image } from "react-native";
 import { useCallback } from "react";
 import TextWithColor from "./TextWithColor";
 

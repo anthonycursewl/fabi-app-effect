@@ -6,11 +6,13 @@ import { ButtonsApp } from "../constants/ButtonsApp";
 
 // Navigation
 import { useNavigation, useNavigationState } from "@react-navigation/native";
+import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
 
   const navigation = useNavigation();
   const currentPath = useNavigationState((state) => state.routes[state.index].name);
+  const { user } = useGlobalState() 
 
   return (
     <>
@@ -36,6 +38,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
             justifyContent: "center",
             width: "100%",
           }}
+          showsHorizontalScrollIndicator={false}
         >
           <View
             style={{
@@ -50,7 +53,9 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
 
             {/* Iteration in order to create the buttons. Buttons are in the constant ButtonsApp */}
             {ButtonsApp.map((item, index) => (
-              <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} navigation={{ navigation: navigation }}/>
+              item.showTo === 'all' || item.showTo === user.role ? (
+                <ButtonCard key={index} icon={item.icon} name={item.name} namePath={item.namePath} currentPath={currentPath} navigation={{ navigation: navigation }}/>
+              ) : null
             ))}
 
           </View>
