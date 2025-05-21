@@ -1,4 +1,4 @@
-import { SafeAreaView, View, ScrollView, Image, Animated, Alert, BackHandler } from "react-native";
+import { SafeAreaView, View, ScrollView, Image, Animated, Alert, BackHandler, TouchableOpacity } from "react-native";
 import { useRef, useEffect, useState, useContext, useCallback } from "react";
 
 // Components
@@ -22,6 +22,7 @@ import { API_URl } from "@/app/config/api.breadriuss.config";
 import { newCitas } from "@/app/shared/constants/mockCitas";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 import { useFocusEffect } from "@react-navigation/native";
+import CitasPending from "../components/CitasPending/CitasPending";
 
 export default function Main({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -102,19 +103,7 @@ export default function Main({ navigation }: INavGlobal) {
                             <TextWithColor color="rgba(25, 25, 26, 0.53)">Bienvenido a tu dashboard.</TextWithColor>
                         </View>
 
-                        <View style={styleDashboard.dashboardCitas}>
-                            <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">Pendientes</TextWithColor>
-                            <TextWithColor color="rgba(51, 51, 51, 0.57)">Citas pendientes.</TextWithColor>
-
-                            <View style={styleDashboard.newCitas}>
-                                {
-                                    newCitas.slice(0, 5).map((cita, index) => (
-                                        <Image source={{ uri: cita.profilePic }} style={{ ...styleDashboard.picCitaInfo, opacity: index > 0 ? 1 - (index / newCitas.length) : 0.9 }} key={cita.id}/>
-                                    ))
-                                }
-                                {newCitas.length > 5 ? <TextWithColor style={{ fontSize: 20 }} color="rgba(155, 123, 206, 0.83)">{`+${restates.toString()}`}</TextWithColor> : null}
-                            </View>
-                        </View>
+                        <CitasPending styleDashboard={styleDashboard} newCitas={newCitas} restates={restates} nav={{ navigation }}/>
 
                         <FirstStepMain user={user} navigation={navigation}/>
 
