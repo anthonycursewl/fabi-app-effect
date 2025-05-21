@@ -9,3 +9,10 @@ export interface Cita {
     user_id: string;
     hour: string;
 }
+
+export interface CitasCont extends Cita {
+    users: {
+        icon_url: string;
+    }
+}
+

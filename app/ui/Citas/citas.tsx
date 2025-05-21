@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity, BackHandler } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -31,8 +31,9 @@ import { PaginationType } from "./interfaces/PaginationTypes"
 
 // Services
 import { generatorUID } from "@/app/shared/services/UUIDGenerator"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 
-export default function Citas() {
+export default function Citas({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
