@@ -47,7 +47,12 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
         }
     
         if (response) {
-            Alert.alert('Cita confirmada', '¡La cita ha sido confirmada con éxito!')
+            if (status === TYPES_STATUS_CITAS.CONFIRMED) {
+                Alert.alert('Cita confirmada', '¡La cita ha sido confirmada con éxito!')
+            } 
+            if (status === TYPES_STATUS_CITAS.CANCELED) {
+                Alert.alert('Cita cancelada', '¡La cita ha sido cancelada con éxito!')
+            }
             await fetchCitas(currentFilter, user.id, true)
             navigation.navigation.goBack()
         }
@@ -99,6 +104,7 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 20, padding: 15, gap: 10 }}>
                 {
                 item.status !== TYPES_STATUS_CITAS.CANCELED && item.status !== TYPES_STATUS_CITAS.CONFIRMED && (user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN) &&
+                user.name === item.contdr_profile.users.name &&
                     <SlideButton onSlideSuccess={() => handleChangeStatusCita(TYPES_STATUS_CITAS.CONFIRMED as TypeFilter)} title="Desliza para confirmar la cita"
                     thumbIcon={
                         <Image style={{ width: 30, height: 30 }} source={require('@/assets/images/arrow-right-cita.png')} />
@@ -108,6 +114,7 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
 
                 {
                 item.status !== TYPES_STATUS_CITAS.CANCELED && (user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN) &&
+                user.name === item.contdr_profile.users.name &&
                         <TouchableOpacity
                         style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
                         onPress={() => {
