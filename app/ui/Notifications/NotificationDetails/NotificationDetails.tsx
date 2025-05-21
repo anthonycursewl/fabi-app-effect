@@ -1,4 +1,4 @@
-import { Alert, SafeAreaView, TouchableOpacity, View } from "react-native";
+import { Alert, BackHandler, SafeAreaView, TouchableOpacity, View } from "react-native";
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import { useRoute } from "@react-navigation/native";
 import { INotification } from "@/app/shared/interfaces/Notification";
@@ -37,7 +37,7 @@ export default function NotificationDetails({ navigation }: INavGlobal) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-            <View style={{ flex: 1, width: '90%', alignSelf: 'center' }}>
+            <View style={{ flex: 1, width: '90%', alignSelf: 'center', marginTop: 10 }}>
                 <View style={{ alignItems: 'flex-start', justifyContent: 'space-between', flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={arrowBack} style={{ width: 35, height: 35 }}/>

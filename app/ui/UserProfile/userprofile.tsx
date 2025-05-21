@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Image, Alert, ActivityIndicator, ScrollView, TouchableOpacity, Modal, TextInput, StyleSheet, CursorValue } from "react-native";
+import { SafeAreaView, View, Image, Alert, ActivityIndicator, ScrollView, TouchableOpacity, Modal, TextInput, StyleSheet, CursorValue, BackHandler } from "react-native";
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import { secureFetch } from "@/app/shared/services/secureFetch";
@@ -13,8 +13,9 @@ import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
 // interfaces
 import { IChangePassword } from "./interfaces/IChangePassword";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
 
-export default function UserProfile() {
+export default function UserProfile({ navigation }: INavGlobal) {
     const [loading, setLoading] = useState<boolean>(false);
     const [user, setUser] = useState<IUserProfile>({ id: "", username: "", email: "", created_at: "", role: "", name: "", icon_url: "", is_active: true });
     const [selectedIcon, setSelectedIcon] = useState<string>("")
