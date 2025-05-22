@@ -103,7 +103,7 @@ export default function Main({ navigation }: INavGlobal) {
                             <TextWithColor color="rgba(25, 25, 26, 0.53)">Bienvenido a tu dashboard.</TextWithColor>
                         </View>
 
-                        <CitasPending styleDashboard={styleDashboard} newCitas={newCitas} restates={restates} nav={{ navigation }}/>
+                        <CitasPending styleDashboard={styleDashboard} nav={{ navigation }}/>
 
                         <FirstStepMain user={user} navigation={navigation}/>
 

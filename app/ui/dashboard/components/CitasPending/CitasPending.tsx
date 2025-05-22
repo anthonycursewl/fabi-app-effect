@@ -3,25 +3,31 @@ import TextWithColor from "@/app/shared/components/TextWithColor";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
 import { useCitasStore } from "@/app/store/zustand/useCitaStore";
 import { useEffect } from "react";
+import { TypeFilter } from "@/app/ui/Citas/interfaces/TypeFilter";
 
-export default function CitasPending({ styleDashboard, newCitas, restates, nav }: { styleDashboard: any, newCitas: any, restates: any, nav: INavGlobal }) {
+export default function CitasPending({ styleDashboard, nav }: { styleDashboard: any, nav: INavGlobal }) {
   const { fetchCitasByContador, citasContByFilter, loading } = useCitasStore()
 
-  const _getPendingCitas = async () => {
-    await fetchCitasByContador('pending')
+  const _getPendingCitas = async (filter: TypeFilter) => {
+    await fetchCitasByContador(filter)
   }
 
   useEffect(() => {
-    _getPendingCitas()
+    _getPendingCitas('pending')
   }, [])
 
   useEffect(() => {
     if (!loading) {
-      console.log(citasContByFilter.pending?.length)
+      if (citasContByFilter.pending?.length === 0) {
+        _getPendingCitas('rescheduled')
+      }
     }
-  }, [citasContByFilter])
+  }, [])
 
-  const citasToShow = citasContByFilter.pending?.slice(0, 5)
+  const citasToShow = citasContByFilter.pending?.length && 
+  citasContByFilter.pending?.length > 0 ? 
+  citasContByFilter.pending?.slice(0, 5) 
+  : citasContByFilter.rescheduled?.slice(0, 5)
 
   return (
     <TouchableOpacity

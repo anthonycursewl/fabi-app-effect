@@ -9,7 +9,6 @@ import { stylesCitas } from "../styles/stylesRegisterCita"
 import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
-import { CustomPicker } from "../components/CustomPicker"
 import { CustomTimePicker } from "../components/PickerTime"
 
 // Hooks
@@ -24,22 +23,24 @@ import { TYPES_STATUS_CITAS } from "@/app/shared/constants/TypesStatusCitas"
 import { schedule } from "../constants/schedule"
 
 // interfaces
-import { ContadorProfileData } from "@/app/shared/interfaces/ContadorProfile"
-import { Cita } from "@/app/shared/interfaces/CitaType"
+import { Cita, CitasCont } from "@/app/shared/interfaces/CitaType"
 import { TimePickerType } from "../interfaces/CustomPickerTime"
 
 // Services
-import { generatorUID } from "@/app/shared/services/UUIDGenerator"
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
 import { useRoute } from "@react-navigation/native"
+import { useCitasStore } from "@/app/store/zustand/useCitaStore"
 
 export default function RescheduleCita({ navigation }: INavGlobal) {
     const route = useRoute()
-    const { item } = route.params as { item: Cita }
+    const { item, path_ref } = route.params as { item: CitasCont, path_ref: string }
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
+
+    // Store de la citas
+    const { updateCitaCont, updateCita } = useCitasStore()
 
     // State of the date
     const defaultStyles = useDefaultStyles();
@@ -110,7 +111,14 @@ export default function RescheduleCita({ navigation }: INavGlobal) {
             if (response) {
                 setTime({ value: '', label: '' })
                 setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })
-                navigation.replace('CitasUser')
+                if (path_ref === 'CitasPendingCont') {
+                    updateCitaCont(item)
+                }
+
+                if (path_ref === 'CitasUser') {
+                    updateCita(cita)
+                }
+                navigation.replace(path_ref)
 
                 return Alert.alert('BRD | Cita creada', 'La cita ha sido reprogramada con éxito!')
             }
