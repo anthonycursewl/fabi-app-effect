@@ -18,8 +18,8 @@ export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { 
     Alert.alert('Cerrar Sesión', 
       '¿Desea cerrar sesión?', 
       [
-        {text: 'No', style: 'cancel'}, 
-        {text: 'Si', onPress: async () => {
+        { text: 'No', style: 'cancel' }, 
+        { text: 'Si', onPress: async () => {
           await removeItem(key)
           navi.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Login' }] }))
           setUser({ id: '', username: '', email: '', password: '', created_at: '', role: '', name: '', iat: 0, exp: 0, jti: '' })
@@ -46,7 +46,9 @@ export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { 
         <View style={styleDashboard.headerDecorationRight}></View>
 
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            nav.navigation.navigate('UserProfile')
+          }}>
             <Image
               source={require("../../../../assets/images/menu-app.png")}
               style={{ width: 25, height: 25 }}
@@ -59,7 +61,9 @@ export default function StatusBarApp({ scrollPosition, styleDashboard, nav }: { 
             <Image source={require("../../../../assets/images/logout-icon.png")} style={{ width: 32, height: 32 }}/>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => {
+            nav.navigation.navigate('UserProfile')
+          }}>
             <Image
               source={{
                 uri: userGlobal.icon_url || "../../../../assets/images/menu-app.png",
