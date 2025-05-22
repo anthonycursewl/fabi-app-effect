@@ -118,7 +118,7 @@ export default function ActionsCita({ item, navigation }: ActionsCitaProps) {
                         <TouchableOpacity
                         style={{ backgroundColor: 'rgb(255, 105, 112)', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, width: '100%', alignItems: 'center', justifyContent: 'center'}}
                         onPress={() => {
-                            navigation.navigation.replace('RescheduleCita', { item: item });
+                            navigation.navigation.replace('RescheduleCita', { item: item, path_ref: 'CitasUser' });
                         }}>
                             <TextWithColor color="rgb(255, 255, 255)">Reprogramar</TextWithColor>
                     </TouchableOpacity>

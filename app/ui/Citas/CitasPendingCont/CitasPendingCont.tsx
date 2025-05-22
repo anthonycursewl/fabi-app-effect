@@ -1,6 +1,6 @@
 import { SafeAreaView, View, FlatList, StatusBar, ActivityIndicator, BackHandler } from "react-native";
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout";
-import { useCallback, useContext, useEffect } from "react"; 
+import { useCallback, useEffect } from "react"; 
 import { StyleSheet } from "react-native";
 
 // Components
@@ -98,7 +98,9 @@ export default function CitasPendingCont({ navigation }: INavGlobal) {
                         ListFooterComponent={renderListFooterComponent}
                         onEndReachedThreshold={0.5}
                         onEndReached={handleLoadMore}
-                        onRefresh={() => fetchCitasByContador(currentContFilter)}
+                        onRefresh={async () => {
+                            await fetchCitasByContador(currentContFilter, true)
+                        }}
                         refreshing={loading && currentPageInfo.skip === 1} 
                     />
                 </View>
