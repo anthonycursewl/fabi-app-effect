@@ -7,22 +7,36 @@ import { TypeFilter } from '@/app/ui/Citas/interfaces/TypeFilter';
 
 
 interface CitasState {
+    // data
     citasByFilter: { [key in TypeFilter]?: Cita[] };
     citasContByFilter: { [key in TypeFilter]?: CitasCont[] };
+    
+    // Pagination data
     paginationByFilter: { [key in TypeFilter]?: { skip: number; take: number; isEnd: boolean } };
     paginationContByFilter: { [key in TypeFilter]?: { skip: number; take: number; isEnd: boolean } };
+    
+    // Loading state
     loading: boolean;
-    error: string | null;
+    setLoading: (loading: boolean) => void;
+    
+    // filters
+    setFilter: (filter: TypeFilter) => void;
+    setContFilter: (filter: TypeFilter) => void;
     currentFilter: TypeFilter;
     currentContFilter: TypeFilter;
-    setLoading: (loading: boolean) => void;
-
-    setFilter: (filter: TypeFilter) => void;
+    
+    // fetch data 
     fetchCitas: (filter: TypeFilter, userId: string, isRefresh?: boolean) => Promise<void>;
     fetchCitasByContador: (filter: TypeFilter, isRefresh?: boolean) => Promise<void>;
+    
+    // update data
+    updateCita: (cita: Cita) => void;
+    updateCitaCont: (cita: CitasCont) => void;
+    
+    // Handle errors
     clearError: () => void;
     setError: (error: string) => void;
-    setContFilter: (filter: TypeFilter) => void;
+    error: string | null;
 }
 
 const initialPagination = { skip: 1, take: 10, isEnd: false };
@@ -53,7 +67,46 @@ export const useCitasStore = create<CitasState>((set, get) => ({
     setLoading: (loading: boolean) => {
         set({ loading: loading })
     },
+    updateCita: (cita: Cita) => {
+        set(state => {
+            const currentFilter = state.currentFilter;
+            const currentCitas = state.citasByFilter[currentFilter];
+            
+            if (!currentCitas) return state;
+            const index = currentCitas.findIndex(c => c.id === cita.id);
 
+            if (index === -1) return state;
+            const newCitas = [...currentCitas];
+            newCitas[index] = cita;
+
+            return {
+                citasByFilter: {
+                    ...state.citasByFilter,
+                    [currentFilter]: newCitas
+                }   
+            }
+        })
+    },
+    updateCitaCont: (cita: CitasCont) => {
+        set(state => {
+            const currentFilter = state.currentContFilter;
+            const currentCitas = state.citasContByFilter[currentFilter];
+            
+            if (!currentCitas) return state;
+            const index = currentCitas.findIndex(c => c.id === cita.id);
+            
+            if (index === -1) return state;
+            const newCitas = [...currentCitas];
+            newCitas[index] = cita;
+            
+            return {
+                citasContByFilter: {
+                    ...state.citasContByFilter,
+                    [currentFilter]: newCitas
+                }
+            };
+        });
+    },
     fetchCitas: async (filter, userId, isRefresh = false) => {
         console.log(`[STORE] fetchCitas BEGIN: filter=${filter}, userId=${userId}, isRefresh=${isRefresh}`);
 

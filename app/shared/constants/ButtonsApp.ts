@@ -9,7 +9,7 @@ export const ButtonsApp = [
         showTo: 'all'
     },
     {
-        icon: require("@/assets/images/nav/home-icon.png"), 
+        icon: require("@/assets/images/nav/pending-citas.png"), 
         name: "Pendientes",
         namePath: "CitasPendingCont",
         isActive: true,
