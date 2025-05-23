@@ -93,9 +93,9 @@ export default function Main({ navigation }: INavGlobal) {
                 >
 
                 <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} nav={{ navigation }}/>
+                <StatusBar translucent={true} style="dark"/>
 
                 <SafeAreaView style={styleDashboard.dashboard}>
-                    <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'transparent' : 'transparent'} style="dark"/>
 
                     <View style={styleDashboard.mainContainer}>
                         <View style={styleDashboard.userDashboard}>
