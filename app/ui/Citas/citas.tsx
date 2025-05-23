@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
-import { SafeAreaView, View, Animated, ScrollView, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity, BackHandler } from "react-native"
+import { SafeAreaView, View, Animated, ScrollView, useAnimatedValue, TextInput, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
 
 // Styles
 import { styleDashboard } from "../dashboard/styles/stylesDashboard"
@@ -119,7 +119,7 @@ export default function Citas({ navigation }: INavGlobal) {
         // Verificar si la cita no es en un domingo
         if (`${date}`.includes('Sun')) {
             return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita en un domingo.')
-        }   
+        }
 
         const newCita = {
             id: generatorUID(),
@@ -148,16 +148,20 @@ export default function Citas({ navigation }: INavGlobal) {
                 setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })    
                 return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
             }
-    }
+        }
 
     return (
+        <>
+        <StatusBar style="dark" />
+        <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.83)', height: 100, width: '100%' }}></View>
+
         <AuthenticatedLayout>
-            <ScrollView scrollEventThrottle={16}
-                onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
-                style={{ flexGrow: 1, width: '100%' }}>
-                        
+            <ScrollView 
+                scrollEventThrottle={16}
+                onScroll={Animated.event([{ 
+                    nativeEvent: { contentOffset: { y: scrollY } }}], { useNativeDriver: false })} style={{ flexGrow: 1, width: '100%' }}>
+            
             <SafeAreaView style={stylesCitas.citasMain}>
-                <StatusBar translucent backgroundColor={scrollPosition > 0 ? 'rgb(241, 241, 241)' : 'transparent'} style="dark"/>
             
                 <View style={styleDashboard.mainContainer}>
                     <View style={stylesCitas.headerName}>
@@ -180,7 +184,6 @@ export default function Citas({ navigation }: INavGlobal) {
                         isAnimated
                         >Maneja tu agenda de citas de la <TextWithColor color="rgba(167, 114, 252, 0.83)" style={{ fontWeight: 'bold' }}>Mejor</TextWithColor> manera! Empieza a registrar.</TextWithColor>
                     </View>
-            
             
                     <View style={styleDashboard.citasRecientes}>
                         <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }} color="rgba(16, 16, 18, 0.83)">Detalles</TextWithColor>
@@ -242,7 +245,7 @@ export default function Citas({ navigation }: INavGlobal) {
 
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         {
-                        !loading ?
+                            !loading ?
                             <TouchableOpacity style={{ backgroundColor: ColorsApp.primary.color, paddingVertical: 8, paddingHorizontal: 15, borderRadius: 18, width: '100%', alignItems: 'center' }}
                             onPress={handleRegisterCita}
                             >
@@ -256,6 +259,7 @@ export default function Citas({ navigation }: INavGlobal) {
                 </View>
             </SafeAreaView>
         </ScrollView>
-    </AuthenticatedLayout>
+        </AuthenticatedLayout>
+        </>
     )
 }
