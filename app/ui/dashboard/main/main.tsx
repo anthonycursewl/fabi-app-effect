@@ -67,6 +67,9 @@ export default function Main({ navigation }: INavGlobal) {
 
     let restates = newCitas.length - 5
 
+    // TODO: Agregar la screen para ver el profile de contador y permitir edición
+    // finish.
+
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
@@ -87,10 +90,11 @@ export default function Main({ navigation }: INavGlobal) {
     return (
         <>
         <AuthenticatedLayout>
-            <ScrollView scrollEventThrottle={16} stickyHeaderIndices={[0]}
+            <ScrollView 
+                scrollEventThrottle={16} 
+                stickyHeaderIndices={[0]}
                 onScroll={Animated.event([ { nativeEvent: { contentOffset: { y: scrollY } } } ], { useNativeDriver: false })}
-                style={{ flexGrow: 1, width: '100%' }}
-                >
+                style={{ flexGrow: 1, width: '100%' }}>
 
                 <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} nav={{ navigation }}/>
                 <StatusBar translucent={true} style="dark"/>
