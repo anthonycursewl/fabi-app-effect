@@ -14,6 +14,7 @@ import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
 import { IChangePassword } from "./interfaces/IChangePassword";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
+import { useContadorStore } from "@/app/store/zustand/useContadorStore";
 
 export default function UserProfile({ navigation }: INavGlobal) {
     const [loading, setLoading] = useState<boolean>(false);
@@ -26,6 +27,7 @@ export default function UserProfile({ navigation }: INavGlobal) {
     const [password, setPassword] = useState<IChangePassword>({ currentPassword: "", newPassword: "", confirmPassword: "" })
 
     const { user: userGlobal, setUser: setUserGlobal } = useGlobalState()
+    const { getProfileCont, profileCont } = useContadorStore()
 
     const getProfileData = async () => {
         const { error, response } = await secureFetch({
@@ -142,6 +144,11 @@ export default function UserProfile({ navigation }: INavGlobal) {
         getProfileData()
     }, [])
 
+
+    useEffect(() => {
+        getProfileCont(userGlobal.id)
+    }, [])  
+
   return (
     <AuthenticatedLayout>
         <ScrollView style={{ width: "100%", height: "100%" }} contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "flex-start" }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -202,6 +209,21 @@ export default function UserProfile({ navigation }: INavGlobal) {
                             <TextWithColor style={{ fontSize: 16, color: "rgba(128, 128, 128, 0.83)" }}>Version de la aplicación</TextWithColor>
                             <TextWithColor style={{ fontSize: 16, color: "rgba(49, 49, 49, 0.83)" }}>1.0.0</TextWithColor>
                         </View>
+
+                        {
+                            user.role === TYPES_ROLES.PROFESIONAL && (
+                                <View>
+                                    <TextWithColor style={{ fontSize: 16, color: "rgba(128, 128, 128, 0.83)", marginBottom: 10 }}>Perfil profesional</TextWithColor>
+                                    <TouchableOpacity 
+                                        style={{ backgroundColor: ColorsApp.primary.color, borderRadius: 10, alignItems: "center", justifyContent: "center", paddingVertical: 5, paddingHorizontal: 10 }} 
+                                        onPress={() => {
+                                            navigation.navigate('CreateProfileContador', { currentProfile: profileCont, path_ref: 'UpdateProfile'})
+                                        }}>
+                                        <TextWithColor color="white">Editar perfil</TextWithColor>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
                     </View>
                 </View>
 

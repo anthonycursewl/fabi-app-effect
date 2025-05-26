@@ -16,23 +16,35 @@ import { API_URl } from "@/app/config/api.breadriuss.config"
 // Interfaces
 import { TypeProfileContador } from "./interfaces/TypeProfileContador"
 import { useRoute } from "@react-navigation/native"
+import { parseRole } from "../UserProfile/services/parseRole"
+import { INavGlobal } from "@/app/shared/interfaces/INavGlobal"
+import { useContadorStore } from "@/app/store/zustand/useContadorStore"
 
-export default function CreateProfileContador() {
+export default function CreateProfileContador({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
 
+    // global state contador
+    const { setProfileCont } = useContadorStore()
+
     const route = useRoute()
     const { currentProfile, path_ref } = route.params as { currentProfile: TypeProfileContador, path_ref: string }
     const [profile, setProfile] = useState<TypeProfileContador>({ 
-        id: currentProfile.id || '', 
-        expertises: currentProfile.expertises || [], 
-        pro_contact: currentProfile.pro_contact || [], 
-        description: currentProfile.description || '', 
-        is_verified: currentProfile.is_verified || false, 
+        id: '', 
+        expertises: [], 
+        pro_contact: [], 
+        description: '', 
+        is_verified: false, 
         user_id: user.id 
     })
+
+    useEffect(() => {
+        if (path_ref === 'UpdateProfile') {
+            setProfile(currentProfile)
+        }
+    }, [currentProfile])
 
 
     const [expertise, setExpertise] = useState<string>('')
@@ -108,14 +120,14 @@ export default function CreateProfileContador() {
             return Alert.alert('BRD | Error', 'No puedes dejar menos de 2 especialidades o contactos!')
         }
 
-        const URL: string = path_ref === 'UpdateProfile' ? `${API_URl}/user/update/profile` : `${API_URl}/user/save/profile`
+        const URL: string = path_ref === 'UpdateProfile' ? `${API_URl}/user/update/cont/profile` : `${API_URl}/user/save/profile`
         const METHOD = path_ref === 'UpdateProfile' ? 'PUT' : 'POST'
         const { error, response } = await secureFetch({ 
             options: {
                 url: URL,
                 method: METHOD,
                 body: {
-                    id: generatorUID(),
+                    id: path_ref === 'UpdateProfile' ? profile.id : generatorUID(),
                     expertises: profile.expertises,
                     pro_contact: profile.pro_contact,
                     description: profile.description,
@@ -131,8 +143,10 @@ export default function CreateProfileContador() {
         }
 
         if (response) {
+            setProfileCont(response)
             setProfile({ id: '', expertises: [], pro_contact: [], description: '', is_verified: false, user_id: user.id })
-            return Alert.alert('BRD | Exito', '¡Tu Perfil ha sido creado con correctamente!')
+            navigation.goBack()
+            return Alert.alert('BRD | Exito', `${path_ref === 'UpdateProfile' ? 'Tu perfil ha sido actualizado correctamente!' : '¡Tu Perfil ha sido creado con correctamente!'}`)
         }
     }
     
@@ -257,7 +271,7 @@ export default function CreateProfileContador() {
                                     onPress={() => {
                                         handleSumbit()
                                     }}>
-                                <TextWithColor color="rgb(255, 255, 255)">Crear perfil</TextWithColor>
+                                <TextWithColor color="rgb(255, 255, 255)">{path_ref === 'UpdateProfile' ? 'Actualizar perfil' : 'Crear perfil'}</TextWithColor>
                             </TouchableOpacity> : 
                             <ActivityIndicator size="large" color="rgb(155, 128, 255)" />
                             }
@@ -280,7 +294,7 @@ export default function CreateProfileContador() {
 
                         <View style={{ gap: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <TextWithColor style={{ fontSize: 14, backgroundColor: 'rgb(212, 212, 212)', paddingVertical: 3, paddingHorizontal: 10, borderRadius: 12, width: 'auto' }} color="rgba(16, 16, 18, 0.83)">Role</TextWithColor>
-                            <TextWithColor>{user.role}</TextWithColor>
+                            <TextWithColor>{parseRole(user.role)}</TextWithColor>
                         </View>
 
                         <View style={{ gap: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
