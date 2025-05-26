@@ -48,7 +48,7 @@ export default function FirstStepMain({ user, navigation }: FirstStepMainProps) 
                 <TextWithColor style={{ fontSize: 24 }}>Crea tu perfil profesional para empezara recibir citas en tu agenda!</TextWithColor>
                 
                 <TouchableOpacity style={{ backgroundColor: 'rgb(199, 136, 253)', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 12 }}
-                onPress={() => navigation.replace('CreateProfileContador')}>
+                onPress={() => navigation.replace('CreateProfileContador', { currentProfile: {}, path_ref: 'CreateProfile' })}>
                     <TextWithColor style={{ fontSize: 12, color: 'rgb(246, 246, 247)' }}>Crear perfil</TextWithColor>
                 </TouchableOpacity>
             </View>

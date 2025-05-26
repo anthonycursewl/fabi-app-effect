@@ -1,8 +1,8 @@
-import { SafeAreaView, View, FlatList, StatusBar, ActivityIndicator, BackHandler } from "react-native";
+import { SafeAreaView, View, FlatList, ActivityIndicator, BackHandler } from "react-native";
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout";
 import { useCallback, useEffect } from "react"; 
 import { StyleSheet } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 // Components
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import FilterCitas from "../components/FilterCitas";
@@ -75,7 +75,7 @@ export default function CitasPendingCont({ navigation }: INavGlobal) {
     return (
         <AuthenticatedLayout>
             <>
-                <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0)'} />
+                <StatusBar translucent style="dark"/>
                 <SafeAreaView style={styles.mainContent}>
                     <View style={{ width: '90%' }}>
                         <TextWithColor style={{ fontSize: 12 }} color="rgba(128, 128, 128, 0.83)">
