@@ -1,6 +1,7 @@
 // Components
-import { FlatList, View, SafeAreaView, StatusBar, Alert } from "react-native"
+import { FlatList, View, SafeAreaView, Alert } from "react-native"
 // Components
+import { StatusBar } from "expo-status-bar"
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout"
 import TextWithColor from "@/app/shared/components/TextWithColor"
 import ModalShowState from "@/app/shared/components/ModalShowState"
@@ -23,7 +24,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
     const [profesionals, setProfesionals] = useState<TypeProfileContador[]>([])
     const [showModalSucess, setShowModalSucess] = useState<boolean>(false)
     
-    {/* We gotta move this function to a service class in the future */}
+    {/* We gotta move this function to a object with methods in the future */}
     const getProfesionalsData = async () => {
         if (pagination.isEnd) {
             console.log('BRD | No hay mas profesionales para mostrar.')
@@ -63,7 +64,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
 
     return (
         <AuthenticatedLayout>
-            <StatusBar translucent barStyle={'dark-content'} backgroundColor={'rgba(255, 255, 255, 0)'}/>
+            <StatusBar translucent style="dark"/>
             <SafeAreaView style={styleProfesionals.mainProfesionals}>
                 <View style={styleProfesionals.headerProfesionals}>
                     <TextWithColor style={{ fontSize: 20 }}>Profesionales Disponibles</TextWithColor>
@@ -73,10 +74,10 @@ export default function Profesionals({ navigation }: INavGlobal) {
                     <FlatList
                     style={{ width: '100%', flexGrow: 1 }}
                     data={profesionals}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id.toString()}
                     showsVerticalScrollIndicator={false}                    
                     renderItem={({ item }) => (
-                        <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
+                        <CardProfesional item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
                     )}
                     onEndReached={() => {
                         getProfesionalsData()

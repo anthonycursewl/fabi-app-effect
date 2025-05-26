@@ -1,4 +1,4 @@
-import { SafeAreaView, View, ScrollView, Image, Animated, Alert, BackHandler, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, ScrollView, Animated, Alert, BackHandler } from "react-native";
 import { useRef, useEffect, useState, useContext, useCallback } from "react";
 
 // Components
@@ -19,10 +19,10 @@ import { styleDashboard } from "../styles/stylesDashboard";
 
 // Constants
 import { API_URl } from "@/app/config/api.breadriuss.config";
-import { newCitas } from "@/app/shared/constants/mockCitas";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 import { useFocusEffect } from "@react-navigation/native";
 import CitasPending from "../components/CitasPending/CitasPending";
+import { parseRole } from "../../UserProfile/services/parseRole";
 
 export default function Main({ navigation }: INavGlobal) {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -65,11 +65,6 @@ export default function Main({ navigation }: INavGlobal) {
         }
     }, [user])
 
-    let restates = newCitas.length - 5
-
-    // TODO: Agregar la screen para ver el profile de contador y permitir edición
-    // finish.
-
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
@@ -97,13 +92,24 @@ export default function Main({ navigation }: INavGlobal) {
                 style={{ flexGrow: 1, width: '100%' }}>
 
                 <StatusBarApp scrollPosition={scrollPosition} styleDashboard={styleDashboard} nav={{ navigation }}/>
-                <StatusBar translucent={true} style="dark"/>
+                <StatusBar translucent={true} style="dark" />
 
                 <SafeAreaView style={styleDashboard.dashboard}>
 
                     <View style={styleDashboard.mainContainer}>
                         <View style={styleDashboard.userDashboard}>
                             <TextWithColor style={{ fontSize: 24, fontWeight: 'bold' }} color="rgba(40, 40, 41, 0.83)">{loading ? 'Cargando...' : `¡Hola ${user.name.split(' ')[0]}!`}</TextWithColor>
+                            
+                            <View style={{
+                                width: parseRole(user.role).length * 10,
+                                backgroundColor: 'rgba(173, 173, 255, 0.66)',
+                                borderRadius: 12,
+                                paddingVertical: 2,
+                                paddingHorizontal: 10,
+                            }}>
+                                <TextWithColor style={{ fontSize: 14, fontWeight: 'bold', color: 'rgba(43, 43, 43, 0.83)', textAlign: 'center' }}>{parseRole(user.role)}</TextWithColor>
+                            </View>
+
                             <TextWithColor color="rgba(25, 25, 26, 0.53)">Bienvenido a tu dashboard.</TextWithColor>
                         </View>
 

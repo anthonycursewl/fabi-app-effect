@@ -11,18 +11,14 @@ export default function Notifications({ navigation }: INavGlobal) {
     const { notifications, loading, getNotifications } = useNotificationStore()
     const { user } = useGlobalState()
 
-    const _getNotis = async () => {
-        await getNotifications()
-    }
-
     useEffect(() => {
-        _getNotis()
+        getNotifications()
     }, [])    
 
     return (
         <AuthenticatedLayout>
             <SafeAreaView style={{ flexGrow: 1, justifyContent: 'flex-start', alignItems: 'center', height: '93%', backgroundColor: 'white', gap: 10 }}>
-                <View style={{ width: '90%', alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                <View style={{ width: '90%', alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
                     <TextWithColor style={{ fontSize: 20, fontWeight: 'bold' }}>
                         ¡Hola {user.name.split(' ')[0]}! 
                     </TextWithColor>
@@ -38,7 +34,7 @@ export default function Notifications({ navigation }: INavGlobal) {
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => <CardPreviewNotification item={item} nav={{ navigation }} />}
                     refreshing={loading}
-                    onRefresh={_getNotis}
+                    onRefresh={getNotifications}
                 />
 
                 <View>
