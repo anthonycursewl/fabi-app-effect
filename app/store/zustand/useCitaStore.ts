@@ -8,7 +8,7 @@ import { TypeFilter } from '@/app/ui/Citas/interfaces/TypeFilter';
 
 interface CitasState {
     // data
-    citasByFilter: { [key in TypeFilter]?: Cita[] };
+    citasByFilter: { [key in TypeFilter]?: CitasCont[] };
     citasContByFilter: { [key in TypeFilter]?: CitasCont[] };
     
     // Pagination data
@@ -30,7 +30,7 @@ interface CitasState {
     fetchCitasByContador: (filter: TypeFilter, isRefresh?: boolean) => Promise<void>;
     
     // update data
-    updateCita: (cita: Cita) => void;
+    updateCita: (cita: CitasCont) => void;
     updateCitaCont: (cita: CitasCont) => void;
     
     // Handle errors
@@ -67,7 +67,7 @@ export const useCitasStore = create<CitasState>((set, get) => ({
     setLoading: (loading: boolean) => {
         set({ loading: loading })
     },
-    updateCita: (cita: Cita) => {
+    updateCita: (cita: CitasCont) => {
         set(state => {
             const currentFilter = state.currentFilter;
             const currentCitas = state.citasByFilter[currentFilter];
@@ -77,7 +77,7 @@ export const useCitasStore = create<CitasState>((set, get) => ({
 
             if (index === -1) return state;
             const newCitas = [...currentCitas];
-            newCitas[index] = cita;
+            newCitas[index] = cita; 
 
             return {
                 citasByFilter: {
@@ -107,7 +107,7 @@ export const useCitasStore = create<CitasState>((set, get) => ({
             };
         });
     },
-    fetchCitas: async (filter, userId, isRefresh = false) => {
+    fetchCitas: async (filter: TypeFilter, userId: string, isRefresh = false): Promise<void> => {
         console.log(`[STORE] fetchCitas BEGIN: filter=${filter}, userId=${userId}, isRefresh=${isRefresh}`);
 
         // --- Bloque de Refresh ---
@@ -220,7 +220,7 @@ export const useCitasStore = create<CitasState>((set, get) => ({
         // --- Fin Manejo de Respuesta Exitosa ---
         console.log(`[STORE] fetchCitas SUCCESS/NO-DATA END: filter=${filter}`);
     },
-    fetchCitasByContador: async (filter: TypeFilter, isRefresh = false) => {
+    fetchCitasByContador: async (filter: TypeFilter, isRefresh = false): Promise<void> => {
         if (isRefresh) {
             set({
                 paginationContByFilter: {
