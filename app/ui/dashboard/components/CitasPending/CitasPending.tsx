@@ -6,26 +6,25 @@ import { useEffect } from "react";
 import { TypeFilter } from "@/app/ui/Citas/interfaces/TypeFilter";
 import { useGlobalState } from "@/app/store/zustand/useGlobalState";
 import { TYPES_ROLES } from "@/app/shared/constants/TypesRoles";
+import CitaUser from "@/app/ui/Citas/CitasUser/CitasUser";
 
 export default function CitasPending({ styleDashboard, nav }: { styleDashboard: any, nav: INavGlobal }) {
-  const { fetchCitasByContador, citasContByFilter, loading } = useCitasStore()
+  const { fetchCitasByContador, citasContByFilter, loading, fetchCitas, citasByFilter } = useCitasStore()
 
     const { user } = useGlobalState()
 
   const _getPendingCitas = async (filter: TypeFilter) => {
-    await fetchCitasByContador(filter)
-  }
-
-  let arroz: string;
-
-  useEffect(() => {
     if (user.role === TYPES_ROLES.PROFESIONAL || user.role === TYPES_ROLES.ADMIN) {
-      _getPendingCitas('pending')
+       await fetchCitasByContador(filter)
     }
 
     if (user.role === TYPES_ROLES.USER) {
-      _getPendingCitas('rescheduled')
+      await fetchCitas(filter, user.id)
     }
+  }
+
+  useEffect(() => {
+    _getPendingCitas('pending')
   }, [])
 
   useEffect(() => {
@@ -36,10 +35,9 @@ export default function CitasPending({ styleDashboard, nav }: { styleDashboard: 
     }
   }, [])
 
-  const citasToShow = citasContByFilter.pending?.length && 
-  citasContByFilter.pending?.length > 0 ? 
-  citasContByFilter.pending?.slice(0, 5) 
-  : citasContByFilter.rescheduled?.slice(0, 5)
+  const citasToShow = user.role === TYPES_ROLES.USER 
+  ? citasByFilter.pending?.length && citasByFilter.pending?.length > 0 ? citasByFilter.pending?.slice(0, 5) : citasByFilter.rescheduled?.slice(0, 5) 
+  : citasContByFilter.pending?.length && citasContByFilter.pending?.length > 0 ? citasContByFilter.pending?.slice(0, 5) : citasContByFilter.rescheduled?.slice(0, 5)
 
   const RenderTitle = () => {
     if (user.role === TYPES_ROLES.USER) {
@@ -80,7 +78,7 @@ export default function CitasPending({ styleDashboard, nav }: { styleDashboard: 
   return (
     <TouchableOpacity
       onPress={() => {
-        nav.navigation.replace('CitasPendingCont');
+        nav.navigation.replace(user.role === TYPES_ROLES.USER ? 'CitasUser' : 'CitasPendingCont');
       }}
     >
       <View style={styleDashboard.dashboardCitas}>
@@ -90,18 +88,18 @@ export default function CitasPending({ styleDashboard, nav }: { styleDashboard: 
           {citasToShow?.map((cita, index) => (
             <Image
               source={{ uri: cita.users.icon_url }}
-              style={{
+              style={{  
                 ...styleDashboard.picCitaInfo,
                 opacity: index > 0 ? 1 - index / (citasToShow?.length || 0) : 0.9,
               }}
               key={cita.id}
             />
           ))}
-          {citasContByFilter.pending?.length && citasContByFilter.pending?.length > 5 ? (
+          {citasToShow?.length && citasToShow?.length > 5 ? (
             <TextWithColor
               style={{ fontSize: 20 }}
               color="rgba(155, 123, 206, 0.83)"
-            >{`+${citasContByFilter.pending?.length && citasContByFilter.pending?.length - 5}`}</TextWithColor>
+            >{`+${citasToShow?.length - 5}`}</TextWithColor>
           ) : null}
         </View>
       </View>
