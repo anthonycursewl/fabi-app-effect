@@ -11,6 +11,10 @@ export interface Cita {
 }
 
 export interface CitasCont extends Cita {
+    contdr_profile: {
+        description: string;
+        name: string | null;
+    }
     users: {
         icon_url: string;
     }
