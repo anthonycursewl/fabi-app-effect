@@ -1,9 +1,10 @@
-import { SafeAreaView, View, FlatList, StatusBar, ActivityIndicator, BackHandler } from "react-native";
+import { SafeAreaView, View, FlatList, ActivityIndicator, BackHandler } from "react-native";
 import AuthenticatedLayout from "@/app/shared/components/AuthenticatedLayout";
 import { useCallback, useContext, useEffect } from "react"; 
 import { StyleSheet } from "react-native";
 
 // Components
+import { StatusBar } from "expo-status-bar";
 import TextWithColor from "@/app/shared/components/TextWithColor";
 import FilterCitas from "../components/FilterCitas";
 import { ListEmptyComponent } from "../components/ListEmptyComponent";
@@ -80,8 +81,8 @@ export default function CitaUser({ navigation }: INavGlobal) {
     return (
         <AuthenticatedLayout>
             <>
-                <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0)'} />
                 <SafeAreaView style={styles.mainContent}>
+                    <StatusBar translucent style="dark"/>
                     <View style={{ width: '90%' }}>
                         <TextWithColor style={{ fontSize: 12 }} color="rgba(128, 128, 128, 0.83)">
                             ¡Bienvenido a la sección de citas!

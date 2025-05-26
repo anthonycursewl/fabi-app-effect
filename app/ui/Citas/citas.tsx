@@ -153,7 +153,7 @@ export default function Citas({ navigation }: INavGlobal) {
     return (
         <>
         <StatusBar style="dark" />
-        <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.83)', height: 100, width: '100%' }}></View>
+        <View style={{ backgroundColor: scrollPosition > 50 ? 'rgba(255, 255, 255, 0.83)' : 'transparent', height: 34, width: '100%' }}></View>
 
         <AuthenticatedLayout>
             <ScrollView 
