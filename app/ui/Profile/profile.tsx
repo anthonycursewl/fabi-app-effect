@@ -15,14 +15,25 @@ import { secureFetch } from "@/app/shared/services/secureFetch"
 import { API_URl } from "@/app/config/api.breadriuss.config"
 // Interfaces
 import { TypeProfileContador } from "./interfaces/TypeProfileContador"
+import { useRoute } from "@react-navigation/native"
 
 export default function CreateProfileContador() {
     const scrollY = useRef(new Animated.Value(0)).current
     const [scrollPosition, setScrollPosition] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
     const { user } = useContext(AuthContext)
-    const [profile, setProfile] = useState<TypeProfileContador>({ id: ''
-        , expertises: [], pro_contact: [], description: '', is_verified: false, user_id: user.id })
+
+    const route = useRoute()
+    const { currentProfile, path_ref } = route.params as { currentProfile: TypeProfileContador, path_ref: string }
+    const [profile, setProfile] = useState<TypeProfileContador>({ 
+        id: currentProfile.id || '', 
+        expertises: currentProfile.expertises || [], 
+        pro_contact: currentProfile.pro_contact || [], 
+        description: currentProfile.description || '', 
+        is_verified: currentProfile.is_verified || false, 
+        user_id: user.id 
+    })
+
 
     const [expertise, setExpertise] = useState<string>('')
     const [contact, setContact] = useState<string>('')
@@ -85,7 +96,6 @@ export default function CreateProfileContador() {
     }
 
     const handleSumbit = async () => {
-        console.log(profile)
         if (!profile.description || !profile.expertises.length || !profile.pro_contact.length) {
             return Alert.alert('BRD | Error', 'No puedes dejar campos vacios!')
         }
@@ -98,10 +108,12 @@ export default function CreateProfileContador() {
             return Alert.alert('BRD | Error', 'No puedes dejar menos de 2 especialidades o contactos!')
         }
 
+        const URL: string = path_ref === 'UpdateProfile' ? `${API_URl}/user/update/profile` : `${API_URl}/user/save/profile`
+        const METHOD = path_ref === 'UpdateProfile' ? 'PUT' : 'POST'
         const { error, response } = await secureFetch({ 
             options: {
-                url: `${API_URl}/user/save/profile`,
-                method: 'POST',
+                url: URL,
+                method: METHOD,
                 body: {
                     id: generatorUID(),
                     expertises: profile.expertises,
