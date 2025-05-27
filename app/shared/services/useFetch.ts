@@ -14,7 +14,7 @@ export const useFetch = async ({ url, method, body, headers }: IFetchProps) => {
                 'Content-Type': 'application/json'
             }
         })
-         
+        
         if (!response.ok) {
             const res = await response.json()
             throw new Error(res.error)
