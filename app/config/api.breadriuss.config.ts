@@ -1,1 +1,1 @@
-export const API_URl: string = 'http://192.168.101.69:3002/api/v1';
+export const API_URl: string = 'https://fabiapi.breadriuss.com/api/v1';
