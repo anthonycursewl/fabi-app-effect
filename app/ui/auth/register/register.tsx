@@ -1,5 +1,10 @@
 import { useContext, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from "react-native"
+import { StyleSheet, Text, View, 
+TextInput, TouchableOpacity, 
+Image, Alert, 
+ActivityIndicator, 
+SafeAreaView, ScrollView, 
+KeyboardAvoidingView, Platform, Keyboard } from "react-native"
 
 // interfaces
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
@@ -20,6 +25,7 @@ interface FormDataLogin {
     password: string;
     username: string;
     name: string;
+    confirmPassword: string;
 } 
 
 export default function Register({ navigation }: INavGlobal) {
@@ -28,6 +34,7 @@ export default function Register({ navigation }: INavGlobal) {
         password: '',
         username: '',
         name: '',
+        confirmPassword: ''
     })
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -35,6 +42,12 @@ export default function Register({ navigation }: INavGlobal) {
         if (!formData.email || !formData.password || !formData.username || !formData.name) {
             console.log('Formulario incompleto');
             Alert.alert('Formulario incompleto', 'Por favor, complete todos los campos del formulario.')
+            return
+        }
+
+        if (formData.confirmPassword !== formData.password) {
+            console.log('Las contraseñas no coinciden');
+            Alert.alert('BRD | Error', 'Las contraseñas no coinciden!')
             return
         }
 
@@ -59,7 +72,7 @@ export default function Register({ navigation }: INavGlobal) {
         if (data) {
             setLoading(false)
             Alert.alert('BRD | Registro', `¡Bienvenido ${formData.name}, ya puedes iniciar sesión!`)
-            setFormData({ email: '', password: '', username: '', name: '' })
+            setFormData({ email: '', password: '', username: '', name: '', confirmPassword: '' })
             navigation.replace('Login')
         }
     }
@@ -67,62 +80,105 @@ export default function Register({ navigation }: INavGlobal) {
     const LogoApp = require('@/assets/images/app-logo.png')
 
     return (
-        <View style={styleRegister.containerMainLogin}>
-            <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/bitter-app-14614.appspot.com/o/bg-fabi-app.png?alt=media&token=b05f1d93-5108-4ed3-b670-a8bcbb25f1bc' }} style={styleRegister.decorateHeader}/>
-            <View style={{ width: '88%', gap: 12, position: 'relative' }}>
-                <View style={{ marginBottom: 20, alignItems: 'center' }}>
-                    <Image source={LogoApp} style={styleRegister.loginImg}/>
+        <SafeAreaView style={{ flex: 1 }}>
+            <KeyboardAvoidingView 
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
+            >
+                <ScrollView 
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                    keyboardDismissMode="interactive"
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        paddingBottom: 20
+                    }}
+                >
+                    <View style={styleRegister.containerMainLogin}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', gap: 5, marginTop: 20 }}>
+                            <View style={styleRegister.gradientLoginFace}></View>
+                            <View style={styleRegister.gradientLoginFace2}></View>
+                            <Image source={LogoApp} style={styleRegister.loginImg}/>
+                        </View>
+
+                    <View style={{ width: '90%', gap: 25 }}>
+                        <View style={{ gap: 5 }}>
+                            <TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>Nombres</TextWithColor>
+                            <TextInput
+                                placeholder="Ingresa tu nombre..."
+                                style={styleRegister.inputAuth}
+                                onChangeText={(text) => setFormData({ ...formData, name: text })}
+                                value={formData.name}
+                            />
+                        </View>
+
+                        <View style={{ gap: 5 }}>
+                            <TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>Nombre de usuario</TextWithColor>
+                            <TextInput
+                                placeholder="Ingresa tu nombre de usuario..."
+                                style={styleRegister.inputAuth}
+                                onChangeText={(text) => setFormData({ ...formData, username: text.toLowerCase().trim() })}
+                                value={formData.username}
+                            />
+                        </View>
+
+                        <View style={{ gap: 5 }}>
+                            <TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>Correo Electrónico</TextWithColor>
+                            <TextInput
+                                placeholder="Ingresa tu correo electrónico..."
+                                style={styleRegister.inputAuth}
+                                onChangeText={(text) => setFormData({ ...formData, email: text })}
+                                value={formData.email}
+                            />
+                        </View>
+
+                         <View style={{ gap: 5 }}>
+                            <TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>Contraseña</TextWithColor>
+                            <TextInput
+                                placeholder="Ingresa tu contraseña..."
+                                style={styleRegister.inputAuth}
+                                onChangeText={(text) => setFormData({ ...formData, password: text })}
+                                value={formData.password}
+                                secureTextEntry
+                            />
+                        </View>
+
+                        <View style={{ gap: 5 }}>
+                            <TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>Confirmar Contraseña</TextWithColor>
+                            <TextInput
+                                placeholder="Confirma tu contraseña..."
+                                style={styleRegister.inputAuth}
+                                onChangeText={(text) => setFormData({ ...formData, confirmPassword: text })}
+                                value={formData.confirmPassword}
+                                secureTextEntry
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 25 }}>
+                        {!loading ? 
+                            <TouchableOpacity style={styleRegister.buttonLogin}
+                            onPress={loading ? () => {} : handleSumbit}
+                            >
+                                <TextWithColor color="white">Registrarse</TextWithColor>
+                            </TouchableOpacity>
+                            : 
+                            <ActivityIndicator color="rgb(169, 76, 255)" size={'small'}/>
+                            }
+
+                        <View style={styleRegister.goToRegister}>
+                            <TextWithColor style={{ fontSize: 12 }}>¿Ya tienes una cuenta?</TextWithColor>
+                            <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                                <TextWithColor color="#c58bdf" style={{ fontSize: 12 }}>¡Inicia sesión aquí!</TextWithColor>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
                 </View>
-
-                <View style={styleRegister.gradientLoginFace}></View>
-                <View style={styleRegister.gradientLoginFace2}></View>
-
-                <View style={styleRegister.containerInfo}>
-                    <TextWithColor>Nombres</TextWithColor>
-                    <TextInput placeholder="Primer nombre Segundo nombre..."
-                    style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, name: text })}
-                    value={formData.name}
-                    />
-
-                    <TextWithColor>Nombre de Usuario</TextWithColor>
-                    <TextInput placeholder="example.cuenta"
-                    style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, username: text.toLowerCase().trim() })}
-                    value={formData.username}
-                    />
-
-                    <TextWithColor>Email</TextWithColor>
-                    <TextInput placeholder="example@example.com"
-                    style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, email: text })}
-                    value={formData.email}
-                    />
-
-                    <TextWithColor>Contraseña</TextWithColor>
-                    <TextInput placeholder="********"
-                    style={styleRegister.inputAuth}
-                    onChangeText={(text) => setFormData( { ...formData, password: text })}
-                    value={formData.password}
-                    />
-                </View>
-
-                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 15 }}>
-                    {!loading ? <TouchableOpacity style={styleRegister.buttonLogin}
-                    onPress={handleSumbit}
-                    >
-                        <TextWithColor color="white">Registrarme</TextWithColor>
-                    </TouchableOpacity> : <ActivityIndicator size="large" color="#c58bdf" />}
-
-                   <View style={styleRegister.goToRegister}>
-                        <TextWithColor>¿Ya tienes una cuenta?</TextWithColor>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <TextWithColor color="#c58bdf">Inicia sesión aquí!</TextWithColor>
-                        </TouchableOpacity>
-                   </View>
-                </View>
-            </View>
-        </View> 
+            </ScrollView>
+            <View style={{ height: 20 }} />
+        </KeyboardAvoidingView>
+        </SafeAreaView>
     )
 }
-

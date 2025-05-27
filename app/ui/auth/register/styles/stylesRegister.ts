@@ -4,14 +4,16 @@ export const styleRegister = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
-        width: '100%'
+        width: '100%',
+        marginTop: 100,
+        flexGrow: 1,
     },
     containerInfo: {
         justifyContent: 'center',
         alignItems: 'flex-start',
         width: '100%',
-        gap: 12
+        gap: 12,
+        flexGrow: 1,
     },
     inputAuth: {
         backgroundColor: 'rgba(224, 224, 224, 0.89)',
