@@ -78,6 +78,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
                     onEndReached={() => {
                         getProfesionalsData()
                     }}
+                    ListEmptyComponent={<TextWithColor style={{ fontSize: 14, color: 'rgb(102, 102, 102)' }}>No hay profesionales disponibles.</TextWithColor>}
                     onEndReachedThreshold={0.1}
                     />
                 </View>

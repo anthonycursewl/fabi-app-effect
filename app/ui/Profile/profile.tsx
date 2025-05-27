@@ -145,7 +145,9 @@ export default function CreateProfileContador({ navigation }: INavGlobal) {
         if (response) {
             setProfileCont(response)
             setProfile({ id: '', expertises: [], pro_contact: [], description: '', is_verified: false, user_id: user.id })
-            navigation.goBack()
+            if (path_ref === 'UpdateProfile') {
+                navigation.goBack()
+            }
             return Alert.alert('BRD | Exito', `${path_ref === 'UpdateProfile' ? 'Tu perfil ha sido actualizado correctamente!' : '¡Tu Perfil ha sido creado con correctamente!'}`)
         }
     }
