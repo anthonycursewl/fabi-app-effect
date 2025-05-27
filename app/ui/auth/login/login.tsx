@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, View, TextInput, TouchableOpacity, Image, Alert } from "react-native"
+import { StyleSheet, View, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from "react-native"
 
 // interfaces
 import { INavGlobal } from "@/app/shared/interfaces/INavGlobal";
@@ -93,12 +93,12 @@ export default function Login({ navigation }: INavGlobal) {
                 </View>
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 15 }}>
-                    <TouchableOpacity style={styleLogin.buttonLogin}
-                    onPress={loading ? () => {} : handleSumbit}
-                    >
-                        
-                        <TextWithColor color="white">{loading ? 'Cargando...' : 'Iniciar Sesión'}</TextWithColor>
+                    {!loading ? <TouchableOpacity style={styleLogin.buttonLogin}
+                    onPress={loading ? () => {} : handleSumbit}>
+                        <TextWithColor color="white">Iniciar Sesión</TextWithColor>
                     </TouchableOpacity>
+                    : <ActivityIndicator color="rgb(169, 76, 255)" size={'small'}/>
+                    }
 
                    <View style={styleLogin.goToRegister}>
                         <TextWithColor>¿No tienes una cuenta?</TextWithColor>

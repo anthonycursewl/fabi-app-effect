@@ -26,12 +26,8 @@ export default function Profesionals({ navigation }: INavGlobal) {
     
     {/* We gotta move this function to a object with methods in the future */}
     const getProfesionalsData = async () => {
-        if (pagination.isEnd) {
-            console.log('BRD | No hay mas profesionales para mostrar.')
-            return
-        }
-
-        if (loading) {
+        if (pagination.isEnd || loading) {
+            console.log("epa")
             return
         }
 
@@ -60,7 +56,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
 
     useEffect(() => {
         getProfesionalsData()
-    }, [])
+    }, [pagination])
 
     return (
         <AuthenticatedLayout>
@@ -77,7 +73,7 @@ export default function Profesionals({ navigation }: INavGlobal) {
                     keyExtractor={(item) => item.id.toString()}
                     showsVerticalScrollIndicator={false}                    
                     renderItem={({ item }) => (
-                        <CardProfesional item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
+                        <CardProfesional key={item.id} item={item} setShowModalSucess={setShowModalSucess} nav={{ navigation }}/>
                     )}
                     onEndReached={() => {
                         getProfesionalsData()
