@@ -121,6 +121,10 @@ export default function Citas({ navigation }: INavGlobal) {
             return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita en un domingo.')
         }
 
+        if (date?.toLocaleString().split('/')[1] === today.toLocaleString().split('/')[1]) {
+            return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita para hoy. Tienes que agendar una cita a partir de mañana.')
+        }
+
         const newCita = {
             id: generatorUID(),
             des_or_reason: cita.des_or_reason,
