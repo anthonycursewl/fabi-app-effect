@@ -42,7 +42,7 @@ export default function Citas({ navigation }: INavGlobal) {
 
     // State of the date
     const defaultStyles = useDefaultStyles();
-    const [date, setDate] =useState<DateType>();
+    const [date, setDate] = useState<DateType>();
 
     // Test of the picker
     const [selectedValue, setSelectedValue] = useState<ContadorProfileData | null>(null);
@@ -229,10 +229,12 @@ export default function Citas({ navigation }: INavGlobal) {
                             <TextWithColor style={{ fontSize: 12 }} color="rgba(92, 92, 92, 0.83)">Elige el espcialista de tu preferencia para revisar su disponibilidad.</TextWithColor>
                         </View>
 
-                        <DateTimePicker mode="single" date={date} 
+                        <DateTimePicker mode="single" 
+                        date={date} 
                         onChange={({ date }) => setDate(date)}
                         minDate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
-                        styles={defaultStyles}/>    
+                        styles={defaultStyles}
+                        />    
 
                         <View style={{ marginBottom: 20 }}>
                             <CustomTimePicker 
