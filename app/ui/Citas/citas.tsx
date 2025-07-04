@@ -231,7 +231,7 @@ export default function Citas({ navigation }: INavGlobal) {
 
                         <DateTimePicker mode="single" date={date} 
                         onChange={({ date }) => setDate(date)}
-                        minDate={today}
+                        minDate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
                         styles={defaultStyles}/>    
 
                         <View style={{ marginBottom: 20 }}>
