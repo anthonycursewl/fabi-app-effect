@@ -229,7 +229,7 @@ export default function Citas({ navigation }: INavGlobal) {
                         </View>
 
                         <CustomDateTimePicker 
-                            selectedDate={new Date(new Date().setDate(new Date().getDate() + 1))} 
+                            selectedDate={date} 
                             onDateChange={setDate}
                             accentColor={ColorsApp.primary.color}
                             minimumDate={new Date(new Date().setDate(new Date().getDate() + 1))}

@@ -74,7 +74,11 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
   };
   
   const handleDaySelect = (day: number) => {
-    const newDate = new Date(currentYear, currentMonth, day);
+    const newDate = new Date(pickerDate);
+    newDate.setDate(day);
+    newDate.setMonth(currentMonth);
+    newDate.setFullYear(currentYear);
+    
     if (!isDateDisabled(newDate)) {
       setPickerDate(newDate);
     }
