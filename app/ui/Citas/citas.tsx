@@ -41,7 +41,9 @@ export default function Citas({ navigation }: INavGlobal) {
     const { user } = useContext(AuthContext)
 
     // State of the date
-    const [date, setDate] = useState<Date>(new Date());
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const [date, setDate] = useState<Date>(tomorrow);
 
     // Test of the picker
     const [selectedValue, setSelectedValue] = useState<ContadorProfileData | null>(null);
