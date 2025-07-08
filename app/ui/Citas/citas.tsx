@@ -8,7 +8,6 @@ import { stylesCitas } from "./styles/stylesRegisterCita"
 // Components
 import { StatusBar } from "expo-status-bar"
 import TextWithColor from "@/app/shared/components/TextWithColor"
-import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 import { CustomPicker } from "./components/CustomPicker"
 import { CustomTimePicker } from "./components/PickerTime"
 
@@ -42,7 +41,6 @@ export default function Citas({ navigation }: INavGlobal) {
     const { user } = useContext(AuthContext)
 
     // State of the date
-    const defaultStyles = useDefaultStyles();
     const [date, setDate] = useState<Date>(new Date());
 
     // Test of the picker
