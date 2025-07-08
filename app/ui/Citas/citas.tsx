@@ -85,9 +85,6 @@ export default function Citas({ navigation }: INavGlobal) {
         }
     }
 
-    // today xd
-    const today = new Date();
-
     useEffect(() => {
         const listener = scrollY.addListener(({ value }) => {
           setScrollPosition(value);
@@ -115,13 +112,8 @@ export default function Citas({ navigation }: INavGlobal) {
             return Alert.alert('BRD | Un error ha ocurrido', 'Por favor, completa todos los campos.')
         }
 
-        // Verificar si la cita no es en un domingo
         if (`${date}`.includes('Sun')) {
             return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita en un domingo.')
-        }
-
-        if (date?.toLocaleString().split('/')[1] === today.toLocaleString().split('/')[1]) {
-            return Alert.alert('BRD | Un error ha ocurrido', 'No puedes agendar una cita para hoy. Tienes que agendar una cita a partir de mañana.')
         }
 
         const newCita = {
@@ -141,18 +133,17 @@ export default function Citas({ navigation }: INavGlobal) {
                 body: newCita
             }, setLoading})
 
-            if (error) {
-                Alert.alert('BRD | Un error ha ocurrido', `${error}`)
-            }
-
-            if (response) {
-                setTime({ value: '', label: '' })
-                setSelectedValue(null)
-                setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })    
-                return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
-            }
+        if (error) {
+            Alert.alert('BRD | Un error ha ocurrido', `${error}`)
         }
 
+        if (response) {
+            setTime({ value: '', label: '' })
+            setSelectedValue(null)
+            setCita({ id: '', des_or_reason: '', date: '', cont_id: '', status: '', user_id: '', hour: '' })    
+            return Alert.alert('BRD | Cita creada', 'La cita ha sido creada con exito.')
+        }
+    }
     return (
         <>
         <StatusBar style="dark" />
