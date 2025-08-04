@@ -89,6 +89,7 @@ export default function Login({ navigation }: INavGlobal) {
                     style={styleLogin.inputAuth}
                     onChangeText={(text) => setFormData( { ...formData, password: text })}
                     value={formData.password}
+                    secureTextEntry
                     />
                 </View>
 
